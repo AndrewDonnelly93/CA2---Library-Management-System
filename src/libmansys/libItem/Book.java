@@ -4,8 +4,9 @@ public class Book extends LibItem {
     private String author;
     private String ISBN;
 
-    public Book(String title, boolean availabilityStatus, String author, String ISBN) {
-        super(title, availabilityStatus);
+    public Book(String title, boolean availabilityStatus, String author, String ISBN, String id) {
+        super(title, availabilityStatus, id);
+        this.itemType = LibItemType.BOOK;
         this.author = author;
         this.ISBN = ISBN;
     }
@@ -27,12 +28,19 @@ public class Book extends LibItem {
     }
 
     @Override
-    void borrowItem() {
+    public void borrowItem() {
 
     }
 
     @Override
-    void returnItem() {
+    public void returnItem() {
 
+    }
+
+    @Override
+    public void printItemDetails() {
+        System.out.println("-".repeat(50));
+        System.out.println("Item type: Book Title: " + this.getTitle()
+                + " Author: " + this.getAuthor() + " ISBN: " + this.getISBN());
     }
 }

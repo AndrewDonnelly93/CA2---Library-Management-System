@@ -1,5 +1,6 @@
 package libmansys.libItem;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 // Represents theses and dissertations
@@ -9,12 +10,21 @@ public class Thesis extends LibItem {
     private String abstractSummary;
     private Date datePublished;
 
-    public Thesis(String title, boolean availabilityStatus, String author, String topic, String abstractSummary, Date datePublished) {
-        super(title, availabilityStatus);
+    public Thesis(
+            String title,
+            boolean availabilityStatus,
+            String author,
+            String topic,
+            String abstractSummary,
+            Date datePublished,
+            String id
+    ) {
+        super(title, availabilityStatus, id);
         this.author = author;
         this.topic = topic;
         this.abstractSummary = abstractSummary;
         this.datePublished = datePublished;
+        this.itemType = LibItemType.THESIS;
     }
 
     public String getAuthor() {
@@ -50,12 +60,22 @@ public class Thesis extends LibItem {
     }
 
     @Override
-    void borrowItem() {
+    public void borrowItem() {
 
     }
 
     @Override
-    void returnItem() {
+    public void returnItem() {
 
+    }
+
+    @Override
+    public void printItemDetails() {
+        System.out.println("-".repeat(50));
+        System.out.println("Item type: Thesis Title: " + this.getTitle()
+                + " Author: " + this.getAuthor() + " Topic: " + this.getTopic() +
+                " Date published: " + new SimpleDateFormat("dd-MM-yyyy").format(this.getDatePublished()));
+        System.out.println("\nAbstract:");
+        System.out.println(this.getAbstractSummary());
     }
 }

@@ -4,9 +4,14 @@ public abstract class LibItem {
     protected String title;
     protected boolean availabilityStatus;
 
-    public LibItem(String title, boolean availabilityStatus) {
+    protected LibItemType itemType;
+    protected String id;
+
+    public LibItem(String title, boolean availabilityStatus, String id) {
+        this.id = id;
         this.title = title;
         this.availabilityStatus = availabilityStatus;
+        this.itemType = LibItemType.LIB_ITEM;
     }
 
     public String getTitle() {
@@ -25,6 +30,8 @@ public abstract class LibItem {
         this.availabilityStatus = availabilityStatus;
     }
 
-    abstract void borrowItem();
-    abstract void returnItem();
+    public abstract void borrowItem();
+    public abstract void returnItem();
+
+    public abstract void printItemDetails();
 }

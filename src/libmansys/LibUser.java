@@ -1,6 +1,7 @@
 package libmansys;
 
-import java.util.ArrayList;
+import libmansys.libItem.LibItem;
+
 import java.util.List;
 
 public class LibUser {
@@ -21,11 +22,11 @@ public class LibUser {
     //Attributes
     private String name;
     private String id;
-    private List<Item> listOfBorrowedAssets;
+    private List<LibItem> listOfBorrowedAssets;
 
 
     //Constructor
-    public LibUser(String name, String id, List<Item> listOfBorrowedAssets) {
+    public LibUser(String name, String id, List<LibItem> listOfBorrowedAssets) {
         this.name = name;
         this.id = id;
         this.listOfBorrowedAssets = listOfBorrowedAssets;
@@ -40,7 +41,7 @@ public class LibUser {
         return id;
     }
 
-    public List<Item> getListOfBorrowedAssets() {
+    public List<LibItem> getListOfBorrowedAssets() {
         return listOfBorrowedAssets;
     }
 
@@ -52,17 +53,17 @@ public class LibUser {
         this.id = id;
     }
 
-    public void setListOfBorrowedAssets(List<Item> listOfBorrowedAssets) {
+    public void setListOfBorrowedAssets(List<LibItem> listOfBorrowedAssets) {
         this.listOfBorrowedAssets = listOfBorrowedAssets;
     }
 
     //Borrowing functionality
-    public void borrowItem(Item item) {
+    public void borrowItem(LibItem item) {
         // Implementation
     }
 
     //Return an item
-    public void returnItem(Item item) {
+    public void returnItem(LibItem item) {
         // Implementation
     }
 
@@ -72,36 +73,18 @@ public class LibUser {
     }
 
     //Check if an item is borrowed
-    public boolean hasBorrowed(Item item) {
+    public boolean hasBorrowed(LibItem item) {
         // Implementation
         return false;
     }
 
-    @Override
-    public String toString() {
-        return "libmansys.LibUser{" +
-                "name='" + name + '\'' +
-                ", id='" + id + '\'' +
-                ", listOfBorrowedAssets=" + listOfBorrowedAssets +
-                '}';
+    public void printUserDetails() {
+        System.out.println("libmansys.LibUser{" +
+                "name='" + this.getName() + '\'' +
+                ", id='" + this.getId());
+        System.out.println("\nList of borrowed assets\n");
+        for (var item: this.getListOfBorrowedAssets()) {
+            item.printItemDetails();
+        }
     }
 }
-
-class Item {
-    String itemName;
-    String itemType;
-
-    public Item(String itemName, String itemType) {
-        this.itemName = itemName;
-        this.itemType = itemType;
-    }
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "itemName='" + itemName + '\'' +
-                ", itemType='" + itemType + '\'' +
-                '}';
-    }
-}
-
