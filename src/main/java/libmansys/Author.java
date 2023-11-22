@@ -17,19 +17,19 @@ public class Author
         if (AuthorName.length() < 2 || AuthorName.length() > 30)
             throw new AuthorException("\n\tAuthor name should be between 2 and 30 characters");
         else
-            this.AuthorName = AuthorName;
+            this.authorName = AuthorName;
         this.authoredItems = authoredItems;
     }
 
     public String getAuthorName() {
-        return AuthorName;
+        return authorName;
     }
 
     public void setAuthorName(String authorName) throws AuthorException {
-        if (AuthorName.length() < 2 || AuthorName.length() > 30)
+        if (authorName.length() < 2 || authorName.length() > 30)
             throw new AuthorException("\n\tAuthor name should be between 2 and 30 characters");
         else
-            this.AuthorName = AuthorName;
+            this.authorName = authorName;
     }
 
     public ArrayList<LibItem> getAuthoredItems() {
