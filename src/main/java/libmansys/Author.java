@@ -14,10 +14,10 @@ public class Author
     }
 
     public Author(String AuthorName, ArrayList<LibItem> authoredItems) throws AuthorException {
-        if (AuthorName.length() < 2 || AuthorName.length() > 30)
+        if (authorName.length() < 2 || authorName.length() > 30)
             throw new AuthorException("\n\tAuthor name should be between 2 and 30 characters");
         else
-            this.authorName = AuthorName;
+            this.authorName = authorName;
         this.authoredItems = authoredItems;
     }
 
