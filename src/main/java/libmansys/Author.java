@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Author
 {
-    private String AuthorName;
+    private String authorName;
     private ArrayList<LibItem> authoredItems;
 
     public Author() {
