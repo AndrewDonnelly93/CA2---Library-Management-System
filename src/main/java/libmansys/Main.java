@@ -4,7 +4,14 @@ import libmansys.libItem.Book;
 import libmansys.libItem.LibItem;
 import libmansys.libItem.Media;
 import libmansys.libItem.Thesis;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
 import java.text.SimpleDateFormat;
@@ -13,7 +20,7 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) throws ParseException, IOException {
 
         //Inits for testing
         Book book1 = new Book(
@@ -57,5 +64,17 @@ public class Main {
         LibUser libUser = new LibUser("Alice John","12345", listOfBorrowedAssets);
 
         libUser.printUserDetails();
+
+        String documentsPath = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/books.csv";
+        // Read the file
+        CSVParser csvParser = CSVParser.parse(
+                new File(documentsPath),
+                Charset.defaultCharset(),
+                CSVFormat.DEFAULT.withHeader("Author", "Title")
+        );
+
+        csvParser.forEach(csvRecord -> {
+            System.out.println(csvRecord.toMap());
+        });
     }
 }
