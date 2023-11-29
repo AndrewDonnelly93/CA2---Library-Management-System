@@ -1,5 +1,6 @@
 package libmansys.libItem;
 
+import java.io.StringWriter;
 import java.time.Duration;
 
 // Represents CDs/DVDs
@@ -16,7 +17,7 @@ public class Media extends LibItem {
             Duration playtime,
             String id
     ) {
-        super(title, availabilityStatus, id, new StringBuilder().append("Title,Availability Status,Producer,Director,Duration,ID\n"));
+        super(title, availabilityStatus, id, new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n"));
         this.producer = producer;
         this.director = director;
         this.playtime = playtime;
@@ -52,8 +53,8 @@ public class Media extends LibItem {
         d = d.minusMinutes(minutes);
         long seconds = d.getSeconds() ;
         return
-                (days ==  0?"":days+" days,")+
-                        (hours == 0?"":hours+" hours, ")+
+                (days ==  0?"":days+" days ")+
+                        (hours == 0?"":hours+" hours ")+
                         (minutes ==  0?"":minutes+" minutes")+
                         (seconds == 0?"":seconds+", seconds");
     }
@@ -81,14 +82,14 @@ public class Media extends LibItem {
     }
 
     @Override
-    public StringBuilder printItemToCSV() {
+    public String printItemToCSV() {
         StringBuilder media = new StringBuilder();
-        media.append(this.getTitle()).append(",");
-        media.append(this.getAvailabilityStatus()).append(",");
-        media.append(this.getProducer()).append(",");
-        media.append(this.getDirector()).append(",");
-        media.append(this.formatDuration(this.getPlaytime())).append(",");
+        media.append(this.getTitle()).append("¬");
+        media.append(this.getAvailabilityStatus()).append("¬");
+        media.append(this.getProducer()).append("¬");
+        media.append(this.getDirector()).append("¬");
+        media.append(this.formatDuration(this.getPlaytime())).append("¬");
         media.append(this.getId()).append("\n");
-        return media;
+        return media.toString();
     }
 }

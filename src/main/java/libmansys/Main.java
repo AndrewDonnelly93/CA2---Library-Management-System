@@ -10,6 +10,7 @@ import org.apache.commons.csv.CSVParser;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.time.Duration;
@@ -40,13 +41,13 @@ public class Main {
         "83eb02f9-e1c4-4498-adce-cbe8911d4011");
         Thesis thesis1 = new Thesis("Zirconia ceramics", true, "Jack Russell",
                 "Heating process which can sinter yttria zirconia ceramics",
-                "This research developed a hybrid heating process which can sinter yttria\n" +
-                        "zirconia ceramics to nearly 100% of their theoretical density in a short time.\n" +
-                        "Following optimisation of the process, a detailed comparison of the\n" +
-                        "properties and microstructures of conventionally sintered and microwave\n" +
-                        "sintered samples of 3 mol% and 8 mol% yttria zirconia was performed.\n" +
-                        "Identical thermal profiles were used for both types of heating. For both\n" +
-                        "materials, microwave heating was found to enhance the densification\n" +
+                "This research developed a hybrid heating process which can sinter yttria" +
+                        "zirconia ceramics to nearly 100% of their theoretical density in a short time." +
+                        "Following optimisation of the process, a detailed comparison of the" +
+                        "properties and microstructures of conventionally sintered and microwave" +
+                        "sintered samples of 3 mol% and 8 mol% yttria zirconia was performed." +
+                        "Identical thermal profiles were used for both types of heating. For both" +
+                        "materials, microwave heating was found to enhance the densification" +
                         "processes which occur during constant rate heating.",
                 new SimpleDateFormat("dd/MM/yyyy").parse("14/05/2023"),
                 "17013fa6-1d7a-45f8-ae4c-292fbeb2b6db");
@@ -76,18 +77,33 @@ public class Main {
             System.out.println(csvRecord.toMap());
         });
 
-        String book1CsvHeader = book1.getCsvHeader();
-        ArrayList<StringBuilder> book1CsvRecord = new ArrayList<>();
-        book1CsvRecord.add(book1.printItemToCSV());
-        String csvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/books.csv";
-        CsvHandler csvHandler = new CsvHandler(csvFile, false, book1CsvHeader, book1CsvRecord);
-        csvHandler.writeToFile();
+        ArrayList<String> booksCsvRecords = new ArrayList<>();
+        ArrayList<String> mediaCsvRecords = new ArrayList<>();
+        ArrayList<String> thesesCsvRecords = new ArrayList<>();
+        // Exporting the list of borrowed assets into CSV files
+        for (var item: listOfBorrowedAssets) {
+            if (item instanceof Book) {
+                booksCsvRecords.add(item.printItemToCSV());
+            } else if (item instanceof Media) {
+                mediaCsvRecords.add(item.printItemToCSV());
+            } else if (item instanceof Thesis) {
+                thesesCsvRecords.add(item.printItemToCSV());
+            }
+        }
 
-        String media1CsvHeader = cd1.getCsvHeader();
-        ArrayList<StringBuilder> media1CsvRecord = new ArrayList<>();
-        book1CsvRecord.add(book1.printItemToCSV());
-        String csvFileMedia = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/media.csv";
-        CsvHandler csvHandlerMedia = new CsvHandler(csvFileMedia, false, media1CsvHeader, media1CsvRecord);
+        StringWriter book1CsvHeader = book1.getCsvHeader();
+        String booksCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/books.csv";
+        CsvHandler booksCsvHandler = new CsvHandler(booksCsvFile, book1CsvHeader, booksCsvRecords);
+        booksCsvHandler.writeToFile();
+
+        StringWriter media1CsvHeader = cd1.getCsvHeader();
+        String mediaCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/media.csv";
+        CsvHandler csvHandlerMedia = new CsvHandler(mediaCsvFile, media1CsvHeader, mediaCsvRecords);
         csvHandlerMedia.writeToFile();
+
+        StringWriter thesis1CsvHeader = thesis1.getCsvHeader();
+        String thesesCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/theses.csv";
+        CsvHandler csvHandlerTheses = new CsvHandler(thesesCsvFile, thesis1CsvHeader, thesesCsvRecords);
+        csvHandlerTheses.writeToFile();
     }
 }
