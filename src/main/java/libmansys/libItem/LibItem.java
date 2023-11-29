@@ -6,12 +6,22 @@ public abstract class LibItem {
 
     protected LibItemType itemType;
     protected String id;
+    protected StringBuilder csvHeader;
 
-    public LibItem(String title, boolean availabilityStatus, String id) {
+    public LibItem(String title, boolean availabilityStatus, String id, StringBuilder csvHeader) {
         this.id = id;
         this.title = title;
         this.availabilityStatus = availabilityStatus;
         this.itemType = LibItemType.LIB_ITEM;
+        this.csvHeader = csvHeader;
+    }
+
+    public String getCsvHeader() {
+        return csvHeader.toString();
+    }
+
+    public void setCsvHeader(StringBuilder csvHeader) {
+        this.csvHeader = csvHeader;
     }
 
     public String getTitle() {
@@ -30,8 +40,13 @@ public abstract class LibItem {
         this.availabilityStatus = availabilityStatus;
     }
 
+    public String getId() {
+        return id;
+    }
     public abstract void borrowItem();
     public abstract void returnItem();
 
     public abstract void printItemDetails();
+
+    public abstract StringBuilder printItemToCSV();
 }
