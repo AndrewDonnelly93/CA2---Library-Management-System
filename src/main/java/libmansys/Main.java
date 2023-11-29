@@ -1,5 +1,6 @@
 package libmansys;
 
+import libmansys.csv.CsvHandler;
 import libmansys.libItem.Book;
 import libmansys.libItem.LibItem;
 import libmansys.libItem.Media;
@@ -10,8 +11,6 @@ import org.apache.commons.csv.CSVParser;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
 import java.text.SimpleDateFormat;
@@ -76,5 +75,19 @@ public class Main {
         csvParser.forEach(csvRecord -> {
             System.out.println(csvRecord.toMap());
         });
+
+        String book1CsvHeader = book1.getCsvHeader();
+        ArrayList<StringBuilder> book1CsvRecord = new ArrayList<>();
+        book1CsvRecord.add(book1.printItemToCSV());
+        String csvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/books.csv";
+        CsvHandler csvHandler = new CsvHandler(csvFile, false, book1CsvHeader, book1CsvRecord);
+        csvHandler.writeToFile();
+
+        String media1CsvHeader = cd1.getCsvHeader();
+        ArrayList<StringBuilder> media1CsvRecord = new ArrayList<>();
+        book1CsvRecord.add(book1.printItemToCSV());
+        String csvFileMedia = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/media.csv";
+        CsvHandler csvHandlerMedia = new CsvHandler(csvFileMedia, false, media1CsvHeader, media1CsvRecord);
+        csvHandlerMedia.writeToFile();
     }
 }

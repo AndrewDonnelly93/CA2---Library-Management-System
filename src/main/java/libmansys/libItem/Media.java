@@ -16,7 +16,7 @@ public class Media extends LibItem {
             Duration playtime,
             String id
     ) {
-        super(title, availabilityStatus, id);
+        super(title, availabilityStatus, id, new StringBuilder().append("Title,Availability Status,Producer,Director,Duration,ID\n"));
         this.producer = producer;
         this.director = director;
         this.playtime = playtime;
@@ -78,5 +78,17 @@ public class Media extends LibItem {
         System.out.println("Item type: Media Title: " + this.getTitle()
                 + " Producer: " + this.getProducer() + " Director: " + this.getDirector() +
                 " Duration: " + this.formatDuration(this.getPlaytime()));
+    }
+
+    @Override
+    public StringBuilder printItemToCSV() {
+        StringBuilder media = new StringBuilder();
+        media.append(this.getTitle()).append(",");
+        media.append(this.getAvailabilityStatus()).append(",");
+        media.append(this.getProducer()).append(",");
+        media.append(this.getDirector()).append(",");
+        media.append(this.formatDuration(this.getPlaytime())).append(",");
+        media.append(this.getId()).append("\n");
+        return media;
     }
 }
