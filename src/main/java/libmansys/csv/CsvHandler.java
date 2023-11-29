@@ -52,7 +52,5 @@ public class CsvHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    ;
+    };
 }

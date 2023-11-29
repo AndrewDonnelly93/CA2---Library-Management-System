@@ -85,7 +85,7 @@ public class Main {
 
         String media1CsvHeader = cd1.getCsvHeader();
         ArrayList<StringBuilder> media1CsvRecord = new ArrayList<>();
-        book1CsvRecord.add(book1.printItemToCSV());
+        media1CsvRecord.add(cd1.printItemToCSV());
         String csvFileMedia = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/media.csv";
         CsvHandler csvHandlerMedia = new CsvHandler(csvFileMedia, false, media1CsvHeader, media1CsvRecord);
         csvHandlerMedia.writeToFile();
