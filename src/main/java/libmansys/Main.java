@@ -59,7 +59,22 @@ public class Main {
         listOfBorrowedAssets.add(cd1);
         listOfBorrowedAssets.add(dvd1);
         listOfBorrowedAssets.add(thesis1);
+        try {
+            List<Author> authorList = new ArrayList<Author>();
+            authorList.add(new Author("Andrew", listOfBorrowedAssets));
+            authorList.add(new Author("Grace", listOfBorrowedAssets));
+            authorList.add(new Author("Leo", listOfBorrowedAssets));
 
+            Author myAuthor = Search.LinearSearchString(authorList, "Leo", "authorName");
+            myAuthor.PrintAuthorDetails();
+
+        }
+        catch (AuthorException e){
+            System.out.println(e);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+/*
         LibUser libUser = new LibUser("Alice John","12345", listOfBorrowedAssets);
 
         libUser.printUserDetails();
@@ -88,6 +103,6 @@ public class Main {
         book1CsvRecord.add(book1.printItemToCSV());
         String csvFileMedia = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/media.csv";
         CsvHandler csvHandlerMedia = new CsvHandler(csvFileMedia, false, media1CsvHeader, media1CsvRecord);
-        csvHandlerMedia.writeToFile();
+        csvHandlerMedia.writeToFile();*/
     }
 }

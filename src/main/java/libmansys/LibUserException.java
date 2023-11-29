@@ -1,13 +1,13 @@
 package libmansys;
 
-public class AuthorException extends Exception
+public class LibUserException extends Exception
 {
     private String message;
-    public AuthorException() {
-        message = "\n\tThere is an error in Author Class";
+    public LibUserException() {
+        message = "\n\tThere is an error in LibUser Class";
     }
 
-    public AuthorException (String message) {
+    public LibUserException (String message) {
         this.message = message;
     }
 
@@ -15,5 +15,4 @@ public class AuthorException extends Exception
     public String toString() {
         return "\n\t Exception: " + message;
     }
-
 }
