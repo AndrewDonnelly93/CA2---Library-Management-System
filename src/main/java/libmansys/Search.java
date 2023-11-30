@@ -8,7 +8,7 @@ public class Search
     public Search() {
     }
 
-    public static <Object> Object LinearSearchByStringAttribute(List<Object> list, String value, String attributeName) throws NoSuchFieldException, IllegalAccessException {
+    public static <Object> Object linearSearchByStringAttribute(List<Object> list, String value, String attributeName) throws NoSuchFieldException, IllegalAccessException {
     for (Object o : list) {
         Field privateField = o.getClass().getDeclaredField(attributeName);
         privateField.setAccessible(true);
@@ -18,5 +18,4 @@ public class Search
     }
         return null;
     }
-
 }
