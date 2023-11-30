@@ -15,7 +15,7 @@ public class Media extends LibItem {
             String director,
             Duration playtime,
             String id
-    ) throws LibItemException {
+    ) {
         super(title, availabilityStatus, id, new StringBuilder().append("Title,Availability Status,Producer,Director,Duration,ID\n"));
         this.producer = producer;
         this.director = director;

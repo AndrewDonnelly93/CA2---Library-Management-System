@@ -1,7 +1,5 @@
 package libmansys.libItem;
 
-import libmansys.LibUserException;
-
 public abstract class LibItem {
     protected String title;
     protected boolean availabilityStatus;
@@ -10,11 +8,8 @@ public abstract class LibItem {
     protected String id;
     protected StringBuilder csvHeader;
 
-    public LibItem(String title, boolean availabilityStatus, String id, StringBuilder csvHeader) throws LibItemException {
-        if (id.isEmpty() || id.length() > 50)
-            throw new LibItemException("\n\tItem ID should be between 1 and 50 characters");
-        else
-            this.id = id;
+    public LibItem(String title, boolean availabilityStatus, String id, StringBuilder csvHeader) {
+        this.id = id;
         this.title = title;
         this.availabilityStatus = availabilityStatus;
         this.itemType = LibItemType.LIB_ITEM;
@@ -48,22 +43,6 @@ public abstract class LibItem {
     public String getId() {
         return id;
     }
-
-    public void setId(String id) throws LibItemException{
-        if (id.isEmpty() || id.length() > 50)
-            throw new LibItemException("\n\tItem ID should be between 1 and 50 characters");
-        else
-            this.id = id;
-    }
-
-    public LibItemType getItemType() {
-        return itemType;
-    }
-
-    public void setItemType(LibItemType itemType) {
-        this.itemType = itemType;
-    }
-
     public abstract void borrowItem();
     public abstract void returnItem();
 

@@ -18,7 +18,7 @@ public class Thesis extends LibItem {
             String abstractSummary,
             Date datePublished,
             String id
-    ) throws LibItemException {
+    ) {
         super(title, availabilityStatus, id, new StringBuilder().append("Title,Availability Status,Topic,Abstract,Date Published,ID\n"));
         this.author = author;
         this.topic = topic;
