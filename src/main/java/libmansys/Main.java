@@ -67,22 +67,11 @@ public class Main {
 
         libUser.printUserDetails();
 
-        String documentsPath = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/books.csv";
-        // Read the file 
-        CSVParser csvParser = CSVParser.parse(
-                new File(documentsPath),
-                Charset.defaultCharset(),
-                CSVFormat.DEFAULT.withHeader("Author", "Title")
-        );
-
-        csvParser.forEach(csvRecord -> {
-            System.out.println(csvRecord.toMap());
-        });
-
+        // Exporting the list of borrowed assets into CSV files
         ArrayList<String> booksCsvRecords = new ArrayList<>();
         ArrayList<String> mediaCsvRecords = new ArrayList<>();
         ArrayList<String> thesesCsvRecords = new ArrayList<>();
-        // Exporting the list of borrowed assets into CSV files
+
         for (var item : listOfBorrowedAssets) {
             if (item instanceof Book) {
                 booksCsvRecords.add(item.printItemToCSV());
@@ -93,22 +82,27 @@ public class Main {
             }
         }
 
-        StringWriter book1CsvHeader = book1.getCsvHeader();
+        StringWriter booksCsvHeader = new StringWriter().append("Title,Availability,Author,ISBN,ID,\n");
         String booksCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/books.csv";
-        CsvHandler booksCsvHandler = new CsvHandler(booksCsvFile, book1CsvHeader, booksCsvRecords);
-        booksCsvHandler.writeToFile();
+        CsvHandler csvHandlerBooks = new CsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords);
+        csvHandlerBooks.writeToFile();
 
-        StringWriter media1CsvHeader = cd1.getCsvHeader();
+        StringWriter mediaCsvHeader = new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n");
         String mediaCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/media.csv";
-        CsvHandler csvHandlerMedia = new CsvHandler(mediaCsvFile, media1CsvHeader, mediaCsvRecords);
+        CsvHandler csvHandlerMedia = new CsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords);
         csvHandlerMedia.writeToFile();
 
-        StringWriter thesis1CsvHeader = thesis1.getCsvHeader();
+        StringWriter thesesCsvHeader = new StringWriter().append("Title,Availability,Topic,DatePublished,ID");
         String thesesCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/theses.csv";
-        CsvHandler csvHandlerTheses = new CsvHandler(thesesCsvFile, thesis1CsvHeader, thesesCsvRecords);
+        CsvHandler csvHandlerTheses = new CsvHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords);
         csvHandlerTheses.writeToFile();
 
-
+        // Reading newly generated CSV files
+        System.out.println("\nFiles generated:");
+        csvHandlerBooks.parseCsvFile(booksCsvFile,  "Books");
+        csvHandlerMedia.parseCsvFile(mediaCsvFile, "Media");
+        csvHandlerTheses.parseCsvFile(thesesCsvFile, "Theses");
+        System.out.println("\n");
         //USER MENU
 
         //Main menu loop

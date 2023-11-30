@@ -17,7 +17,7 @@ public class Media extends LibItem {
             Duration playtime,
             String id
     ) {
-        super(title, availabilityStatus, id, new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n"));
+        super(title, availabilityStatus, id);
         this.producer = producer;
         this.director = director;
         this.playtime = playtime;

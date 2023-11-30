@@ -8,7 +8,7 @@ public class Book extends LibItem {
     private String ISBN;
 
     public Book(String title, boolean availabilityStatus, String author, String ISBN, String id) {
-        super(title, availabilityStatus, id, new StringWriter().append("Title,Availability,Author,ISBN,ID,\n"));
+        super(title, availabilityStatus, id);
         this.itemType = LibItemType.BOOK;
         this.author = author;
         this.ISBN = ISBN;
@@ -59,4 +59,8 @@ public class Book extends LibItem {
         return book.toString();
     }
 
+//    @Override
+//    public void printCsvRecord() {
+//
+//    }
 }

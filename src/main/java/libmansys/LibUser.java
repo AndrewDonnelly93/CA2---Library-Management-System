@@ -81,7 +81,7 @@ public class LibUser {
     public void printUserDetails() {
         System.out.println("libmansys.LibUser{" +
                 "name='" + this.getName() + '\'' +
-                ", id='" + this.getId());
+                ", id='" + this.getId()+"}");
         System.out.println("\nList of borrowed assets\n");
         for (var item: this.getListOfBorrowedAssets()) {
             item.printItemDetails();

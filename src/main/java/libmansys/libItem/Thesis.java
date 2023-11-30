@@ -20,7 +20,7 @@ public class Thesis extends LibItem {
             Date datePublished,
             String id
     ) {
-        super(title, availabilityStatus, id, new StringWriter().append("Title,Availability,Topic,DatePublished,ID"));
+        super(title, availabilityStatus, id);
         this.author = author;
         this.topic = topic;
         this.abstractSummary = abstractSummary;

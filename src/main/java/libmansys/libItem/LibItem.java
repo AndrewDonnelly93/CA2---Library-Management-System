@@ -7,24 +7,13 @@ public abstract class LibItem {
     protected boolean availabilityStatus;
     protected LibItemType itemType;
     protected String id;
-    protected StringWriter csvHeader;
 
-    public LibItem(String title, boolean availabilityStatus, String id, StringWriter csvHeader) {
+    public LibItem(String title, boolean availabilityStatus, String id) {
         this.id = id;
         this.title = title;
         this.availabilityStatus = availabilityStatus;
         this.itemType = LibItemType.LIB_ITEM;
-        this.csvHeader = csvHeader;
     }
-
-    public StringWriter getCsvHeader() {
-        return csvHeader;
-    }
-
-    public void setCsvHeader(StringWriter csvHeader) {
-        this.csvHeader = csvHeader;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -50,4 +39,6 @@ public abstract class LibItem {
     public abstract void printItemDetails();
 
     public abstract String printItemToCSV();
+
+   // public abstract void printCsvRecord();
 }
