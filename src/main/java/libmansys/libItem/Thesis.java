@@ -19,7 +19,7 @@ public class Thesis extends LibItem {
             Date datePublished,
             String id
     ) {
-        super(title, availabilityStatus, id, new StringBuilder().append("Title,Availability Status,Topic,Abstract,Date Published,ID\n"));
+        super(title, availabilityStatus, id);
         this.author = author;
         this.topic = topic;
         this.abstractSummary = abstractSummary;
@@ -77,10 +77,5 @@ public class Thesis extends LibItem {
                 " Date published: " + new SimpleDateFormat("dd-MM-yyyy").format(this.getDatePublished()));
         System.out.println("\nAbstract:");
         System.out.println(this.getAbstractSummary());
-    }
-
-    @Override
-    public StringBuilder printItemToCSV() {
-        return null;
     }
 }

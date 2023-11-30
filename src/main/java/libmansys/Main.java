@@ -9,6 +9,8 @@ import libmansys.libItem.Thesis;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
 import java.text.SimpleDateFormat;
@@ -74,49 +76,43 @@ public class Main {
         libUser.printUserDetails();
 
         // Exporting the list of borrowed assets into CSV files
-        ArrayList<String> booksCsvRecords = new ArrayList<>();
-        ArrayList<String> mediaCsvRecords = new ArrayList<>();
-        ArrayList<String> thesesCsvRecords = new ArrayList<>();
+        ArrayList<LibItem> booksCsvRecords = new ArrayList<>();
+        ArrayList<LibItem> mediaCsvRecords = new ArrayList<>();
+        ArrayList<LibItem> thesesCsvRecords = new ArrayList<>();
         for (var item : listOfBorrowedAssets) {
             if (item instanceof Book) {
-                System.out.println(item.printItemToCSV().toString());
-                booksCsvRecords.add(item.printItemToCSV().toString());
+                booksCsvRecords.add(item);
             } else if (item instanceof Media) {
-                System.out.println(item.printItemToCSV().toString());
-                mediaCsvRecords.add(item.printItemToCSV().toString());
+                mediaCsvRecords.add(item);
             } else if (item instanceof Thesis) {
-                System.out.println(item.printItemToCSV().toString());
-                thesesCsvRecords.add(item.printItemToCSV().toString());
+                thesesCsvRecords.add(item);
             }
         }
-        System.out.println(booksCsvRecords);
-        System.out.println(mediaCsvRecords);
-        System.out.println(thesesCsvRecords);
 
         StringWriter booksCsvHeader = new StringWriter().append("Title,Availability,Author,ISBN,ID,\n");
-        String booksCsvFile = "/Users/gracewilliams/IdeaProjects/new/src/test/csv/books.csv";
-        LibItemCsvHandler csvHandlerBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords);
+        String booksCsvFile = getFullPathFromRelative("src/test/csv/books.csv");
+        LibItemCsvHandler csvHandlerBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords, "Books");
         csvHandlerBooks.writeToFile();
 
         StringWriter mediaCsvHeader = new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n");
-        String mediaCsvFile = "/Users/gracewilliams/IdeaProjects/new/src/test/csv/media.csv";
-        LibItemCsvHandler csvHandlerMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords);
+        String mediaCsvFile = "src/test/csv/media.csv";
+        LibItemCsvHandler csvHandlerMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords, "Media");
         csvHandlerMedia.writeToFile();
 
         StringWriter thesesCsvHeader = new StringWriter().append("Title,Availability,Topic,DatePublished,ID");
-        String thesesCsvFile = "/Users/gracewilliams/IdeaProjects/new/src/test/csv/theses.csv";
-        LibItemCsvHandler csvHandlerTheses = new LibItemCsvHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords);
+        String thesesCsvFile = getFullPathFromRelative("src/test/csv/theses.csv");
+        LibItemCsvHandler csvHandlerTheses = new LibItemCsvHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords, "Theses");
         csvHandlerTheses.writeToFile();
 
         // Reading newly generated CSV files
         System.out.println("\nFiles generated:");
-        csvHandlerBooks.parseCsvFile(booksCsvFile, "Books");
+        csvHandlerBooks.parseCsvFile(booksCsvFile,  "Books");
         csvHandlerMedia.parseCsvFile(mediaCsvFile, "Media");
         csvHandlerTheses.parseCsvFile(thesesCsvFile, "Theses");
         System.out.println("\n");
 
         // Printing the list of library users to a CSV file
-        String usersCsvFile = "/Users/gracewilliams/IdeaProjects/new/src/test/csv/users.csv";
+        String usersCsvFile = getFullPathFromRelative("src/test/csv/users.csv");
         ArrayList<LibUser> usersList = new ArrayList<>();
         usersList.add(libUser);
         usersList.add(libUser2);
@@ -160,6 +156,11 @@ public class Main {
                     System.out.println("Invalid option. Please try again.");
             }
         }
+    }
+
+    public static String getFullPathFromRelative (String relativePath) {
+        Path fullPath = Paths.get(relativePath);
+        return fullPath.toString();
     }
 
     //SORT TEST
