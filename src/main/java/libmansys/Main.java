@@ -27,7 +27,7 @@ public class Main {
         //Inits for testing
         Book book1 = new Book(
                 "The Little Prince", true,
-                "Antoine de Saint-Exupéry", " 978-0156012195","6c60ac1f-a82d-4c99-8590-8e19099d3b04"
+                "Antoine de Saint-Exupéry", " 978-0156012195", "6c60ac1f-a82d-4c99-8590-8e19099d3b04"
         );
         Book book2 = new Book(
                 "Harry Potter and the Chamber of Secrets", false,
@@ -38,9 +38,9 @@ public class Main {
                 "Kate Le Bon", Duration.ofHours(1).plusMinutes(30),
                 "e37db276-a850-477f-9737-91e47ef83a84");
         Media dvd1 = new Media("Home Alone", false,
-        "John Hughes", "Chris Columbus",
-        Duration.ofHours(1).plusMinutes(43),
-        "83eb02f9-e1c4-4498-adce-cbe8911d4011");
+                "John Hughes", "Chris Columbus",
+                Duration.ofHours(1).plusMinutes(43),
+                "83eb02f9-e1c4-4498-adce-cbe8911d4011");
         Thesis thesis1 = new Thesis("Zirconia ceramics", true, "Jack Russell",
                 "Heating process which can sinter yttria zirconia ceramics",
                 "This research developed a hybrid heating process which can sinter yttria" +
@@ -63,7 +63,7 @@ public class Main {
         listOfBorrowedAssets.add(dvd1);
         listOfBorrowedAssets.add(thesis1);
 
-        LibUser libUser = new LibUser("Alice John","12345", listOfBorrowedAssets);
+        LibUser libUser = new LibUser("Alice John", "12345", listOfBorrowedAssets);
 
         libUser.printUserDetails();
 
@@ -83,7 +83,7 @@ public class Main {
         ArrayList<String> mediaCsvRecords = new ArrayList<>();
         ArrayList<String> thesesCsvRecords = new ArrayList<>();
         // Exporting the list of borrowed assets into CSV files
-        for (var item: listOfBorrowedAssets) {
+        for (var item : listOfBorrowedAssets) {
             if (item instanceof Book) {
                 booksCsvRecords.add(item.printItemToCSV());
             } else if (item instanceof Media) {
@@ -107,8 +107,6 @@ public class Main {
         String thesesCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/theses.csv";
         CsvHandler csvHandlerTheses = new CsvHandler(thesesCsvFile, thesis1CsvHeader, thesesCsvRecords);
         csvHandlerTheses.writeToFile();
-    }
-}
 
 
         //USER MENU
@@ -128,7 +126,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    handleUSers();
+                    handleUsers();
                     break;
                 case 2:
                     handleCatalogue();
@@ -145,170 +143,169 @@ public class Main {
         }
     }
 
-        //Methods for handling different services (Exam, Student, Exam Results)
-        //Each method contains a submenu for specific actions related to that service
-        private static void handleUsers() {
-            System.out.println("Manage Users:");
-            System.out.println("1. Export list of all users");
-            System.out.println("2. Search for user");
-            System.out.println("3. Add user");
-            System.out.println("4. Back to Main Menu");
+    //Methods for handling different services (Exam, Student, Exam Results)
+    //Each method contains a submenu for specific actions related to that service
+    private static void handleUsers() {
+        System.out.println("Manage Users:");
+        System.out.println("1. Export list of all users");
+        System.out.println("2. Search for user");
+        System.out.println("3. Add user");
+        System.out.println("4. Back to Main Menu");
 
-            String choice = scanner.nextLine();
+        String choice = scanner.nextLine();
 
-            switch (choice) {
-                case "1":
-                    //TODO csvExport(libUserService);
-                    break;
-                case "2":
-                    //TODO searchLibUser();
-                    break;
-                case "3":
-                    //TODO addUser();
-                    break;
-                case 4:
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
-            }
+        switch (choice) {
+            case "1":
+                //TODO csvExport(libUserService);
+                break;
+            case "2":
+                //TODO searchLibUser();
+                break;
+            case "3":
+                //TODO addUser();
+                break;
+            case "4":
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
         }
+    }
 
-        private static void handleCatalogue() {
-            System.out.println("Manage Catalogue:");
-            System.out.println("1. Update Catalogue");
-            System.out.println("2. View Catalogue");
-            System.out.println("3. Back to Main Menu");
+    private static void handleCatalogue () {
+        System.out.println("Manage Catalogue:");
+        System.out.println("1. Update Catalogue");
+        System.out.println("2. View Catalogue");
+        System.out.println("3. Back to Main Menu");
 
-            String choice = scanner.nextLine();
+        String choice = scanner.nextLine();
 
-            switch (choice) {
-                case "1":
-                    updateCatalogue();
-                    break;
-                case "2":
-                    viewCatalogue();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
-            }
+        switch (choice) {
+            case "1":
+                updateCatalogue();
+                break;
+            case "2":
+                viewCatalogue();
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
         }
+    }
 
-        private static void updateCatalogue() {
-            System.out.println("Update Catalogue:");
-            System.out.println("1. Update Author");
-            System.out.println("2. Update LibItem");
+    private static void updateCatalogue () {
+        System.out.println("Update Catalogue:");
+        System.out.println("1. Update Author");
+        System.out.println("2. Update LibItem");
 
-            String choice = scanner.nextLine();
+        String choice = scanner.nextLine();
 
-            switch (choice) {
-                case "1":
-                    updateAuthor();
-                    break;
-                case "2":
-                    updateLibItem();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
-            }
+        switch (choice) {
+            case "1":
+                updateAuthor();
+                break;
+            case "2":
+                updateLibItem();
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
         }
+    }
 
-        private static void viewCatalogue() {
-            System.out.println("View Catalogue:");
-            System.out.println("1. View Authors");
-            System.out.println("2. View Library Items");
+    private static void viewCatalogue () {
+        System.out.println("View Catalogue:");
+        System.out.println("1. View Authors");
+        System.out.println("2. View Library Items");
 
-            String choice = scanner.nextLine();
+        String choice = scanner.nextLine();
 
-            switch (choice) {
-                case "1":
-                    viewAuthors();
-                    break;
-                case "2":
-                    viewLibItems();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
-            }
+        switch (choice) {
+            case "1":
+                viewAuthors();
+                break;
+            case "2":
+                viewLibItems();
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
         }
+    }
 
-        private static void updateAuthor() {
-            // TODO Code to update an author
+    private static void updateAuthor () {
+        // TODO Code to update an author
+    }
+
+
+    private static void updateLibItem () {
+        // TODO Code to update a library item
+    }
+
+    private static void viewAuthors () {
+        System.out.println("Author Catalogue:");
+        System.out.println("1. Export list of all Authors (Note: Valid for Books and Theses only)");
+        System.out.println("2. Search for an Author");
+
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                //TODO authorExport();
+                break;
+            case "2":
+                //TODO searchAuthor();
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
         }
-        
+    }
 
-        private static void updateLibItem() {
-            // TODO Code to update a library item
+    private static void viewLibItems () {
+        System.out.println("Library Catalogue:");
+        System.out.println("1. Export list of all items (includes books, theses and media)");
+        System.out.println("2. Export list of available items only");
+        System.out.println("3. Search for an item");
+
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                //TODO allItemsExport();
+                break;
+            case "2":
+                //TODO availItemsExport();
+                break;
+            case "3":
+                //TODO searchItems();
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
         }
+    }
 
-        private static void viewAuthors() {
-            System.out.println("Author Catalogue:");
-            System.out.println("1. Export list of all Authors (Note: Valid for Books and Theses only)");
-            System.out.println("2. Search for an Author");
+    private static void handleLoans () {
+        System.out.println("Loan System:");
+        System.out.println("a. Borrow Book");
+        System.out.println("b. Return Book");
+        System.out.println("c. Back to Main Menu");
 
-            String choice = scanner.nextLine();
+        String choice = scanner.nextLine();
 
-            switch (choice) {
-                case "1":
-                    //TODO authorExport();
-                    break;
-                case "2":
-                    //TODO searchAuthor();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
-            }
+        switch (choice) {
+            case "a":
+                //TODO borrowBook();
+                break;
+            case "b":
+                //TODO returnBook();
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
         }
-
-        private static void viewLibItems() {
-                System.out.println("Library Catalogue:");
-                System.out.println("1. Export list of all items (includes books, theses and media)");
-                System.out.println("2. Export list of available items only");
-                System.out.println("3. Search for an item");
-
-                String choice = scanner.nextLine();
-
-                switch (choice) {
-                    case "1":
-                        //TODO allItemsExport();
-                        break;
-                    case "2":
-                        //TODO availItemsExport();
-                        break;
-                    case "3":
-                        //TODO searchItems();
-                        break;
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
-                        break;
-                }
-            }
-
-                private static void handleLoans () {
-                    System.out.println("Loan System:");
-                    System.out.println("a. Borrow Book");
-                    System.out.println("b. Return Book");
-                    System.out.println("c. Back to Main Menu");
-
-                    String choice = scanner.nextLine();
-
-                    switch (choice) {
-                        case "a":
-                            //TODO borrowBook();
-                            break;
-                        case "b":
-                            //TODO returnBook();
-                            break;
-                        default:
-                            System.out.println("Invalid choice. Please try again.");
-                            break;
-                    }
-                }
-            }
-
+    }
+}
 
 
