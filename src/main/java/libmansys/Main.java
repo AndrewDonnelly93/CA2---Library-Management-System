@@ -9,10 +9,13 @@ import libmansys.libItem.Thesis;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
  
@@ -60,45 +63,45 @@ public class Main {
         listOfBorrowedAssets.add(dvd1);
         listOfBorrowedAssets.add(thesis1);
 
+        //wrapped this in a try/catch because it was throwing an error
         LibUser libUser;
         LibUser libUser2;
-
         try {
             libUser = new LibUser("Alice John", "12345", listOfBorrowedAssets);
             libUser2 = new LibUser("James Barry", "32525", listOfBorrowedAssets);
-            libUser.printUserDetails();
         } catch (LibUserException e) {
             throw new RuntimeException(e);
         }
 
-        // Exporting the list of borrowed assets into CSV files
-        ArrayList<String> booksCsvRecords = new ArrayList<>();
-        ArrayList<String> mediaCsvRecords = new ArrayList<>();
-        ArrayList<String> thesesCsvRecords = new ArrayList<>();
+        libUser.printUserDetails();
 
+        // Exporting the list of borrowed assets into CSV files
+        ArrayList<LibItem> booksCsvRecords = new ArrayList<>();
+        ArrayList<LibItem> mediaCsvRecords = new ArrayList<>();
+        ArrayList<LibItem> thesesCsvRecords = new ArrayList<>();
         for (var item : listOfBorrowedAssets) {
             if (item instanceof Book) {
-                booksCsvRecords.add(item.printItemToCSV().toString());
+                booksCsvRecords.add(item);
             } else if (item instanceof Media) {
-                mediaCsvRecords.add(item.printItemToCSV().toString());
+                mediaCsvRecords.add(item);
             } else if (item instanceof Thesis) {
-                thesesCsvRecords.add(item.printItemToCSV().toString());
+                thesesCsvRecords.add(item);
             }
         }
 
         StringWriter booksCsvHeader = new StringWriter().append("Title,Availability,Author,ISBN,ID,\n");
-        String booksCsvFile = "C:/Users/Leo/Desktop/ATU/Software Development/CA2---Library-Management-System/src/test/csv/books.csv";
-        LibItemCsvHandler csvHandlerBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords);
+        String booksCsvFile = getFullPathFromRelative("src/test/csv/books.csv");
+        LibItemCsvHandler csvHandlerBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords, "Books");
         csvHandlerBooks.writeToFile();
 
         StringWriter mediaCsvHeader = new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n");
-        String mediaCsvFile = "C:/Users/Leo/Desktop/ATU/Software Development/CA2---Library-Management-System/src/test/csv/media.csv";
-        LibItemCsvHandler csvHandlerMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords);
+        String mediaCsvFile = "src/test/csv/media.csv";
+        LibItemCsvHandler csvHandlerMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords, "Media");
         csvHandlerMedia.writeToFile();
 
         StringWriter thesesCsvHeader = new StringWriter().append("Title,Availability,Topic,DatePublished,ID");
-        String thesesCsvFile = "C:/Users/Leo/Desktop/ATU/Software Development/CA2---Library-Management-System/src/test/csv/theses.csv";
-        LibItemCsvHandler csvHandlerTheses = new LibItemCsvHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords);
+        String thesesCsvFile = getFullPathFromRelative("src/test/csv/theses.csv");
+        LibItemCsvHandler csvHandlerTheses = new LibItemCsvHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords, "Theses");
         csvHandlerTheses.writeToFile();
 
         // Reading newly generated CSV files
@@ -109,7 +112,7 @@ public class Main {
         System.out.println("\n");
 
         // Printing the list of library users to a CSV file
-        String usersCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/users.csv";
+        String usersCsvFile = getFullPathFromRelative("src/test/csv/users.csv");
         ArrayList<LibUser> usersList = new ArrayList<>();
         usersList.add(libUser);
         usersList.add(libUser2);
@@ -127,6 +130,8 @@ public class Main {
             System.out.println("2. Manage Catalogue");
             System.out.println("3. Loan System");
             System.out.println("4. Exit");
+            System.out.println("5. Test Merge Sort");
+
 
             String input = scanner.nextLine();
             int choice = Integer.parseInt(input);
@@ -144,13 +149,42 @@ public class Main {
                 case 4:
                     exit = true;
                     break;
+                case 5:
+                    testMergeSort(listOfBorrowedAssets);
+                    break;
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
         }
     }
 
-    //Methods for handling different services (Exam, Student, Exam Results)
+    public static String getFullPathFromRelative (String relativePath) {
+        Path fullPath = Paths.get(relativePath);
+        return fullPath.toString();
+    }
+
+    //SORT TEST
+    private static void testMergeSort(List<LibItem> libItems) {
+        // Assuming listOfBorrowedAssets is accessible here. If not, pass it as a parameter.
+        Comparator<LibItem> libItemComparator = Comparator.comparing(LibItem::getTitle);
+
+        // Output the list before sorting
+        System.out.println("List Before Sorting:");
+        for (LibItem item : libItems) {
+            System.out.println(item.getTitle());
+        }
+
+        // Applying the merge sort
+        MergeSort.mergeSort(libItems, libItemComparator, 0, libItems.size() - 1);
+
+        // Output the list after sorting
+        System.out.println("\nSorted List:");
+        for (LibItem item : libItems) {
+            System.out.println(item.getTitle());
+        }
+    }
+
+    //Methods for handling different services (Users, Catalogue, Loans
     //Each method contains a submenu for specific actions related to that service
     private static void handleUsers() {
         System.out.println("Manage Users:");

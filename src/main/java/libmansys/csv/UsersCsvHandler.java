@@ -2,6 +2,7 @@ package libmansys.csv;
 
 import libmansys.LibUser;
 import libmansys.libItem.Book;
+import libmansys.libItem.LibItem;
 import libmansys.libItem.Media;
 import libmansys.libItem.Thesis;
 import org.apache.commons.csv.CSVFormat;
@@ -49,17 +50,17 @@ public class UsersCsvHandler {
                     if (user.getListOfBorrowedAssets().isEmpty()) {
                         csvPrinter.printRecord("No items borrowed");
                     } else {
-                        ArrayList<String> booksCsvRecords = new ArrayList<>();
-                        ArrayList<String> mediaCsvRecords = new ArrayList<>();
-                        ArrayList<String> thesesCsvRecords = new ArrayList<>();
+                        ArrayList<LibItem> booksCsvRecords = new ArrayList<>();
+                        ArrayList<LibItem> mediaCsvRecords = new ArrayList<>();
+                        ArrayList<LibItem> thesesCsvRecords = new ArrayList<>();
 
                         for (var item : user.getListOfBorrowedAssets()) {
                             if (item instanceof Book) {
-                                booksCsvRecords.add(item.printItemToCSV().toString());
+                                booksCsvRecords.add(item);
                             } else if (item instanceof Media) {
-                                mediaCsvRecords.add(item.printItemToCSV().toString());
+                                mediaCsvRecords.add(item);
                             } else if (item instanceof Thesis) {
-                                thesesCsvRecords.add(item.printItemToCSV().toString());
+                                thesesCsvRecords.add(item);
                             }
                         }
 
@@ -87,19 +88,18 @@ public class UsersCsvHandler {
                                 mediaCsvRecords
                         );
                     }
-
-                    csvPrinter.flush();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-
             });
+            csvPrinter.flush();
+            System.out.println("\nThe list of user file has been generated\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void printLibItemToCsv(CSVPrinter csvPrinter, String libItemsName, String emptyMessage, ArrayList<String> csvRecords) throws IOException {
+    public void printLibItemToCsv(CSVPrinter csvPrinter, String libItemsName, String emptyMessage, ArrayList<LibItem> csvRecords) throws IOException {
         try {
             csvPrinter.printRecord(libItemsName);
             if (csvRecords.isEmpty()) {
@@ -116,9 +116,35 @@ public class UsersCsvHandler {
                         csvPrinter.printRecord("Title","Availability","Topic","Date Published","ID");
                         break;
                 }
-                csvRecords.forEach(record -> {
+                csvRecords.forEach(csvRecord -> {
                     try {
-                      csvPrinter.printRecord(record.toString().split("¬"));
+                        if (csvRecord instanceof Book) {
+                            csvPrinter.printRecord(
+                                    csvRecord.getTitle(),
+                                    csvRecord.getAvailabilityStatus(),
+                                    ((Book) csvRecord).getAuthor(),
+                                    ((Book) csvRecord).getISBN(),
+                                    csvRecord.getId()
+                            );
+                        } else if (csvRecord instanceof Media) {
+                            csvPrinter.printRecord(
+                                    csvRecord.getTitle(),
+                                    csvRecord.getAvailabilityStatus(),
+                                    ((Media) csvRecord).getProducer(),
+                                    ((Media) csvRecord).getDirector(),
+                                    ((Media) csvRecord).getPlaytime(),
+                                    csvRecord.getId()
+                            );
+                        } else if (csvRecord instanceof Thesis) {
+                            csvPrinter.printRecord(
+                                    csvRecord.getTitle(),
+                                    csvRecord.getAvailabilityStatus(),
+                                    ((Thesis) csvRecord).getTopic(),
+                                    ((Thesis) csvRecord).getDatePublished(),
+                                    ((Thesis) csvRecord).getAbstractSummary(),
+                                    csvRecord.getId()
+                            );
+                        }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

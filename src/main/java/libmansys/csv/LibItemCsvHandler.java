@@ -1,5 +1,9 @@
 package libmansys.csv;
 
+import libmansys.libItem.Book;
+import libmansys.libItem.LibItem;
+import libmansys.libItem.Media;
+import libmansys.libItem.Thesis;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
@@ -17,16 +21,19 @@ import java.util.stream.Collectors;
 public class LibItemCsvHandler {
     private String csvFilePath;
     private StringWriter csvHeader;
-    private ArrayList<String> csvRecords;
+    private ArrayList<LibItem> csvRecords;
+    private String csvFileType;
 
     public LibItemCsvHandler(
             String csvFilePath,
             StringWriter csvHeader,
-            ArrayList<String> csvRecords
+            ArrayList<LibItem> csvRecords,
+            String csvFileType
     ) {
         this.csvFilePath = csvFilePath;
         this.csvHeader = csvHeader;
         this.csvRecords = csvRecords;
+        this.csvFileType = csvFileType;
     }
 
     public String getCsvHeader() {
@@ -37,21 +44,76 @@ public class LibItemCsvHandler {
         this.csvHeader = csvHeader;
     }
 
-    public ArrayList<String> getCsvRecords() {
+    public ArrayList<LibItem> getCsvRecords() {
         return csvRecords;
     }
 
-    public void setCsvRecords(ArrayList<String> csvRecords) {
+    public void setCsvRecords(ArrayList<LibItem> csvRecords) {
         this.csvRecords = csvRecords;
+    }
+
+    public String getCsvFilePath() {
+        return csvFilePath;
+    }
+
+    public void setCsvFilePath(String csvFilePath) {
+        this.csvFilePath = csvFilePath;
+    }
+
+    public String getCsvFileType() {
+        return csvFileType;
+    }
+
+    public void setCsvFileType(String csvFileType) {
+        this.csvFileType = csvFileType;
     }
 
     // Write to a CSV file for books, media and theses
     public void writeToFile() {
         try {
             FileWriter write = new FileWriter(csvFilePath);
-            CSVPrinter csvPrinter = new CSVPrinter(write, CSVFormat.DEFAULT.withHeader(this.getCsvHeader().split(",")));
+            CSVPrinter csvPrinter = new CSVPrinter(write, CSVFormat.DEFAULT);
+            switch (this.getCsvFileType()) {
+                case "Books":
+                    csvPrinter.printRecord("Title","Availability","Author","ISBN","ID");
+                    break;
+                case "Media":
+                    csvPrinter.printRecord("Title","Availability","Producer","Director","Duration","ID");
+                    break;
+                case "Theses":
+                    csvPrinter.printRecord("Title","Availability","Topic","Date Published","Abstract","ID");
+                    break;
+                default:
+                    break;
+            }
             for (var csvRecord: this.getCsvRecords()) {
-                csvPrinter.printRecord(csvRecord.toString().split("¬"));
+               if (csvRecord instanceof Book) {
+                   csvPrinter.printRecord(
+                           csvRecord.getTitle(),
+                           csvRecord.getAvailabilityStatus(),
+                           ((Book) csvRecord).getAuthor(),
+                           ((Book) csvRecord).getISBN(),
+                           csvRecord.getId()
+                   );
+               } else if (csvRecord instanceof Media) {
+                    csvPrinter.printRecord(
+                            csvRecord.getTitle(),
+                            csvRecord.getAvailabilityStatus(),
+                            ((Media) csvRecord).getProducer(),
+                            ((Media) csvRecord).getDirector(),
+                            ((Media) csvRecord).getPlaytime(),
+                            csvRecord.getId()
+                    );
+               } else if (csvRecord instanceof Thesis) {
+                   csvPrinter.printRecord(
+                           csvRecord.getTitle(),
+                           csvRecord.getAvailabilityStatus(),
+                           ((Thesis) csvRecord).getTopic(),
+                           ((Thesis) csvRecord).getDatePublished(),
+                           ((Thesis) csvRecord).getAbstractSummary(),
+                           csvRecord.getId()
+                   );
+               }
             }
             csvPrinter.flush();
         } catch (IOException e) {
