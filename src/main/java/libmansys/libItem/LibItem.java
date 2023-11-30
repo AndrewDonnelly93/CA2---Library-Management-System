@@ -39,6 +39,4 @@ public abstract class LibItem {
     public abstract void printItemDetails();
 
     public abstract String printItemToCSV();
-
-   // public abstract void printCsvRecord();
 }

@@ -103,6 +103,9 @@ public class Main {
         csvHandlerMedia.parseCsvFile(mediaCsvFile, "Media");
         csvHandlerTheses.parseCsvFile(thesesCsvFile, "Theses");
         System.out.println("\n");
+
+
+
         //USER MENU
 
         //Main menu loop
