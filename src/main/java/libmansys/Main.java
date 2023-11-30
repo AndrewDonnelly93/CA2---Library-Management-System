@@ -1,17 +1,13 @@
 package libmansys;
 
-import libmansys.csv.CsvHandler;
+import libmansys.csv.CsvMediaHandler;
 import libmansys.libItem.Book;
 import libmansys.libItem.LibItem;
 import libmansys.libItem.Media;
 import libmansys.libItem.Thesis;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.time.Duration;
 import java.text.SimpleDateFormat;
@@ -84,17 +80,17 @@ public class Main {
 
         StringWriter booksCsvHeader = new StringWriter().append("Title,Availability,Author,ISBN,ID,\n");
         String booksCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/books.csv";
-        CsvHandler csvHandlerBooks = new CsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords);
+        CsvMediaHandler csvHandlerBooks = new CsvMediaHandler(booksCsvFile, booksCsvHeader, booksCsvRecords);
         csvHandlerBooks.writeToFile();
 
         StringWriter mediaCsvHeader = new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n");
         String mediaCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/media.csv";
-        CsvHandler csvHandlerMedia = new CsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords);
+        CsvMediaHandler csvHandlerMedia = new CsvMediaHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords);
         csvHandlerMedia.writeToFile();
 
         StringWriter thesesCsvHeader = new StringWriter().append("Title,Availability,Topic,DatePublished,ID");
         String thesesCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/theses.csv";
-        CsvHandler csvHandlerTheses = new CsvHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords);
+        CsvMediaHandler csvHandlerTheses = new CsvMediaHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords);
         csvHandlerTheses.writeToFile();
 
         // Reading newly generated CSV files

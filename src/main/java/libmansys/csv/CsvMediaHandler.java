@@ -11,16 +11,15 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CsvHandler {
+public class CsvMediaHandler {
     private String csvFilePath;
     private StringWriter csvHeader;
     private ArrayList<String> csvRecords;
 
-    public CsvHandler(
+    public CsvMediaHandler(
             String csvFilePath,
             StringWriter csvHeader,
             ArrayList<String> csvRecords
@@ -93,6 +92,7 @@ public class CsvHandler {
 
     }
 
+    // Printing book records
     public void printBooks(List<CSVRecord> csvRecords) {
         System.out.println("\n---------------------------------------------");
         System.out.println("Books");
@@ -113,6 +113,7 @@ public class CsvHandler {
         });
     }
 
+    // Printing media records
     public void printMedia(List<CSVRecord> csvRecords) {
         System.out.println("\n---------------------------------------------");
         System.out.println("Media");
@@ -136,6 +137,7 @@ public class CsvHandler {
         });
     }
 
+    // Printing theses records
     public void printTheses(List<CSVRecord> csvRecords) {
         System.out.println("\n---------------------------------------------");
         System.out.println("Theses");
