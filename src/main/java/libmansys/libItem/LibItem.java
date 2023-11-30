@@ -1,14 +1,15 @@
 package libmansys.libItem;
 
+import java.io.StringWriter;
+
 public abstract class LibItem {
     protected String title;
     protected boolean availabilityStatus;
-
     protected LibItemType itemType;
     protected String id;
-    protected StringBuilder csvHeader;
+    protected StringWriter csvHeader;
 
-    public LibItem(String title, boolean availabilityStatus, String id, StringBuilder csvHeader) {
+    public LibItem(String title, boolean availabilityStatus, String id, StringWriter csvHeader) {
         this.id = id;
         this.title = title;
         this.availabilityStatus = availabilityStatus;
@@ -16,11 +17,11 @@ public abstract class LibItem {
         this.csvHeader = csvHeader;
     }
 
-    public String getCsvHeader() {
-        return csvHeader.toString();
+    public StringWriter getCsvHeader() {
+        return csvHeader;
     }
 
-    public void setCsvHeader(StringBuilder csvHeader) {
+    public void setCsvHeader(StringWriter csvHeader) {
         this.csvHeader = csvHeader;
     }
 
@@ -48,5 +49,5 @@ public abstract class LibItem {
 
     public abstract void printItemDetails();
 
-    public abstract StringBuilder printItemToCSV();
+    public abstract String printItemToCSV();
 }
