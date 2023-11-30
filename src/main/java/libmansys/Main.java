@@ -242,51 +242,54 @@ public class Main {
                 default:
                     System.out.println("Invalid choice. Please try again.");
                     break;
+            }
         }
 
         private static void viewLibItems() {
-            System.out.println("Library Catalogue:");
-            System.out.println("1. Export list of all items (includes books, theses and media)");
-            System.out.println("2. Export list of available items only");
-            System.out.println("3. Search for an item");
+                System.out.println("Library Catalogue:");
+                System.out.println("1. Export list of all items (includes books, theses and media)");
+                System.out.println("2. Export list of available items only");
+                System.out.println("3. Search for an item");
 
-            String choice = scanner.nextLine();
+                String choice = scanner.nextLine();
 
-            switch (choice) {
-                case "1":
-                    //TODO allItemsExport();
-                    break;
-                case "2":
-                    //TODO availItemsExport();
-                    break;
-                case "3":
-                    //TODO searchItems();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
+                switch (choice) {
+                    case "1":
+                        //TODO allItemsExport();
+                        break;
+                    case "2":
+                        //TODO availItemsExport();
+                        break;
+                    case "3":
+                        //TODO searchItems();
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                        break;
+                }
             }
 
-        private static void handleLoans() {
-            System.out.println("Loan System:");
-            System.out.println("a. Borrow Book");
-            System.out.println("b. Return Book");
-            System.out.println("c. Back to Main Menu");
+                private static void handleLoans () {
+                    System.out.println("Loan System:");
+                    System.out.println("a. Borrow Book");
+                    System.out.println("b. Return Book");
+                    System.out.println("c. Back to Main Menu");
 
-            String choice = scanner.nextLine();
+                    String choice = scanner.nextLine();
 
-            switch (choice) {
-                case "a":
-                    //TODO borrowBook();
-                    break;
-                case "b":
-                    //TODO returnBook();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
+                    switch (choice) {
+                        case "a":
+                            //TODO borrowBook();
+                            break;
+                        case "b":
+                            //TODO returnBook();
+                            break;
+                        default:
+                            System.out.println("Invalid choice. Please try again.");
+                            break;
+                    }
+                }
             }
-        }
 
 
 
