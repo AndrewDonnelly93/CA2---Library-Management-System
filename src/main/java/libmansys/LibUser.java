@@ -26,9 +26,15 @@ public class LibUser {
 
 
     //Constructor
-    public LibUser(String name, String id, List<LibItem> listOfBorrowedAssets) {
-        this.name = name;
-        this.id = id;
+    public LibUser(String name, String id, List<LibItem> listOfBorrowedAssets) throws LibUserException{
+        if (name.length() < 2 || name.length() > 30)
+            throw new LibUserException("\n\tUser name should be between 2 and 30 characters");
+        else
+            this.name = name;
+        if (id.isEmpty() || id.length() > 10)
+            throw new LibUserException("\n\tUser ID should be between 1 and 10 characters");
+        else
+            this.id = id;
         this.listOfBorrowedAssets = listOfBorrowedAssets;
     }
 
@@ -45,12 +51,18 @@ public class LibUser {
         return listOfBorrowedAssets;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String name) throws LibUserException {
+        if (name.length() < 2 || name.length() > 30)
+            throw new LibUserException("\n\tUser name should be between 2 and 30 characters");
+        else
+            this.name = name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String id) throws LibUserException{
+        if (id.isEmpty() || id.length() > 10)
+            throw new LibUserException("\n\tUser ID should be between 1 and 10 characters");
+        else
+            this.id = id;
     }
 
     public void setListOfBorrowedAssets(List<LibItem> listOfBorrowedAssets) {

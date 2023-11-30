@@ -1,6 +1,5 @@
 package libmansys.libItem;
 
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -20,7 +19,7 @@ public class Thesis extends LibItem {
             Date datePublished,
             String id
     ) {
-        super(title, availabilityStatus, id);
+        super(title, availabilityStatus, id, new StringBuilder().append("Title,Availability Status,Topic,Abstract,Date Published,ID\n"));
         this.author = author;
         this.topic = topic;
         this.abstractSummary = abstractSummary;
@@ -81,13 +80,7 @@ public class Thesis extends LibItem {
     }
 
     @Override
-    public String printItemToCSV() {
-        StringBuilder thesis = new StringBuilder();
-        thesis.append(this.getTitle()).append("¬");
-        thesis.append(this.getAvailabilityStatus()).append("¬");
-        thesis.append(this.getTopic()).append("¬");
-        thesis.append(new SimpleDateFormat("dd-MM-yyyy").format(this.getDatePublished())).append("¬");
-        thesis.append(this.getId()).append("\n");
-        return thesis.toString();
+    public StringBuilder printItemToCSV() {
+        return null;
     }
 }

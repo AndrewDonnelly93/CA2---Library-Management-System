@@ -1,14 +1,11 @@
 package libmansys.libItem;
-
-import java.io.StringWriter;
-
 // Represents books and audiobooks
 public class Book extends LibItem {
     private String author;
     private String ISBN;
 
     public Book(String title, boolean availabilityStatus, String author, String ISBN, String id) {
-        super(title, availabilityStatus, id);
+        super(title, availabilityStatus, id, new StringBuilder().append("Title,Availability Status,Author,ISBN,ID\n"));
         this.itemType = LibItemType.BOOK;
         this.author = author;
         this.ISBN = ISBN;
@@ -49,13 +46,14 @@ public class Book extends LibItem {
     }
 
     @Override
-    public String printItemToCSV() {
+    public StringBuilder printItemToCSV() {
         StringBuilder book = new StringBuilder();
-        book.append(this.getTitle()).append("¬");
-        book.append(this.getAvailabilityStatus()).append("¬");
-        book.append(this.getAuthor()).append("¬");
-        book.append(this.getISBN()).append("¬");
+        book.append(this.getTitle()).append(",");
+        book.append(this.getAvailabilityStatus()).append(",");
+        book.append(this.getAuthor()).append(",");
+        book.append(this.getISBN()).append(",");
         book.append(this.getId()).append("\n");
-        return book.toString();
+        return book;
     }
+
 }
