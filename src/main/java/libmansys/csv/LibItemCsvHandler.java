@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CsvMediaHandler {
+public class LibItemCsvHandler {
     private String csvFilePath;
     private StringWriter csvHeader;
     private ArrayList<String> csvRecords;
 
-    public CsvMediaHandler(
+    public LibItemCsvHandler(
             String csvFilePath,
             StringWriter csvHeader,
             ArrayList<String> csvRecords
@@ -45,6 +45,7 @@ public class CsvMediaHandler {
         this.csvRecords = csvRecords;
     }
 
+    // Write to a CSV file for books, media and theses
     public void writeToFile() {
         try {
             FileWriter write = new FileWriter(csvFilePath);

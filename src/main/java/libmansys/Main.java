@@ -1,6 +1,7 @@
 package libmansys;
 
-import libmansys.csv.CsvMediaHandler;
+import libmansys.csv.LibItemCsvHandler;
+import libmansys.csv.UsersCsvHandler;
 import libmansys.libItem.Book;
 import libmansys.libItem.LibItem;
 import libmansys.libItem.Media;
@@ -23,7 +24,7 @@ public class Main {
         //Inits for testing
         Book book1 = new Book(
                 "The Little Prince", true,
-                "Antoine de Saint-Exupéry", " 978-0156012195", "6c60ac1f-a82d-4c99-8590-8e19099d3b04"
+                "Antoine de Saint-Exupéry", "978-0156012195", "6c60ac1f-a82d-4c99-8590-8e19099d3b04"
         );
         Book book2 = new Book(
                 "Harry Potter and the Chamber of Secrets", false,
@@ -60,6 +61,7 @@ public class Main {
         listOfBorrowedAssets.add(thesis1);
 
         LibUser libUser = new LibUser("Alice John", "12345", listOfBorrowedAssets);
+        LibUser libUser2 = new LibUser("James Barry", "32525", listOfBorrowedAssets);
 
         libUser.printUserDetails();
 
@@ -80,17 +82,17 @@ public class Main {
 
         StringWriter booksCsvHeader = new StringWriter().append("Title,Availability,Author,ISBN,ID,\n");
         String booksCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/books.csv";
-        CsvMediaHandler csvHandlerBooks = new CsvMediaHandler(booksCsvFile, booksCsvHeader, booksCsvRecords);
+        LibItemCsvHandler csvHandlerBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords);
         csvHandlerBooks.writeToFile();
 
         StringWriter mediaCsvHeader = new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n");
         String mediaCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/media.csv";
-        CsvMediaHandler csvHandlerMedia = new CsvMediaHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords);
+        LibItemCsvHandler csvHandlerMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords);
         csvHandlerMedia.writeToFile();
 
         StringWriter thesesCsvHeader = new StringWriter().append("Title,Availability,Topic,DatePublished,ID");
         String thesesCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/theses.csv";
-        CsvMediaHandler csvHandlerTheses = new CsvMediaHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords);
+        LibItemCsvHandler csvHandlerTheses = new LibItemCsvHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords);
         csvHandlerTheses.writeToFile();
 
         // Reading newly generated CSV files
@@ -100,7 +102,13 @@ public class Main {
         csvHandlerTheses.parseCsvFile(thesesCsvFile, "Theses");
         System.out.println("\n");
 
-
+        // Printing the list of library users to a CSV file
+        String usersCsvFile = "C:/Users/andre/IdeaProjects/CA2---Library-Management-System/src/test/csv/users.csv";
+        ArrayList<LibUser> usersList = new ArrayList<>();
+        usersList.add(libUser);
+        usersList.add(libUser2);
+        UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, usersList);
+        usersCsvHandler.writeUsersList();
 
         //USER MENU
 

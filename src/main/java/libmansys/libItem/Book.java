@@ -58,9 +58,4 @@ public class Book extends LibItem {
         book.append(this.getId()).append("\n");
         return book.toString();
     }
-
-//    @Override
-//    public void printCsvRecord() {
-//
-//    }
 }
