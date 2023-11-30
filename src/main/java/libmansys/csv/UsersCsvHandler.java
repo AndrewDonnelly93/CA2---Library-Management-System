@@ -55,11 +55,11 @@ public class UsersCsvHandler {
 
                         for (var item : user.getListOfBorrowedAssets()) {
                             if (item instanceof Book) {
-                                booksCsvRecords.add(item.printItemToCSV());
+                                booksCsvRecords.add(item.printItemToCSV().toString());
                             } else if (item instanceof Media) {
-                                mediaCsvRecords.add(item.printItemToCSV());
+                                mediaCsvRecords.add(item.printItemToCSV().toString());
                             } else if (item instanceof Thesis) {
-                                thesesCsvRecords.add(item.printItemToCSV());
+                                thesesCsvRecords.add(item.printItemToCSV().toString());
                             }
                         }
 
