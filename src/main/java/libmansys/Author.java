@@ -57,5 +57,13 @@ public class Author
             item.printItemDetails();
         }
     }
+
+    public static Author LinearSearchAuthor (List<Author> authorList, String targetName) {
+        for (Author author : authorList) {
+            if (author.getAuthorName().equals(targetName))
+                return author;
+        }
+        return null;
+    }
 }
 

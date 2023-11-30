@@ -8,15 +8,15 @@ public class Search
     public Search() {
     }
 
-    public static <Object> Object LinearSearchString (List<Object> list, String value, String attribute) throws NoSuchFieldException {
+    public static <Object> Object LinearSearchByStringAttribute(List<Object> list, String value, String attributeName) throws NoSuchFieldException, IllegalAccessException {
     for (Object o : list) {
-        Class<?> type = o.getClass();
-        String field = type.getDeclaredField(attribute).getName();
-        if (field.equals(value))
+        Field privateField = o.getClass().getDeclaredField(attributeName);
+        privateField.setAccessible(true);
+        String attributeValue = (String) privateField.get(o);
+        if (attributeValue.equals(value))
             return o;
     }
         return null;
     }
-
 
 }
