@@ -62,7 +62,6 @@ public class Main {
 
         LibUser libUser = new LibUser("Alice John", "12345", listOfBorrowedAssets);
         LibUser libUser2 = new LibUser("James Barry", "32525", listOfBorrowedAssets);
-
         libUser.printUserDetails();
 
         // Exporting the list of borrowed assets into CSV files
@@ -72,11 +71,11 @@ public class Main {
 
         for (var item : listOfBorrowedAssets) {
             if (item instanceof Book) {
-                booksCsvRecords.add(item.printItemToCSV());
+                booksCsvRecords.add(item.printItemToCSV().toString());
             } else if (item instanceof Media) {
-                mediaCsvRecords.add(item.printItemToCSV());
+                mediaCsvRecords.add(item.printItemToCSV().toString());
             } else if (item instanceof Thesis) {
-                thesesCsvRecords.add(item.printItemToCSV());
+                thesesCsvRecords.add(item.printItemToCSV().toString());
             }
         }
 
