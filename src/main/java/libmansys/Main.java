@@ -340,7 +340,7 @@ public class Main {
 
     }
 
-    private static void viewLibItems() {
+    private static void viewLibItems() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("Library Catalogue:");
         System.out.println("1. Export list of all items (includes books, theses and media)");
         System.out.println("2. Export list of available items only");
@@ -356,7 +356,7 @@ public class Main {
                 availItemsExport();
                 break;
             case "3":
-                //TODO searchItems();
+                searchItems();
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
@@ -409,6 +409,26 @@ public class Main {
                 }
         }
     }
+
+    private static void searchItems() throws NoSuchFieldException, IllegalAccessException {
+        String itemTitle;
+        do {
+            System.out.println("Enter item's name (between 5 and 50 characters): ");
+            itemTitle = scanner.nextLine();
+            if (itemTitle.length() < 5 || itemTitle.length() > 50) {
+                System.out.println("Item's name should be between 5 and 50 characters");
+            }
+        } while (itemTitle.length() < 5 || itemTitle.length() > 50);
+        List<LibItem> libraryItems = library;
+        LibItem itemSearch = Search.linearSearchByStringAttribute(libraryItems, itemTitle, "title");
+        if (itemSearch == null) {
+            System.out.println("Sorry, this item has not been found");
+        } else {
+            System.out.println("This item has been found");
+            itemSearch.printItemDetails();
+        }
+    }
+
 
     private static void allItemsExport() {
         // Initiating CSV Handlers for books, media and theses
