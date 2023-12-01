@@ -1,0 +1,29 @@
+Name,ID
+Alice John,12345
+List of borrowed assets
+Books
+Title,Availability,Author,ISBN,ID
+The Little Prince,true,Antoine de Saint-Exupéry,978-0156012195,6c60ac1f-a82d-4c99-8590-8e19099d3b04
+Harry Potter and the Chamber of Secrets,false,J. K. Rowling,9788183221344,f5bc4b45-b297-44c9-a4e2-74c3d04d8cd4
+Media
+Title,Availability,Producer,Director,Duration,ID
+Pale Green Ghosts,true,Bella Union,Kate Le Bon,"1 hours, 30 minutes",e37db276-a850-477f-9737-91e47ef83a84
+Home Alone,false,John Hughes,Chris Columbus,"1 hours, 43 minutes",83eb02f9-e1c4-4498-adce-cbe8911d4011
+Theses
+Title,Availability,Topic,Date Published,ID
+Pale Green Ghosts,true,Bella Union,Kate Le Bon,"1 hours, 30 minutes",e37db276-a850-477f-9737-91e47ef83a84
+Home Alone,false,John Hughes,Chris Columbus,"1 hours, 43 minutes",83eb02f9-e1c4-4498-adce-cbe8911d4011
+James Barry,32525
+List of borrowed assets
+Books
+Title,Availability,Author,ISBN,ID
+The Little Prince,true,Antoine de Saint-Exupéry,978-0156012195,6c60ac1f-a82d-4c99-8590-8e19099d3b04
+Harry Potter and the Chamber of Secrets,false,J. K. Rowling,9788183221344,f5bc4b45-b297-44c9-a4e2-74c3d04d8cd4
+Media
+Title,Availability,Producer,Director,Duration,ID
+Pale Green Ghosts,true,Bella Union,Kate Le Bon,"1 hours, 30 minutes",e37db276-a850-477f-9737-91e47ef83a84
+Home Alone,false,John Hughes,Chris Columbus,"1 hours, 43 minutes",83eb02f9-e1c4-4498-adce-cbe8911d4011
+Theses
+Title,Availability,Topic,Date Published,ID
+Pale Green Ghosts,true,Bella Union,Kate Le Bon,"1 hours, 30 minutes",e37db276-a850-477f-9737-91e47ef83a84
+Home Alone,false,John Hughes,Chris Columbus,"1 hours, 43 minutes",83eb02f9-e1c4-4498-adce-cbe8911d4011
