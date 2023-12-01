@@ -57,11 +57,15 @@ public class Main {
 
         List<LibItem> listOfBorrowedAssets = new ArrayList<>();
 
+
         listOfBorrowedAssets.add(book1);
         listOfBorrowedAssets.add(book2);
         listOfBorrowedAssets.add(cd1);
         listOfBorrowedAssets.add(dvd1);
         listOfBorrowedAssets.add(thesis1);
+
+        //Init a list of users for testing
+        List<LibUser> libUserList = new ArrayList<>();
 
         //wrapped this in a try/catch because it was throwing an error
         LibUser libUser;
@@ -72,6 +76,10 @@ public class Main {
         } catch (LibUserException e) {
             throw new RuntimeException(e);
         }
+
+        libUserList.add(libUser2);
+        libUserList.add(libUser);
+
 
         libUser.printUserDetails();
 
@@ -130,7 +138,6 @@ public class Main {
             System.out.println("2. Manage Catalogue");
             System.out.println("3. Loan System");
             System.out.println("4. Exit");
-            System.out.println("5. Test Merge Sort");
 
 
             String input = scanner.nextLine();
@@ -138,7 +145,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    handleUsers();
+                    handleUsers(libUserList);
                     break;
                 case 2:
                     handleCatalogue();
@@ -148,9 +155,6 @@ public class Main {
                     break;
                 case 4:
                     exit = true;
-                    break;
-                case 5:
-                    testMergeSort(listOfBorrowedAssets);
                     break;
                 default:
                     System.out.println("Invalid option. Please try again.");
@@ -163,30 +167,9 @@ public class Main {
         return fullPath.toString();
     }
 
-    //SORT TEST
-    private static void testMergeSort(List<LibItem> libItems) {
-        // Assuming listOfBorrowedAssets is accessible here. If not, pass it as a parameter.
-        Comparator<LibItem> libItemComparator = Comparator.comparing(LibItem::getTitle);
-
-        // Output the list before sorting
-        System.out.println("List Before Sorting:");
-        for (LibItem item : libItems) {
-            System.out.println(item.getTitle());
-        }
-
-        // Applying the merge sort
-        MergeSort.mergeSort(libItems, libItemComparator, 0, libItems.size() - 1);
-
-        // Output the list after sorting
-        System.out.println("\nSorted List:");
-        for (LibItem item : libItems) {
-            System.out.println(item.getTitle());
-        }
-    }
-
     //Methods for handling different services (Users, Catalogue, Loans
     //Each method contains a submenu for specific actions related to that service
-    private static void handleUsers() {
+    private static void handleUsers(List<LibUser> libUserList) {
         System.out.println("Manage Users:");
         System.out.println("1. Export list of all users");
         System.out.println("2. Search for user");
@@ -197,7 +180,7 @@ public class Main {
 
         switch (choice) {
             case "1":
-                //TODO csvExport(libUserService);
+                userSort(libUserList);
                 break;
             case "2":
                 //TODO searchLibUser();
@@ -212,6 +195,53 @@ public class Main {
                 break;
         }
     }
+
+    //SORT TEST
+    private static void userSort(List<LibUser> libUserList) {
+        System.out.println("How would you like to sort the list of users?");
+        System.out.println("1. By Title");
+        System.out.println("2. By ID");
+        String sortChoice = scanner.nextLine();
+        Comparator<LibUser> comparator;
+
+        switch (sortChoice) {
+            case "1":
+                comparator = Comparator.comparing(LibUser::getName);
+                break;
+            case "2":
+                comparator = Comparator.comparing(LibUser::getId);
+                break;
+            default:
+                System.out.println("Invalid choice. Defaulting to sort by Title.");
+                comparator = Comparator.comparing(LibUser::getName);
+                break;
+        }
+
+        // Output the list before sorting
+        System.out.println("List Before Sorting:");
+        for (LibUser user : libUserList) {
+            System.out.println(user.getName() + " - ID: " + user.getId());
+        }
+
+        // Applying the merge sort
+        MergeSort.mergeSort(libUserList, comparator, 0, libUserList.size() - 1);
+
+        // Output the list after sorting
+        System.out.println("\nSorted List:");
+        for (LibUser user : libUserList) {
+            System.out.println(user.getName() + " - ID: " + user.getId());
+        }
+
+        exportUsersToCsv(libUserList);
+    }
+
+    private static void exportUsersToCsv(List<LibUser> libUserList) {
+        String usersCsvFile = getFullPathFromRelative("src/test/csv/sorted_users.csv");
+        UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, (ArrayList<LibUser>) libUserList);
+        usersCsvHandler.writeUsersList();
+        System.out.println("Sorted user list exported to CSV.");
+    }
+
 
     private static void handleCatalogue () {
         System.out.println("Manage Catalogue:");
@@ -348,5 +378,10 @@ public class Main {
         }
     }
 }
+
+/*TODO
+add sort options - ID and number of loans
+Export the list
+ */
 
 
