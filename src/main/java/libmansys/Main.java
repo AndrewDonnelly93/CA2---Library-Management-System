@@ -1,5 +1,6 @@
 package libmansys;
 
+import libmansys.csv.AuthorsCsvHandler;
 import libmansys.csv.LibItemCsvHandler;
 import libmansys.csv.UsersCsvHandler;
 import libmansys.libItem.Book;
@@ -22,7 +23,7 @@ import java.util.Scanner;
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) throws ParseException, IOException {
+    public static void main(String[] args) throws ParseException, IOException, AuthorException {
 
         //Inits for testing
         Book book1 = new Book(
@@ -118,6 +119,20 @@ public class Main {
         usersList.add(libUser2);
         UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, usersList);
         usersCsvHandler.writeUsersList();
+
+        // Generating a list of authors
+        ArrayList<LibItem> booksByAuthor1 = new ArrayList<>();
+        booksByAuthor1.add(book2);
+        ArrayList<LibItem> booksByAuthor2 = new ArrayList<>();
+        booksByAuthor2.add(book1);
+        Author author1 = new Author("J.K.Rowling", booksByAuthor1);
+        Author author2 = new Author("Antoine de Saint-Exupéry", booksByAuthor2);
+        ArrayList<Author> authorsList = new ArrayList<>();
+        authorsList.add(author1);
+        authorsList.add(author2);
+        String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
+        AuthorsCsvHandler authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
+        authorsCsvHandler.writeAuthorsList();
 
         //USER MENU
 
