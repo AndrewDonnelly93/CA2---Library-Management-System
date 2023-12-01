@@ -16,12 +16,27 @@ import java.text.ParseException;
 import java.time.Duration;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
 
     private static AuthorsCsvHandler authorsCsvHandler;
     private static ArrayList<Author> authorsList;
+
+    private static ArrayList<LibItem> library;
+    private static ArrayList<LibItem> booksCsvRecords;
+    private static ArrayList<LibItem> mediaCsvRecords;
+    private static ArrayList<LibItem> thesesCsvRecords;
+    private static LibItemCsvHandler csvHandlerBooks;
+    private static LibItemCsvHandler csvHandlerMedia;
+    private static LibItemCsvHandler csvHandlerTheses;
+    private static final String booksCsvFile = getFullPathFromRelative("src/test/csv/books.csv");
+    private static final String mediaCsvFile = getFullPathFromRelative("src/test/csv/media.csv");
+    private static final String thesesCsvFile = getFullPathFromRelative("src/test/csv/theses.csv");
+    private static final StringWriter booksCsvHeader = new StringWriter().append("Title,Availability,Author,ISBN,ID,\n");
+    private static final StringWriter mediaCsvHeader = new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n");
+    private static final StringWriter thesesCsvHeader = new StringWriter().append("Title,Availability,Topic,DatePublished,ID");
 
     public static void main(String[] args) throws ParseException, IOException, AuthorException, NoSuchFieldException, IllegalAccessException {
 
@@ -57,8 +72,6 @@ public class Main {
 
 
         List<LibItem> listOfBorrowedAssets = new ArrayList<>();
-
-
         listOfBorrowedAssets.add(book1);
         listOfBorrowedAssets.add(book2);
         listOfBorrowedAssets.add(cd1);
@@ -69,7 +82,7 @@ public class Main {
         List<LibUser> libUserList = new ArrayList<>();
 
         // Initialising the library system
-        ArrayList<LibItem> library = new ArrayList<>();
+        library = new ArrayList<>();
         library.add(book1);
         library.add(book2);
         library.add(cd1);
@@ -92,11 +105,11 @@ public class Main {
 
         libUser.printUserDetails();
 
-        // Exporting the list of borrowed assets into CSV files
-        ArrayList<LibItem> booksCsvRecords = new ArrayList<>();
-        ArrayList<LibItem> mediaCsvRecords = new ArrayList<>();
-        ArrayList<LibItem> thesesCsvRecords = new ArrayList<>();
-        for (var item : listOfBorrowedAssets) {
+        // Initiating Books, Media and Theses lists
+        booksCsvRecords = new ArrayList<>();
+        mediaCsvRecords = new ArrayList<>();
+        thesesCsvRecords = new ArrayList<>();
+        for (var item : library) {
             if (item instanceof Book) {
                 booksCsvRecords.add(item);
             } else if (item instanceof Media) {
@@ -105,28 +118,6 @@ public class Main {
                 thesesCsvRecords.add(item);
             }
         }
-
-        StringWriter booksCsvHeader = new StringWriter().append("Title,Availability,Author,ISBN,ID,\n");
-        String booksCsvFile = getFullPathFromRelative("src/test/csv/books.csv");
-        LibItemCsvHandler csvHandlerBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords, "Books");
-        csvHandlerBooks.writeToFile();
-
-        StringWriter mediaCsvHeader = new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n");
-        String mediaCsvFile = "src/test/csv/media.csv";
-        LibItemCsvHandler csvHandlerMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords, "Media");
-        csvHandlerMedia.writeToFile();
-
-        StringWriter thesesCsvHeader = new StringWriter().append("Title,Availability,Topic,DatePublished,ID");
-        String thesesCsvFile = getFullPathFromRelative("src/test/csv/theses.csv");
-        LibItemCsvHandler csvHandlerTheses = new LibItemCsvHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords, "Theses");
-        csvHandlerTheses.writeToFile();
-
-        // Reading newly generated CSV files
-        System.out.println("\nFiles generated:");
-        csvHandlerBooks.parseCsvFile(booksCsvFile, "Books");
-        csvHandlerMedia.parseCsvFile(mediaCsvFile, "Media");
-        csvHandlerTheses.parseCsvFile(thesesCsvFile, "Theses");
-        System.out.println("\n");
 
         // Printing the list of library users to a CSV file
         String usersCsvFile = getFullPathFromRelative("src/test/csv/users.csv");
@@ -372,10 +363,10 @@ public class Main {
 
         switch (choice) {
             case "1":
-                //TODO allItemsExport();
+                allItemsExport();
                 break;
             case "2":
-                //TODO availItemsExport();
+                availItemsExport();
                 break;
             case "3":
                 //TODO searchItems();
@@ -432,7 +423,58 @@ public class Main {
             });
         }
         scannerAuthor.close();
+    }
 
+    private static void allItemsExport() {
+        // Initiating CSV Handlers for books, media and theses
+        csvHandlerBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords, "Books");
+        csvHandlerMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords, "Media");
+        csvHandlerTheses = new LibItemCsvHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords, "Theses");
+        // Generating CSV files
+        csvHandlerBooks.writeToFile();
+        csvHandlerMedia.writeToFile();
+        csvHandlerTheses.writeToFile();
+        // Reading CSV files and showing them
+        showGeneratedLibItemsFiles(csvHandlerBooks, csvHandlerMedia, csvHandlerTheses);
+    }
+
+    private static void showGeneratedLibItemsFiles(
+            LibItemCsvHandler csvHandlerBooks,
+            LibItemCsvHandler csvHandlerMedia,
+            LibItemCsvHandler csvHandlerTheses
+    ) {
+        // Reading newly generated CSV files
+        System.out.println("\nFiles generated:");
+        csvHandlerBooks.parseCsvFile(booksCsvFile, "Books");
+        csvHandlerMedia.parseCsvFile(mediaCsvFile, "Media");
+        csvHandlerTheses.parseCsvFile(thesesCsvFile, "Theses");
+        System.out.println("\n");
+    }
+
+    private static void availItemsExport() {
+        ArrayList<LibItem> availBooksCsvRecords = new ArrayList<>();
+        ArrayList<LibItem> availMediaCsvRecords = new ArrayList<>();
+        ArrayList<LibItem> availThesesCsvRecords = new ArrayList<>();
+        List<LibItem> availableLibItems = library.stream()
+                .filter(LibItem::getAvailabilityStatus)
+                .collect(Collectors.toList());
+        for (var item : availableLibItems) {
+            if (item instanceof Book) {
+                availBooksCsvRecords.add(item);
+            } else if (item instanceof Media) {
+                availMediaCsvRecords.add(item);
+            } else if (item instanceof Thesis) {
+                availThesesCsvRecords.add(item);
+            }
+        }
+        LibItemCsvHandler csvHandlerAvailBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, availBooksCsvRecords, "Books");
+        LibItemCsvHandler csvHandlerAvailMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, availMediaCsvRecords, "Media");
+        LibItemCsvHandler csvHandlerAvailTheses = new LibItemCsvHandler(thesesCsvFile, thesesCsvHeader, availThesesCsvRecords, "Theses");
+        csvHandlerAvailBooks.writeToFile();
+        csvHandlerAvailMedia.writeToFile();
+        csvHandlerAvailTheses.writeToFile();
+        System.out.println("Available items lists have been generated");
+        showGeneratedLibItemsFiles(csvHandlerAvailBooks, csvHandlerAvailMedia, csvHandlerAvailTheses);
     }
 }
 

@@ -86,34 +86,50 @@ public class LibItemCsvHandler {
                 default:
                     break;
             }
-            for (var csvRecord: this.getCsvRecords()) {
-               if (csvRecord instanceof Book) {
-                   csvPrinter.printRecord(
-                           csvRecord.getTitle(),
-                           csvRecord.getAvailabilityStatus(),
-                           ((Book) csvRecord).getAuthor(),
-                           ((Book) csvRecord).getISBN(),
-                           csvRecord.getId()
-                   );
-               } else if (csvRecord instanceof Media) {
-                    csvPrinter.printRecord(
-                            csvRecord.getTitle(),
-                            csvRecord.getAvailabilityStatus(),
-                            ((Media) csvRecord).getProducer(),
-                            ((Media) csvRecord).getDirector(),
-                            ((Media) csvRecord).getPlaytime(),
-                            csvRecord.getId()
-                    );
-               } else if (csvRecord instanceof Thesis) {
-                   csvPrinter.printRecord(
-                           csvRecord.getTitle(),
-                           csvRecord.getAvailabilityStatus(),
-                           ((Thesis) csvRecord).getTopic(),
-                           ((Thesis) csvRecord).getDatePublished(),
-                           ((Thesis) csvRecord).getAbstractSummary(),
-                           csvRecord.getId()
-                   );
-               }
+            if (csvRecords.isEmpty()) {
+                switch (this.getCsvFileType()) {
+                    case "Books":
+                        csvPrinter.printRecord("No available books");
+                        break;
+                    case "Media":
+                        csvPrinter.printRecord("No available media");
+                        break;
+                    case "Theses":
+                        csvPrinter.printRecord("No available theses");
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                for (var csvRecord : this.getCsvRecords()) {
+                    if (csvRecord instanceof Book) {
+                        csvPrinter.printRecord(
+                                csvRecord.getTitle(),
+                                csvRecord.getAvailabilityStatus(),
+                                ((Book) csvRecord).getAuthor(),
+                                ((Book) csvRecord).getISBN(),
+                                csvRecord.getId()
+                        );
+                    } else if (csvRecord instanceof Media) {
+                        csvPrinter.printRecord(
+                                csvRecord.getTitle(),
+                                csvRecord.getAvailabilityStatus(),
+                                ((Media) csvRecord).getProducer(),
+                                ((Media) csvRecord).getDirector(),
+                                ((Media) csvRecord).getPlaytime(),
+                                csvRecord.getId()
+                        );
+                    } else if (csvRecord instanceof Thesis) {
+                        csvPrinter.printRecord(
+                                csvRecord.getTitle(),
+                                csvRecord.getAvailabilityStatus(),
+                                ((Thesis) csvRecord).getTopic(),
+                                ((Thesis) csvRecord).getDatePublished(),
+                                ((Thesis) csvRecord).getAbstractSummary(),
+                                csvRecord.getId()
+                        );
+                    }
+                }
             }
             switch (this.getCsvFileType()) {
                 case "Books":
@@ -172,65 +188,77 @@ public class LibItemCsvHandler {
     public void printBooks(List<CSVRecord> csvRecords) {
         System.out.println("\n---------------------------------------------");
         System.out.println("Books");
-        csvRecords.forEach(csvRecord -> {
-            long recordNumber = csvRecord.getRecordNumber() - 1;
-            String title = csvRecord.get(0);
-            String availability = csvRecord.get(1);
-            String author = csvRecord.get(2);
-            String isbn = csvRecord.get(3);
-            String id = csvRecord.get(4);
-            System.out.println("Record No - " + recordNumber);
-            System.out.println("---------------");
-            System.out.println("Title: " + title);
-            System.out.println("Availability: " + availability);
-            System.out.println("Author: " + author);
-            System.out.println("ISBN: " + isbn);
-            System.out.println("ID: " + id);
-        });
+        if (csvRecords.isEmpty()) {
+            System.out.println("No available books");
+        } else {
+            csvRecords.forEach(csvRecord -> {
+                long recordNumber = csvRecord.getRecordNumber() - 1;
+                String title = csvRecord.get(0);
+                String availability = csvRecord.get(1);
+                String author = csvRecord.get(2);
+                String isbn = csvRecord.get(3);
+                String id = csvRecord.get(4);
+                System.out.println("Record No - " + recordNumber);
+                System.out.println("---------------");
+                System.out.println("Title: " + title);
+                System.out.println("Availability: " + availability);
+                System.out.println("Author: " + author);
+                System.out.println("ISBN: " + isbn);
+                System.out.println("ID: " + id);
+            });
+        }
     }
 
     // Printing media records
     public void printMedia(List<CSVRecord> csvRecords) {
         System.out.println("\n---------------------------------------------");
         System.out.println("Media");
-        csvRecords.forEach(csvRecord -> {
-            long recordNumber = csvRecord.getRecordNumber() - 1;
-            String title = csvRecord.get(0);
-            String availability = csvRecord.get(1);
-            String producer = csvRecord.get(2);
-            String director = csvRecord.get(3);
-            String duration = csvRecord.get(4);
-            String id = csvRecord.get(5);
+        if (csvRecords.isEmpty()) {
+            System.out.println("No available media");
+        } else {
+            csvRecords.forEach(csvRecord -> {
+                long recordNumber = csvRecord.getRecordNumber() - 1;
+                String title = csvRecord.get(0);
+                String availability = csvRecord.get(1);
+                String producer = csvRecord.get(2);
+                String director = csvRecord.get(3);
+                String duration = csvRecord.get(4);
+                String id = csvRecord.get(5);
 
-            System.out.println("Record No - " + recordNumber);
-            System.out.println("---------------");
-            System.out.println("Title: " + title);
-            System.out.println("Availability: " + availability);
-            System.out.println("Producer: " + producer);
-            System.out.println("Director: " + director);
-            System.out.println("Duration: " + duration);
-            System.out.println("ID: " + id);
-        });
+                System.out.println("Record No - " + recordNumber);
+                System.out.println("---------------");
+                System.out.println("Title: " + title);
+                System.out.println("Availability: " + availability);
+                System.out.println("Producer: " + producer);
+                System.out.println("Director: " + director);
+                System.out.println("Duration: " + duration);
+                System.out.println("ID: " + id);
+            });
+        }
     }
 
     // Printing theses records
     public void printTheses(List<CSVRecord> csvRecords) {
         System.out.println("\n---------------------------------------------");
         System.out.println("Theses");
-        csvRecords.forEach(csvRecord -> {
-            long recordNumber = csvRecord.getRecordNumber() - 1;
-            String title = csvRecord.get(0);
-            String availability = csvRecord.get(1);
-            String topic = csvRecord.get(2);
-            String datePublished = csvRecord.get(3);
-            String id = csvRecord.get(4);
-            System.out.println("Record No - " + recordNumber);
-            System.out.println("---------------");
-            System.out.println("Title: " + title);
-            System.out.println("Availability: " + availability);
-            System.out.println("Topic: " + topic);
-            System.out.println("Date Published: " + datePublished);
-            System.out.println("ID: " + id);
-        });
+        if (csvRecords.isEmpty()) {
+            System.out.println("No available theses");
+        } else {
+            csvRecords.forEach(csvRecord -> {
+                long recordNumber = csvRecord.getRecordNumber() - 1;
+                String title = csvRecord.get(0);
+                String availability = csvRecord.get(1);
+                String topic = csvRecord.get(2);
+                String datePublished = csvRecord.get(3);
+                String id = csvRecord.get(4);
+                System.out.println("Record No - " + recordNumber);
+                System.out.println("---------------");
+                System.out.println("Title: " + title);
+                System.out.println("Availability: " + availability);
+                System.out.println("Topic: " + topic);
+                System.out.println("Date Published: " + datePublished);
+                System.out.println("ID: " + id);
+            });
+        }
     }
 }
