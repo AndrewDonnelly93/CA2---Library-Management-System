@@ -75,12 +75,11 @@ public class LibUser {
     }
 
     //Return an item
-    public void returnItem(String itemTitle) throws NoSuchFieldException, IllegalAccessException {
-        LibItem item = Search.linearSearchByStringAttribute(listOfBorrowedAssets, itemTitle, "title");
-        if (item != null)
+    public void returnItem(LibItem item) throws NoSuchFieldException, IllegalAccessException {
+        if (hasBorrowed(item))
             listOfBorrowedAssets.remove(item);
         else
-            System.out.println("Item was not borrowed by this user");
+            System.out.println(item.getTitle() + " was not borrowed by this user");
     }
 
     //Display borrowed items
@@ -90,8 +89,7 @@ public class LibUser {
 
     //Check if an item is borrowed
     public boolean hasBorrowed(LibItem item) {
-        // Implementation
-        return false;
+        return listOfBorrowedAssets.contains(item);
     }
 
     public void printUserDetails() {

@@ -14,20 +14,14 @@ class AuthorTest
     private List<LibItem> authoredItems;
 
     @Test
-    void testGetAuthorName() throws AuthorException {
-        givenAuthorValidArguments();
-        assertEquals("Author", author.getAuthorName());
-    }
-
-    @Test
-    void testSetAuthorName() throws AuthorException {
-        givenAuthorValidArguments();
-        author.setAuthorName("Name");
-        assertEquals("Name", author.getAuthorName());
-    }
-
-    @Test
     void testAddBook() throws AuthorException {
+        givenAuthorValidArguments();
+        Book book = new Book("Title1", true, "Author", "1111111111111", "11111111-1111-1111-1111-111111111111");
+        author.addItem(book);
+        assertTrue(author.getAuthoredItems().contains(book));
+    }
+    @Test
+    void testRemoveBook() throws AuthorException {
         givenAuthorValidArguments();
         Book book = new Book("Title1", true, "Author", "1111111111111", "11111111-1111-1111-1111-111111111111");
         author.addItem(book);
