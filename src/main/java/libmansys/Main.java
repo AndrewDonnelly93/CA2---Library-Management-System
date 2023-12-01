@@ -102,9 +102,6 @@ public class Main {
         libUserList.add(libUser2);
         libUserList.add(libUser);
 
-
-        libUser.printUserDetails();
-
         // Initiating Books, Media and Theses lists
         booksCsvRecords = new ArrayList<>();
         mediaCsvRecords = new ArrayList<>();
@@ -119,13 +116,6 @@ public class Main {
             }
         }
 
-        // Printing the list of library users to a CSV file
-        String usersCsvFile = getFullPathFromRelative("src/test/csv/users.csv");
-        ArrayList<LibUser> usersList = new ArrayList<>();
-        usersList.add(libUser);
-        usersList.add(libUser2);
-        UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, usersList);
-        usersCsvHandler.writeUsersList();
 
         // Adding a list of authors
         ArrayList<LibItem> booksByAuthor1 = new ArrayList<>();
