@@ -28,9 +28,6 @@ public class Main {
     private static ArrayList<LibItem> booksCsvRecords;
     private static ArrayList<LibItem> mediaCsvRecords;
     private static ArrayList<LibItem> thesesCsvRecords;
-    private static LibItemCsvHandler csvHandlerBooks;
-    private static LibItemCsvHandler csvHandlerMedia;
-    private static LibItemCsvHandler csvHandlerTheses;
     private static final String booksCsvFile = getFullPathFromRelative("src/test/csv/books.csv");
     private static final String mediaCsvFile = getFullPathFromRelative("src/test/csv/media.csv");
     private static final String thesesCsvFile = getFullPathFromRelative("src/test/csv/theses.csv");
@@ -415,9 +412,9 @@ public class Main {
 
     private static void allItemsExport() {
         // Initiating CSV Handlers for books, media and theses
-        csvHandlerBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords, "Books");
-        csvHandlerMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords, "Media");
-        csvHandlerTheses = new LibItemCsvHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords, "Theses");
+        LibItemCsvHandler csvHandlerBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords, "Books");
+        LibItemCsvHandler csvHandlerMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords, "Media");
+        LibItemCsvHandler csvHandlerTheses = new LibItemCsvHandler(thesesCsvFile, thesesCsvHeader, thesesCsvRecords, "Theses");
         // Generating CSV files
         csvHandlerBooks.writeToFile();
         csvHandlerMedia.writeToFile();
