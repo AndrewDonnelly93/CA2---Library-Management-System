@@ -40,9 +40,9 @@ public class AuthorsCsvHandler {
                 try {
                     // Printing author name
                     csvPrinter.printRecord(author.getAuthorName());
-                    csvPrinter.printRecord("List of books written by this author");
+                    csvPrinter.printRecord("List of books and theses written by this author");
                     if (author.getAuthoredItems().isEmpty()) {
-                        csvPrinter.printRecord("No books of this author is available");
+                        csvPrinter.printRecord("No books or theses of this author is available");
                     } else {
                         for (var book: author.getAuthoredItems()) {
                             csvPrinter.printRecord(book.getTitle());
@@ -53,7 +53,7 @@ public class AuthorsCsvHandler {
                 }
             });
             csvPrinter.flush();
-            System.out.println("Authors list has been generated");
+            System.out.println("Authors list has been generated\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -115,6 +115,19 @@ public class LibItemCsvHandler {
                    );
                }
             }
+            switch (this.getCsvFileType()) {
+                case "Books":
+                    System.out.println("The list of books has been generated");
+                    break;
+                case "Media":
+                    System.out.println("The list of media has been generated");
+                    break;
+                case "Theses":
+                    System.out.println("The list of theses has been generated");
+                    break;
+                default:
+                    break;
+            }
             csvPrinter.flush();
         } catch (IOException e) {
             e.printStackTrace();

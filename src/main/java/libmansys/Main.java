@@ -15,15 +15,15 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
- 
+import java.util.*;
+
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) throws ParseException, IOException, AuthorException {
+    private static AuthorsCsvHandler authorsCsvHandler;
+    private static ArrayList<Author> authorsList;
+
+    public static void main(String[] args) throws ParseException, IOException, AuthorException, NoSuchFieldException, IllegalAccessException {
 
         //Inits for testing
         Book book1 = new Book(
@@ -67,6 +67,14 @@ public class Main {
 
         //Init a list of users for testing
         List<LibUser> libUserList = new ArrayList<>();
+
+        // Initialising the library system
+        ArrayList<LibItem> library = new ArrayList<>();
+        library.add(book1);
+        library.add(book2);
+        library.add(cd1);
+        library.add(dvd1);
+        library.add(thesis1);
 
         //wrapped this in a try/catch because it was throwing an error
         LibUser libUser;
@@ -115,7 +123,7 @@ public class Main {
 
         // Reading newly generated CSV files
         System.out.println("\nFiles generated:");
-        csvHandlerBooks.parseCsvFile(booksCsvFile,  "Books");
+        csvHandlerBooks.parseCsvFile(booksCsvFile, "Books");
         csvHandlerMedia.parseCsvFile(mediaCsvFile, "Media");
         csvHandlerTheses.parseCsvFile(thesesCsvFile, "Theses");
         System.out.println("\n");
@@ -128,19 +136,22 @@ public class Main {
         UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, usersList);
         usersCsvHandler.writeUsersList();
 
-        // Generating a list of authors
+        // Adding a list of authors
         ArrayList<LibItem> booksByAuthor1 = new ArrayList<>();
         booksByAuthor1.add(book2);
         ArrayList<LibItem> booksByAuthor2 = new ArrayList<>();
         booksByAuthor2.add(book1);
+        ArrayList<LibItem> thesesByAuthor3 = new ArrayList<>();
+        thesesByAuthor3.add(thesis1);
         Author author1 = new Author("J.K.Rowling", booksByAuthor1);
         Author author2 = new Author("Antoine de Saint-Exupéry", booksByAuthor2);
-        ArrayList<Author> authorsList = new ArrayList<>();
+        Author author3 = new Author("Jack Russell", thesesByAuthor3);
+        authorsList = new ArrayList<>();
         authorsList.add(author1);
         authorsList.add(author2);
+        authorsList.add(author3);
         String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
-        AuthorsCsvHandler authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
-        authorsCsvHandler.writeAuthorsList();
+        authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
 
         //USER MENU
 
@@ -153,7 +164,6 @@ public class Main {
             System.out.println("2. Manage Catalogue");
             System.out.println("3. Loan System");
             System.out.println("4. Exit");
-
 
             String input = scanner.nextLine();
             int choice = Integer.parseInt(input);
@@ -170,14 +180,16 @@ public class Main {
                     break;
                 case 4:
                     exit = true;
+                    System.exit(0);
                     break;
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
+
         }
     }
 
-    public static String getFullPathFromRelative (String relativePath) {
+    public static String getFullPathFromRelative(String relativePath) {
         Path fullPath = Paths.get(relativePath);
         return fullPath.toString();
     }
@@ -240,6 +252,7 @@ public class Main {
         libUserList.forEach(user -> System.out.println(user.getName() + " - ID: " + user.getId()));
 
         // Applying the merge sort
+        // Applying the merge sort
         sorter.sort(libUserList, comparator);
 
         // Output the list after sorting
@@ -258,7 +271,7 @@ public class Main {
     }
 
 
-    private static void handleCatalogue () {
+    private static void handleCatalogue() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("Manage Catalogue:");
         System.out.println("1. Update Catalogue");
         System.out.println("2. View Catalogue");
@@ -279,7 +292,7 @@ public class Main {
         }
     }
 
-    private static void updateCatalogue () {
+    private static void updateCatalogue() {
         System.out.println("Update Catalogue:");
         System.out.println("1. Update Author");
         System.out.println("2. Update LibItem");
@@ -299,7 +312,7 @@ public class Main {
         }
     }
 
-    private static void viewCatalogue () {
+    private static void viewCatalogue() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("View Catalogue:");
         System.out.println("1. View Authors");
         System.out.println("2. View Library Items");
@@ -319,16 +332,16 @@ public class Main {
         }
     }
 
-    private static void updateAuthor () {
+    private static void updateAuthor() {
         // TODO Code to update an author
     }
 
 
-    private static void updateLibItem () {
+    private static void updateLibItem() {
         // TODO Code to update a library item
     }
 
-    private static void viewAuthors () {
+    private static void viewAuthors() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("Author Catalogue:");
         System.out.println("1. Export list of all Authors (Note: Valid for Books and Theses only)");
         System.out.println("2. Search for an Author");
@@ -337,18 +350,19 @@ public class Main {
 
         switch (choice) {
             case "1":
-                //TODO authorExport();
+                authorsCsvHandler.writeAuthorsList();
                 break;
             case "2":
-                //TODO searchAuthor();
+                searchAuthors();
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
                 break;
         }
+
     }
 
-    private static void viewLibItems () {
+    private static void viewLibItems() {
         System.out.println("Library Catalogue:");
         System.out.println("1. Export list of all items (includes books, theses and media)");
         System.out.println("2. Export list of available items only");
@@ -372,7 +386,7 @@ public class Main {
         }
     }
 
-    private static void handleLoans () {
+    private static void handleLoans() {
         System.out.println("Loan System:");
         System.out.println("a. Borrow Book");
         System.out.println("b. Return Book");
@@ -391,6 +405,34 @@ public class Main {
                 System.out.println("Invalid choice. Please try again.");
                 break;
         }
+    }
+
+    private static void searchAuthors() throws NoSuchFieldException, IllegalAccessException {
+        Scanner scannerAuthor = new Scanner(System.in);
+        String authorName;
+        do {
+            System.out.println("Enter author's name: ");
+            authorName = scannerAuthor.nextLine();
+            if (authorName.length() < 5 || authorName.length() > 30) {
+                System.out.println("Author's name should be between 5 and 30 characters");
+            }
+        } while (authorName.length() < 5 || authorName.length() > 30);
+
+        System.out.println("Searching by name: " + authorName);
+        List<Author> authorsListCasted = authorsList;
+        List<Author> authorSearch = Collections.singletonList(Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName"));
+        if (authorSearch != null) {
+            System.out.println("Sorry, this author has not been found");
+        } else {
+            authorSearch.forEach(author -> {System.out.println("This author(" + author.getAuthorName() + ") has been found");
+                System.out.println("The list of their books or theses:");
+                author.getAuthoredItems().forEach(book -> {
+                    System.out.println(book.getTitle());
+                });
+            });
+        }
+        scannerAuthor.close();
+
     }
 }
 
