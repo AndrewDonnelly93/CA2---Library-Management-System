@@ -285,17 +285,17 @@ public class Main {
 
     private static void updateCatalogue() {
         System.out.println("Update Catalogue:");
-        System.out.println("1. Update Author");
-        System.out.println("2. Update LibItem");
+        System.out.println("1. Add Author");
+        System.out.println("2. Add LibItem");
 
         String choice = scanner.nextLine();
 
         switch (choice) {
             case "1":
-                updateAuthor();
+                addAuthor();
                 break;
             case "2":
-                updateLibItem();
+                addLibItem();
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
@@ -323,13 +323,13 @@ public class Main {
         }
     }
 
-    private static void updateAuthor() {
-        // TODO Code to update an author
+    private static void addAuthor() {
+        // TODO Code to add an author
     }
 
 
-    private static void updateLibItem() {
-        // TODO Code to update a library item
+    private static void addLibItem() {
+        // TODO Code to add a library item
     }
 
     private static void viewAuthors() throws NoSuchFieldException, IllegalAccessException {
@@ -411,16 +411,16 @@ public class Main {
 
         System.out.println("Searching by name: " + authorName);
         List<Author> authorsListCasted = authorsList;
-        List<Author> authorSearch = Collections.singletonList(Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName"));
-        if (authorSearch != null) {
+        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        if (authorSearch == null) {
             System.out.println("Sorry, this author has not been found");
         } else {
-            authorSearch.forEach(author -> {System.out.println("This author(" + author.getAuthorName() + ") has been found");
-                System.out.println("The list of their books or theses:");
-                author.getAuthoredItems().forEach(book -> {
-                    System.out.println(book.getTitle());
-                });
-            });
+            System.out.println("This author(" + authorSearch.getAuthorName() + ") has been found");
+                if (authorSearch.getAuthoredItems().isEmpty()) {
+                    System.out.println("No available books or items");
+                } else {
+                    authorSearch.printAuthorDetails();
+                }
         }
         scannerAuthor.close();
     }
