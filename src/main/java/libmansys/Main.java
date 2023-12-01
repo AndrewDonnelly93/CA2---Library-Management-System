@@ -1,5 +1,6 @@
 package libmansys;
 
+import libmansys.csv.AuthorsCsvHandler;
 import libmansys.csv.LibItemCsvHandler;
 import libmansys.csv.UsersCsvHandler;
 import libmansys.libItem.Book;
@@ -14,15 +15,15 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
- 
+import java.util.*;
+
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) throws ParseException, IOException {
+    private static AuthorsCsvHandler authorsCsvHandler;
+    private static ArrayList<Author> authorsList;
+
+    public static void main(String[] args) throws ParseException, IOException, AuthorException, NoSuchFieldException, IllegalAccessException {
 
         //Inits for testing
         Book book1 = new Book(
@@ -57,11 +58,23 @@ public class Main {
 
         List<LibItem> listOfBorrowedAssets = new ArrayList<>();
 
+
         listOfBorrowedAssets.add(book1);
         listOfBorrowedAssets.add(book2);
         listOfBorrowedAssets.add(cd1);
         listOfBorrowedAssets.add(dvd1);
         listOfBorrowedAssets.add(thesis1);
+
+        //Init a list of users for testing
+        List<LibUser> libUserList = new ArrayList<>();
+
+        // Initialising the library system
+        ArrayList<LibItem> library = new ArrayList<>();
+        library.add(book1);
+        library.add(book2);
+        library.add(cd1);
+        library.add(dvd1);
+        library.add(thesis1);
 
         //wrapped this in a try/catch because it was throwing an error
         LibUser libUser;
@@ -72,6 +85,10 @@ public class Main {
         } catch (LibUserException e) {
             throw new RuntimeException(e);
         }
+
+        libUserList.add(libUser2);
+        libUserList.add(libUser);
+
 
         libUser.printUserDetails();
 
@@ -106,7 +123,7 @@ public class Main {
 
         // Reading newly generated CSV files
         System.out.println("\nFiles generated:");
-        csvHandlerBooks.parseCsvFile(booksCsvFile,  "Books");
+        csvHandlerBooks.parseCsvFile(booksCsvFile, "Books");
         csvHandlerMedia.parseCsvFile(mediaCsvFile, "Media");
         csvHandlerTheses.parseCsvFile(thesesCsvFile, "Theses");
         System.out.println("\n");
@@ -119,6 +136,23 @@ public class Main {
         UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, usersList);
         usersCsvHandler.writeUsersList();
 
+        // Adding a list of authors
+        ArrayList<LibItem> booksByAuthor1 = new ArrayList<>();
+        booksByAuthor1.add(book2);
+        ArrayList<LibItem> booksByAuthor2 = new ArrayList<>();
+        booksByAuthor2.add(book1);
+        ArrayList<LibItem> thesesByAuthor3 = new ArrayList<>();
+        thesesByAuthor3.add(thesis1);
+        Author author1 = new Author("J.K.Rowling", booksByAuthor1);
+        Author author2 = new Author("Antoine de Saint-Exupéry", booksByAuthor2);
+        Author author3 = new Author("Jack Russell", thesesByAuthor3);
+        authorsList = new ArrayList<>();
+        authorsList.add(author1);
+        authorsList.add(author2);
+        authorsList.add(author3);
+        String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
+        authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
+
         //USER MENU
 
         //Main menu loop
@@ -130,15 +164,13 @@ public class Main {
             System.out.println("2. Manage Catalogue");
             System.out.println("3. Loan System");
             System.out.println("4. Exit");
-            System.out.println("5. Test Merge Sort");
-
 
             String input = scanner.nextLine();
             int choice = Integer.parseInt(input);
 
             switch (choice) {
                 case 1:
-                    handleUsers();
+                    handleUsers(libUserList);
                     break;
                 case 2:
                     handleCatalogue();
@@ -148,45 +180,23 @@ public class Main {
                     break;
                 case 4:
                     exit = true;
-                    break;
-                case 5:
-                    testMergeSort(listOfBorrowedAssets);
+                    System.exit(0);
                     break;
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
+
         }
     }
 
-    public static String getFullPathFromRelative (String relativePath) {
+    public static String getFullPathFromRelative(String relativePath) {
         Path fullPath = Paths.get(relativePath);
         return fullPath.toString();
     }
 
-    //SORT TEST
-    private static void testMergeSort(List<LibItem> libItems) {
-        // Assuming listOfBorrowedAssets is accessible here. If not, pass it as a parameter.
-        Comparator<LibItem> libItemComparator = Comparator.comparing(LibItem::getTitle);
-
-        // Output the list before sorting
-        System.out.println("List Before Sorting:");
-        for (LibItem item : libItems) {
-            System.out.println(item.getTitle());
-        }
-
-        // Applying the merge sort
-        MergeSort.mergeSort(libItems, libItemComparator, 0, libItems.size() - 1);
-
-        // Output the list after sorting
-        System.out.println("\nSorted List:");
-        for (LibItem item : libItems) {
-            System.out.println(item.getTitle());
-        }
-    }
-
     //Methods for handling different services (Users, Catalogue, Loans
     //Each method contains a submenu for specific actions related to that service
-    private static void handleUsers() {
+    private static void handleUsers(List<LibUser> libUserList) {
         System.out.println("Manage Users:");
         System.out.println("1. Export list of all users");
         System.out.println("2. Search for user");
@@ -197,7 +207,7 @@ public class Main {
 
         switch (choice) {
             case "1":
-                //TODO csvExport(libUserService);
+                userSort(libUserList);
                 break;
             case "2":
                 //TODO searchLibUser();
@@ -213,7 +223,55 @@ public class Main {
         }
     }
 
-    private static void handleCatalogue () {
+    //Sort method using Lambda function
+    private static void userSort(List<LibUser> libUserList) {
+        System.out.println("How would you like to sort the list of users?");
+        System.out.println("1. By Name");
+        System.out.println("2. By ID");
+        String sortChoice = scanner.nextLine();
+        Comparator<LibUser> comparator;
+
+        switch (sortChoice) {
+            case "1":
+                comparator = Comparator.comparing(LibUser::getName);
+                break;
+            case "2":
+                comparator = Comparator.comparing(LibUser::getId);
+                break;
+            default:
+                System.out.println("Invalid choice. Defaulting to sort by Name.");
+                comparator = Comparator.comparing(LibUser::getName);
+                break;
+        }
+
+        // Create an instance of MergeSort for LibUser
+        MergeSort<LibUser> sorter = new MergeSort<>();
+
+        // Output the list before sorting
+        System.out.println("List Before Sorting:");
+        libUserList.forEach(user -> System.out.println(user.getName() + " - ID: " + user.getId()));
+
+        // Applying the merge sort
+        // Applying the merge sort
+        sorter.sort(libUserList, comparator);
+
+        // Output the list after sorting
+        System.out.println("\nSorted List:");
+        libUserList.forEach(user -> System.out.println(user.getName() + " - ID: " + user.getId()));
+
+        exportUsersToCsv(libUserList);
+    }
+
+
+    private static void exportUsersToCsv(List<LibUser> libUserList) {
+        String usersCsvFile = getFullPathFromRelative("src/test/csv/sorted_users.csv");
+        UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, (ArrayList<LibUser>) libUserList);
+        usersCsvHandler.writeUsersList();
+        System.out.println("Sorted user list exported to CSV.");
+    }
+
+
+    private static void handleCatalogue() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("Manage Catalogue:");
         System.out.println("1. Update Catalogue");
         System.out.println("2. View Catalogue");
@@ -234,7 +292,7 @@ public class Main {
         }
     }
 
-    private static void updateCatalogue () {
+    private static void updateCatalogue() {
         System.out.println("Update Catalogue:");
         System.out.println("1. Update Author");
         System.out.println("2. Update LibItem");
@@ -254,7 +312,7 @@ public class Main {
         }
     }
 
-    private static void viewCatalogue () {
+    private static void viewCatalogue() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("View Catalogue:");
         System.out.println("1. View Authors");
         System.out.println("2. View Library Items");
@@ -274,16 +332,16 @@ public class Main {
         }
     }
 
-    private static void updateAuthor () {
+    private static void updateAuthor() {
         // TODO Code to update an author
     }
 
 
-    private static void updateLibItem () {
+    private static void updateLibItem() {
         // TODO Code to update a library item
     }
 
-    private static void viewAuthors () {
+    private static void viewAuthors() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("Author Catalogue:");
         System.out.println("1. Export list of all Authors (Note: Valid for Books and Theses only)");
         System.out.println("2. Search for an Author");
@@ -292,18 +350,19 @@ public class Main {
 
         switch (choice) {
             case "1":
-                //TODO authorExport();
+                authorsCsvHandler.writeAuthorsList();
                 break;
             case "2":
-                //TODO searchAuthor();
+                searchAuthors();
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
                 break;
         }
+
     }
 
-    private static void viewLibItems () {
+    private static void viewLibItems() {
         System.out.println("Library Catalogue:");
         System.out.println("1. Export list of all items (includes books, theses and media)");
         System.out.println("2. Export list of available items only");
@@ -327,7 +386,7 @@ public class Main {
         }
     }
 
-    private static void handleLoans () {
+    private static void handleLoans() {
         System.out.println("Loan System:");
         System.out.println("a. Borrow Book");
         System.out.println("b. Return Book");
@@ -347,6 +406,39 @@ public class Main {
                 break;
         }
     }
+
+    private static void searchAuthors() throws NoSuchFieldException, IllegalAccessException {
+        Scanner scannerAuthor = new Scanner(System.in);
+        String authorName;
+        do {
+            System.out.println("Enter author's name: ");
+            authorName = scannerAuthor.nextLine();
+            if (authorName.length() < 5 || authorName.length() > 30) {
+                System.out.println("Author's name should be between 5 and 30 characters");
+            }
+        } while (authorName.length() < 5 || authorName.length() > 30);
+
+        System.out.println("Searching by name: " + authorName);
+        List<Author> authorsListCasted = authorsList;
+        List<Author> authorSearch = Collections.singletonList(Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName"));
+        if (authorSearch != null) {
+            System.out.println("Sorry, this author has not been found");
+        } else {
+            authorSearch.forEach(author -> {System.out.println("This author(" + author.getAuthorName() + ") has been found");
+                System.out.println("The list of their books or theses:");
+                author.getAuthoredItems().forEach(book -> {
+                    System.out.println(book.getTitle());
+                });
+            });
+        }
+        scannerAuthor.close();
+
+    }
 }
+
+/*TODO
+add sort options - ID and number of loans
+Export the list
+ */
 
 
