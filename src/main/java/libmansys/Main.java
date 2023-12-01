@@ -211,10 +211,10 @@ public class Main {
         }
     }
 
-    //SORT TEST
+    //Sort method using Lambda function
     private static void userSort(List<LibUser> libUserList) {
         System.out.println("How would you like to sort the list of users?");
-        System.out.println("1. By Title");
+        System.out.println("1. By Name");
         System.out.println("2. By ID");
         String sortChoice = scanner.nextLine();
         Comparator<LibUser> comparator;
@@ -227,28 +227,28 @@ public class Main {
                 comparator = Comparator.comparing(LibUser::getId);
                 break;
             default:
-                System.out.println("Invalid choice. Defaulting to sort by Title.");
+                System.out.println("Invalid choice. Defaulting to sort by Name.");
                 comparator = Comparator.comparing(LibUser::getName);
                 break;
         }
 
+        // Create an instance of MergeSort for LibUser
+        MergeSort<LibUser> sorter = new MergeSort<>();
+
         // Output the list before sorting
         System.out.println("List Before Sorting:");
-        for (LibUser user : libUserList) {
-            System.out.println(user.getName() + " - ID: " + user.getId());
-        }
+        libUserList.forEach(user -> System.out.println(user.getName() + " - ID: " + user.getId()));
 
         // Applying the merge sort
-        MergeSort.mergeSort(libUserList, comparator, 0, libUserList.size() - 1);
+        sorter.sort(libUserList, comparator);
 
         // Output the list after sorting
         System.out.println("\nSorted List:");
-        for (LibUser user : libUserList) {
-            System.out.println(user.getName() + " - ID: " + user.getId());
-        }
+        libUserList.forEach(user -> System.out.println(user.getName() + " - ID: " + user.getId()));
 
         exportUsersToCsv(libUserList);
     }
+
 
     private static void exportUsersToCsv(List<LibUser> libUserList) {
         String usersCsvFile = getFullPathFromRelative("src/test/csv/sorted_users.csv");

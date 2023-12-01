@@ -1,12 +1,19 @@
 package libmansys;
 
+import libmansys.libItem.Sortable;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class MergeSort {
+public class MergeSort<T> implements Sortable<T> {
 
-    public static <T> void mergeSort(List<T> list, Comparator<T> comparator, int l, int r) {
+    @Override
+    public void sort(List<T> list, Comparator<T> comparator) {
+        mergeSort(list, comparator, 0, list.size() - 1);
+    }
+
+    private static <T> void mergeSort(List<T> list, Comparator<T> comparator, int l, int r) {
         if (l < r) {
             int m = l + (r - l) / 2;
             mergeSort(list, comparator, l, m);
