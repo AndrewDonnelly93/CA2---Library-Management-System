@@ -399,11 +399,10 @@ public class Main {
     }
 
     private static void searchAuthors() throws NoSuchFieldException, IllegalAccessException {
-        Scanner scannerAuthor = new Scanner(System.in);
         String authorName;
         do {
             System.out.println("Enter author's name: ");
-            authorName = scannerAuthor.nextLine();
+            authorName = scanner.nextLine();
             if (authorName.length() < 5 || authorName.length() > 30) {
                 System.out.println("Author's name should be between 5 and 30 characters");
             }
@@ -422,7 +421,6 @@ public class Main {
                     authorSearch.printAuthorDetails();
                 }
         }
-        scannerAuthor.close();
     }
 
     private static void allItemsExport() {
