@@ -39,31 +39,23 @@ public class Author
         this.authoredItems = authoredItems;
     }
 
-    public void addBook(LibItem item) throws AuthorException {
+    public void addItem(LibItem item) throws AuthorException {
         if (item instanceof Media)
-            throw new AuthorException("\n\tItem added should be a books or a thesis");
+            throw new AuthorException("\n\tItem added should be a book or a thesis");
         else
             authoredItems.add(item);
     }
 
-    public void removeBook(LibItem item) {
+    public void removeItem(LibItem item) {
         authoredItems.remove(item);
     }
 
-    public void PrintAuthorDetails (){
+    public void printAuthorDetails (){
         System.out.println("\n\tAuthor Name: " + authorName);
         System.out.println("\n\tList of authored assets\n");
         for (LibItem item : authoredItems) {
             item.printItemDetails();
         }
-    }
-
-    public static Author LinearSearchAuthor (List<Author> authorList, String targetName) {
-        for (Author author : authorList) {
-            if (author.getAuthorName().equals(targetName))
-                return author;
-        }
-        return null;
     }
 }
 
