@@ -1,9 +1,6 @@
 package libmansys;
 
-import libmansys.libItem.Book;
-import libmansys.libItem.LibItem;
-import libmansys.libItem.Media;
-import libmansys.libItem.Thesis;
+import libmansys.libItem.*;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -21,12 +18,12 @@ class SearchTest {
     private Thesis thesis;
 
     @Test
-    void testLinearSearchByStringAttribute() throws ParseException, NoSuchFieldException, IllegalAccessException {
+    void testLinearSearchByStringAttribute() throws ParseException, NoSuchFieldException, IllegalAccessException, LibItemException {
         addingItems();
         assertEquals(media, Search.linearSearchByStringAttribute(itemsList, "Media Title", "title"));
     }
 
-    private void addingItems() throws ParseException {
+    private void addingItems() throws ParseException, LibItemException {
         itemsList = new ArrayList<>();
         book = new Book("Book Title", true, "Author", "0000000000000",
                 "00000000-0000-0000-0000-000000000000");
