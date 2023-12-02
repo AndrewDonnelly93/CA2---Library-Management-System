@@ -1,6 +1,6 @@
 package libmansys.csv;
 
-import libmansys.Author;
+import libmansys.author.Author;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 

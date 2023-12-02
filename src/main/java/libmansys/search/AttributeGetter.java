@@ -1,4 +1,4 @@
-package libmansys;
+package libmansys.search;
 
 @FunctionalInterface
 public interface AttributeGetter<T> {

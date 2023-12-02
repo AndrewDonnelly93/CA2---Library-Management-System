@@ -1,5 +1,7 @@
 package libmansys;
 
+import libmansys.author.Author;
+import libmansys.author.AuthorException;
 import libmansys.libItem.Book;
 import libmansys.libItem.LibItem;
 import libmansys.libItem.LibItemException;

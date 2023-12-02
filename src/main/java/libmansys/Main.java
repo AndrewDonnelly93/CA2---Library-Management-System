@@ -1,5 +1,7 @@
 package libmansys;
 
+import libmansys.author.Author;
+import libmansys.author.AuthorException;
 import libmansys.csv.AuthorsCsvHandler;
 import libmansys.csv.LibItemCsvHandler;
 import libmansys.csv.UsersCsvHandler;
@@ -7,6 +9,7 @@ import libmansys.libItem.Book;
 import libmansys.libItem.LibItem;
 import libmansys.libItem.Media;
 import libmansys.libItem.Thesis;
+import libmansys.search.Search;
 import libmansys.sort.MergeSort;
 import libmansys.user.LibUser;
 import libmansys.user.LibUserException;
@@ -697,17 +700,24 @@ public class Main {
 
         switch (sortChoice) {
             case "1":
-                String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
-                AuthorsCsvHandler authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
-                authorsCsvHandler.writeAuthorsList();
+                exportAuthorsToCsv();
                 break;
             case "2":
                 comparator = Comparator.comparing(Author::getAuthorName);
+                MergeSort<Author> sorter = new MergeSort<>();
+                sorter.sort(authorsList, comparator);
+                exportAuthorsToCsv();
                 break;
             default:
                 System.out.println("Invalid choice.");
                 break;
         }
+    }
+
+    private static void exportAuthorsToCsv() {
+        String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
+        AuthorsCsvHandler authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
+        authorsCsvHandler.writeAuthorsList();
     }
 
     private static void viewLibItems() throws NoSuchFieldException, IllegalAccessException {

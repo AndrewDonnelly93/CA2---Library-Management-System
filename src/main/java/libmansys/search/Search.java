@@ -1,4 +1,6 @@
-package libmansys;
+package libmansys.search;
+
+import libmansys.search.AttributeGetter;
 
 import java.util.List;
 
