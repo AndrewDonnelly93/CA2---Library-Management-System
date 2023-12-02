@@ -33,17 +33,6 @@ public class Book extends LibItem {
             this.ISBN = ISBN;
     }
 
-
-    @Override
-    public void borrowItem() {
-
-    }
-
-    @Override
-    public void returnItem() {
-
-    }
-
     @Override
     public void printItemDetails() {
         System.out.println("-".repeat(50));
