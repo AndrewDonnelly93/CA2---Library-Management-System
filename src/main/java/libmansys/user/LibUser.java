@@ -68,11 +68,6 @@ public class LibUser {
             System.out.println(item.getTitle() + " was not borrowed by this user");
     }
 
-    //Display borrowed items
-    public void displayBorrowedItems() {
-        // Implementation
-    }
-
     //Check if an item is borrowed
     public boolean hasBorrowed(LibItem item) {
         return listOfBorrowedAssets.contains(item);
