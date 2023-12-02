@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -45,7 +47,7 @@ class MergeSortTest
         media = new Media("Media Title", true, "Producer", "Director",
                 Duration.ofHours(1).plusMinutes(30), "00000000-0000-0000-0000-000000000000");
         thesis = new Thesis("Thesis Title", true, "Author", "Topic",
-                "Abstract Summary", new SimpleDateFormat("dd/MM/yyyy").parse("14/05/2023"),
+                "Abstract Summary", LocalDate.parse("14/05/2023", DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                 "00000000-0000-0000-0000-000000000000");
         itemsList.add(media);
         itemsList.add(book1);
