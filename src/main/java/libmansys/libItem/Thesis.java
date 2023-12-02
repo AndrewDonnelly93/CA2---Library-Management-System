@@ -51,8 +51,8 @@ public class Thesis extends LibItem {
         this.abstractSummary = abstractSummary;
     }
 
-    public Date getDatePublished() {
-        return datePublished;
+    public String getDatePublished() {
+        return new SimpleDateFormat("dd-MM-yyyy").format(datePublished);
     }
 
     public void setDatePublished(Date datePublished) {
