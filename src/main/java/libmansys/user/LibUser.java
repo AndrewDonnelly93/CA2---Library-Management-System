@@ -17,8 +17,8 @@ public class LibUser {
             throw new LibUserException("\n\tUser name should be between 2 and 30 characters");
         else
             this.name = name;
-        if (id.isEmpty() || id.length() > 10)
-            throw new LibUserException("\n\tUser ID should be between 1 and 10 characters");
+        if (id.length() != 5)
+            throw new LibUserException("\n\tUser ID should have 5 characters");
         else
             this.id = id;
         this.listOfBorrowedAssets = listOfBorrowedAssets;
@@ -45,8 +45,8 @@ public class LibUser {
     }
 
     public void setId(String id) throws LibUserException{
-        if (id.isEmpty() || id.length() > 10)
-            throw new LibUserException("\n\tUser ID should be between 1 and 10 characters");
+        if (id.length() != 5)
+            throw new LibUserException("\n\tUser ID should have 5 characters");
         else
             this.id = id;
     }

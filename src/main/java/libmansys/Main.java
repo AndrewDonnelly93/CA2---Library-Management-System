@@ -14,12 +14,9 @@ import libmansys.sort.MergeSort;
 import libmansys.user.LibUser;
 import libmansys.user.LibUserException;
 import libmansys.libItem.*;
-
-import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -39,7 +36,7 @@ public class Main {
     private static final StringWriter mediaCsvHeader = new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n");
     private static final StringWriter thesesCsvHeader = new StringWriter().append("Title,Availability,Topic,DatePublished,ID");
 
-    public static void main(String[] args) throws ParseException, IOException, AuthorException, NoSuchFieldException, IllegalAccessException, LibItemException {
+    public static void main(String[] args) throws AuthorException, LibItemException {
 
         // Initialising the library system
         Book book1;
@@ -268,12 +265,12 @@ public class Main {
         // Prompt for user ID
         String id;
         do {
-            System.out.println("Enter user's ID (1-10 characters): ");
+            System.out.println("Enter user's ID (5 characters): ");
             id = scanner.nextLine();
-            if (id.isEmpty() || id.length() > 10) {
-                System.out.println("User ID should be between 1 and 10 characters");
+            if (id.length() != 5) {
+                System.out.println("User ID should have 5 characters");
             }
-        } while (id.isEmpty() || id.length() > 10);
+        } while (id.length() != 5);
 
         // Create new user and add to the list
         try {
@@ -286,7 +283,7 @@ public class Main {
     }
 
 
-    private static void handleCatalogue() throws NoSuchFieldException, IllegalAccessException, LibItemException, AuthorException {
+    private static void handleCatalogue() throws LibItemException, AuthorException {
         System.out.println("Manage Catalogue:");
         System.out.println("1. Update Catalogue");
         System.out.println("2. View Catalogue");
@@ -307,7 +304,7 @@ public class Main {
         }
     }
 
-    private static void updateCatalogue() throws NoSuchFieldException, IllegalAccessException, LibItemException, AuthorException {
+    private static void updateCatalogue() throws LibItemException, AuthorException {
         System.out.println("Update Catalogue:");
         System.out.println("1. Add Author");
         System.out.println("2. Add LibItem");
@@ -327,7 +324,7 @@ public class Main {
         }
     }
 
-    private static void viewCatalogue() throws NoSuchFieldException, IllegalAccessException {
+    private static void viewCatalogue() {
         System.out.println("View Catalogue:");
         System.out.println("1. View Authors");
         System.out.println("2. View Library Items");
@@ -347,7 +344,7 @@ public class Main {
         }
     }
 
-    private static void addAuthor() throws NoSuchFieldException, IllegalAccessException, AuthorException, LibItemException {
+    private static void addAuthor() throws AuthorException, LibItemException {
         String authorName;
         do {
             System.out.println("Enter author's name: ");
@@ -386,7 +383,7 @@ public class Main {
     }
 
 
-    private static void addLibItem() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+    private static void addLibItem() throws LibItemException {
         System.out.println("Which item would you like to add?");
         System.out.println("1. Add a book");
         System.out.println("2. Add a media item");
@@ -410,7 +407,7 @@ public class Main {
         }
     }
 
-    private static void addBook() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+    private static void addBook() throws LibItemException {
         String authorName;
         String title;
         String isbnNumber;
@@ -484,7 +481,7 @@ public class Main {
         newBook.printItemDetails();
     }
 
-    private static void addMedia() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+    private static void addMedia() throws LibItemException {
         String title;
         String producer;
         String director;
@@ -512,7 +509,7 @@ public class Main {
             System.out.println("Enter director name:");
             director = scanner.nextLine();
             if (director.length() < 2 || director.length() > 50) {
-                System.out.println("Sorry, producer name should be between 2 and 50 characters");
+                System.out.println("Sorry, director name should be between 2 and 50 characters");
             }
         } while (director.length() < 2 || director.length() > 50);
         // Entering duration
@@ -592,7 +589,7 @@ public class Main {
         newThesis.printItemDetails();
     }
 
-    private static void addThesis() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+    private static void addThesis() throws LibItemException {
         String authorName;
         String title;
         String topic;
@@ -668,7 +665,7 @@ public class Main {
         return uuid.toString();
     }
 
-    private static void viewAuthors() throws NoSuchFieldException, IllegalAccessException {
+    private static void viewAuthors() {
         System.out.println("Author Catalogue:");
         System.out.println("1. Export list of all Authors (Note: Valid for Books and Theses only)");
         System.out.println("2. Search for an Author");
@@ -717,7 +714,7 @@ public class Main {
         authorsCsvHandler.writeAuthorsList();
     }
 
-    private static void viewLibItems() throws NoSuchFieldException, IllegalAccessException {
+    private static void viewLibItems() {
         System.out.println("Library Catalogue:");
         System.out.println("1. Export list of all items (includes books, theses and media)");
         System.out.println("2. Export list of available items only");
@@ -741,7 +738,7 @@ public class Main {
         }
     }
 
-    private static void handleLoans() throws NoSuchFieldException, IllegalAccessException {
+    private static void handleLoans() {
         System.out.println("Loan System:");
         System.out.println("a. Borrow Book");
         System.out.println("b. Return Book");

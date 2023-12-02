@@ -17,8 +17,14 @@ public class Media extends LibItem {
             String id
     ) throws LibItemException {
         super(title, availabilityStatus, id);
-        this.producer = producer;
-        this.director = director;
+        if (producer.length() < 2 || producer.length() > 50)
+            throw new LibItemException("\n\tProducer name should be between 2 and 50 characters");
+        else
+            this.producer = producer;
+        if (director.length() < 2 || director.length() > 50)
+            throw new LibItemException("\n\tDirector name should be between 2 and 50 characters");
+        else
+            this.director = director;
         this.playtime = playtime;
         this.itemType = LibItemType.MEDIA;
     }
@@ -27,16 +33,22 @@ public class Media extends LibItem {
         return producer;
     }
 
-    public void setProducer(String producer) {
-        this.producer = producer;
+    public void setProducer(String producer) throws LibItemException {
+        if (producer.length() < 2 || producer.length() > 50)
+            throw new LibItemException("\n\tProducer name should be between 2 and 50 characters");
+        else
+            this.producer = producer;
     }
 
     public String getDirector() {
         return director;
     }
 
-    public void setDirector(String director) {
-        this.director = director;
+    public void setDirector(String director) throws LibItemException {
+        if (director.length() < 2 || director.length() > 50)
+            throw new LibItemException("\n\tDirector name should be between 2 and 50 characters");
+        else
+            this.director = director;
     }
 
     public String getPlaytime() {

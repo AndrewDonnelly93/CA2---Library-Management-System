@@ -1,7 +1,7 @@
 package libmansys.libItem;
 
 public class LibItemException extends Exception {
-    private String message;
+    private final String message;
     public LibItemException() {
         message = "\n\tThere is an error in LibItem Class";
     }
