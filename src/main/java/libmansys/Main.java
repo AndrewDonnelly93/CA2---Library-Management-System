@@ -69,7 +69,7 @@ public class Main {
                             "Identical thermal profiles were used for both types of heating. For both" +
                             "materials, microwave heating was found to enhance the densification" +
                             "processes which occur during constant rate heating.",
-                    new SimpleDateFormat("dd/MM/yyyy").parse("14/05/2023"),
+                    LocalDate.parse("14/05/2023", DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     "17013fa6-1d7a-45f8-ae4c-292fbeb2b6db");
         } catch (LibItemException e) {
             throw new RuntimeException(e);
@@ -377,8 +377,53 @@ public class Main {
         }
     }
 
-    private static void addMedia() {
+    private static void addMedia() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+        String title;
+        String producer;
+        String director;
+        Duration duration = null;
+        String id = generateRandomID();
 
+        // Entering title
+        do {
+            System.out.println("Enter title:");
+            title = scanner.nextLine();
+            if (title.length() < 2 || title.length() > 50) {
+                System.out.println("Sorry, title should be between 2 and 50 characters");
+            }
+        } while (title.length() < 2 || title.length() > 50);
+        // Entering producer
+        do {
+            System.out.println("Enter producer name:");
+            producer = scanner.nextLine();
+            if (producer.length() < 2 || producer.length() > 50) {
+                System.out.println("Sorry, producer name should be between 2 and 50 characters");
+            }
+        } while (producer.length() < 2 || producer.length() > 50);
+        // Entering director
+        do {
+            System.out.println("Enter director name:");
+            director = scanner.nextLine();
+            if (director.length() < 2 || director.length() > 50) {
+                System.out.println("Sorry, producer name should be between 2 and 50 characters");
+            }
+        } while (director.length() < 2 || director.length() > 50);
+        // Entering duration
+        do {
+            System.out.println("Enter playtime in the format 'PT1H30M' (1 hour 30 minutes)");
+            String durationString = scanner.nextLine();
+            try {
+                duration = Duration.parse(durationString);
+            } catch (Exception e) {
+                System.out.println("Invalid duration format. Please enter the duration in the format 'PT1H30M'.");
+            }
+        } while (duration == null);
+
+        // Adding media to the library
+        Media newMedia = new Media(title, true, producer, director, duration, id);
+        library.add(newMedia);
+        System.out.println("New media item has been added to the library");
+        newMedia.printItemDetails();
     }
 
     private static void addThesis() throws NoSuchFieldException, IllegalAccessException, LibItemException {
@@ -386,7 +431,7 @@ public class Main {
         String title;
         String topic;
         String abstractSummary;
-        Date datePublished = null;
+        LocalDate datePublished = null;
         String id = generateRandomID();
         do {
             System.out.println("Enter author's name (it should exists in the author list or add an author first): ");
@@ -431,14 +476,13 @@ public class Main {
                 String dateString = scanner.nextLine();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 try {
-                    LocalDate date = LocalDate.parse(dateString, formatter);
-                    datePublished = java.sql.Date.valueOf(date);
+                    datePublished = LocalDate.parse(dateString, formatter);
                 } catch (Exception e) {
                     System.out.println("Invalid date format. Please enter the date in dd/mm/yyyy format.");
                 }
-            } while (datePublished != null);
-            // Adding theses to the library
+            } while (datePublished == null);
 
+            // Adding theses to the library
             Thesis newThesis = new Thesis(title,
                     true,
                     authorName,
