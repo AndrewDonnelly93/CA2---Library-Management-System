@@ -70,12 +70,12 @@ public class LibUser {
     }
 
     //Borrowing functionality
-    public void borrowItem(LibItem item) throws NoSuchFieldException, IllegalAccessException {
+    public void borrowItem(LibItem item) {
         listOfBorrowedAssets.add(item);
     }
 
     //Return an item
-    public void returnItem(LibItem item) throws NoSuchFieldException, IllegalAccessException {
+    public void returnItem(LibItem item) {
         if (hasBorrowed(item))
             listOfBorrowedAssets.remove(item);
         else

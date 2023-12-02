@@ -18,7 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -47,7 +46,7 @@ public class Main {
         Thesis thesis1;
 
         try {
-            //Inits for testing
+            // Initialising the library system
             book1 = new Book(
                     "The Little Prince", true,
                     "Antoine de Saint-Exupéry", "9780156012195", "6c60ac1f-a82d-4c99-8590-8e19099d3b04"
@@ -356,7 +355,7 @@ public class Main {
             }
         } while (authorName.length() < 5 || authorName.length() > 30);
         List<Author> authorsListCasted = authorsList;
-        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        Author authorSearch = Search.linearSearchByAttribute(authorsListCasted, Author::getAuthorName, authorName );
         if (authorSearch == null) {
             // Adding new author to the library
             System.out.println("Would you like to add a book or a thesis for this author?");
@@ -407,7 +406,7 @@ public class Main {
             }
         } while (authorName.length() < 2);
         List<Author> authorsListCasted = authorsList;
-        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        Author authorSearch = Search.linearSearchByAttribute(authorsListCasted, Author::getAuthorName, authorName);
         if (authorSearch == null) {
             System.out.println("Please add this author to the authors list first");
         } else {
@@ -501,7 +500,7 @@ public class Main {
             }
         } while (authorName.length() < 2);
         List<Author> authorsListCasted = authorsList;
-        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        Author authorSearch = Search.linearSearchByAttribute(authorsListCasted,Author::getAuthorName, authorName);
         if (authorSearch == null) {
             System.out.println("Please add this author to the authors list first");
         } else {
@@ -579,7 +578,6 @@ public class Main {
                 System.out.println("Invalid choice. Please try again.");
                 break;
         }
-
     }
 
     private static void exportAuthorList() {
@@ -648,18 +646,16 @@ public class Main {
                 break;
         }
     }
-
-    private static void searchAuthors() {
-    private static void borrowBook() throws NoSuchFieldException, IllegalAccessException {
+    private static void borrowBook() {
         System.out.println("Enter User's ID");
         String userID = scanner.nextLine();
-        LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
+        LibUser user = Search.linearSearchByAttribute(libUserList, LibUser::getId, userID);
         if (user == null) {
             System.out.println("User ID " + userID + " is not registered");
         } else {
             System.out.println("Enter item's title: ");
             String itemTitle = scanner.nextLine();
-            LibItem item = Search.linearSearchByStringAttribute(library, itemTitle, "title");
+            LibItem item = Search.linearSearchByAttribute(library, LibItem::getTitle, itemTitle);
             if (item == null) {
                 System.out.println("Item " + itemTitle + " does not exist");
             } else {
@@ -676,16 +672,16 @@ public class Main {
         }
     }
 
-    private static void returnBook() throws NoSuchFieldException, IllegalAccessException {
+    private static void returnBook(){
         System.out.println("Enter User's ID");
         String userID = scanner.nextLine();
-        LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
+        LibUser user = Search.linearSearchByAttribute(libUserList, LibUser::getId, userID);
         if (user == null) {
             System.out.println("User ID " + userID + " is not registered");
         } else {
             System.out.println("Enter item's title: ");
             String itemTitle = scanner.nextLine();
-            LibItem item = Search.linearSearchByStringAttribute(user.getListOfBorrowedAssets(), itemTitle, "title");
+            LibItem item = Search.linearSearchByAttribute(user.getListOfBorrowedAssets(), LibItem::getTitle, itemTitle);
             if (item == null) {
                 System.out.println("Item " + itemTitle + " was not borrowed by user " + userID);
             } else {
@@ -698,7 +694,7 @@ public class Main {
         }
     }
 
-    private static void searchAuthors() throws NoSuchFieldException, IllegalAccessException {
+    private static void searchAuthors() {
         String authorName;
         do {
             System.out.println("Enter author's name: ");
