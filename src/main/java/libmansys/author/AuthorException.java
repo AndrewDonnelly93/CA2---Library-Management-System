@@ -1,4 +1,4 @@
-package libmansys;
+package libmansys.author;
 
 public class AuthorException extends Exception
 {

@@ -1,4 +1,4 @@
-package libmansys;
+package libmansys.author;
 
 import libmansys.libItem.LibItem;
 import libmansys.libItem.Media;
