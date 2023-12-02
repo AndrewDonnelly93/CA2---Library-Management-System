@@ -63,16 +63,6 @@ public class Media extends LibItem {
     }
 
     @Override
-    public void borrowItem() {
-
-    }
-
-    @Override
-    public void returnItem() {
-
-    }
-
-    @Override
     public void printItemDetails() {
         System.out.println("-".repeat(50));
         System.out.println("Item type: Media Title: " + this.getTitle()

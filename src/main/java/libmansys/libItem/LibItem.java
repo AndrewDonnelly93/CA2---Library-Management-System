@@ -7,7 +7,7 @@ public abstract class LibItem {
     protected LibItemType itemType;
     protected String id;
 
-    public LibItem(String title, boolean availabilityStatus, String id) throws LibItemException {
+    public LibItem(String title, boolean availabilityStatus, String id) throws LibItemException{
         if (id.length() != 36)
             throw new LibItemException("\n\tItem ID should have 36 characters");
         else
@@ -43,10 +43,6 @@ public abstract class LibItem {
         else
             this.id = id;
     }
-
-    public abstract void borrowItem();
-
-    public abstract void returnItem();
 
     public abstract void printItemDetails();
 }
