@@ -22,11 +22,10 @@ class SearchTest {
     @Test
     void testLinearSearchByAttribute() throws ParseException, LibItemException {
         addingItems();
-        // Replace linearSearchByStringAttribute with linearSearchByAttribute and return title with lamda method reference instead
         assertEquals(media, Search.linearSearchByAttribute(itemsList, LibItem::getTitle, "Media Title"));
     }
 
-    private void addingItems() throws ParseException, LibItemException {
+    private void addingItems() throws LibItemException {
         itemsList = new ArrayList<>();
         book = new Book("Book Title", true, "Author", "0000000000000",
                 "00000000-0000-0000-0000-000000000000");

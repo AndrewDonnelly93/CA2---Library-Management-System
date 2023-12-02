@@ -12,7 +12,10 @@ public abstract class LibItem {
             throw new LibItemException("\n\tItem ID should have 36 characters");
         else
             this.id = id;
-        this.title = title;
+        if (title.length() < 2 || title.length() > 50)
+            throw new LibItemException("\n\tTitle should be between 2 and 50 characters");
+        else
+            this.title = title;
         this.availabilityStatus = availabilityStatus;
         this.itemType = LibItemType.LIB_ITEM;
     }
@@ -21,8 +24,11 @@ public abstract class LibItem {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitle(String title) throws LibItemException {
+        if (title.length() < 2 || title.length() > 50)
+            throw new LibItemException("\n\tTitle should be between 2 and 50 characters");
+        else
+            this.title = title;
     }
 
     public boolean getAvailabilityStatus() {

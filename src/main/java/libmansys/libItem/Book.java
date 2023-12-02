@@ -1,4 +1,7 @@
 package libmansys.libItem;
+
+import libmansys.author.AuthorException;
+
 // Represents books and audiobooks
 public class Book extends LibItem {
     private String author;
@@ -7,7 +10,10 @@ public class Book extends LibItem {
     public Book(String title, boolean availabilityStatus, String author, String ISBN, String id) throws LibItemException {
         super(title, availabilityStatus, id);
         this.itemType = LibItemType.BOOK;
-        this.author = author;
+        if (author.length() < 2 || author.length() > 30)
+            throw new LibItemException("\n\tAuthor name should be between 2 and 30 characters");
+        else
+            this.author = author;
         if (ISBN.length() != 13)
             throw new LibItemException("\n\tBook ISBN should have 13 digits");
         else
@@ -18,8 +24,11 @@ public class Book extends LibItem {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthor(String author) throws LibItemException {
+        if (author.length() < 2 || author.length() > 30)
+            throw new LibItemException("\n\tAuthor name should be between 2 and 30 characters");
+        else
+            this.author = author;
     }
 
     public String getISBN() {

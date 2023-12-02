@@ -1,9 +1,7 @@
 package libmansys.libItem;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 // Represents theses and dissertations
 public class Thesis extends LibItem {
@@ -22,9 +20,15 @@ public class Thesis extends LibItem {
             String id
     ) throws LibItemException {
         super(title, availabilityStatus, id);
-        this.author = author;
+        if (author.length() < 2 || author.length() > 30)
+            throw new LibItemException("\n\tAuthor name should be between 2 and 30 characters");
+        else
+            this.author = author;
         this.topic = topic;
-        this.abstractSummary = abstractSummary;
+        if (abstractSummary.length() < 100 || abstractSummary.length() > 500)
+            throw new LibItemException("\n\tAbstract Summary should be between 100 and 500 characters");
+        else
+            this.abstractSummary = abstractSummary;
         this.datePublished = datePublished;
         this.itemType = LibItemType.THESIS;
     }
@@ -33,8 +37,11 @@ public class Thesis extends LibItem {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthor(String author) throws LibItemException {
+        if (author.length() < 2 || author.length() > 30)
+            throw new LibItemException("\n\tAuthor name should be between 2 and 30 characters");
+        else
+            this.author = author;
     }
 
     public String getTopic() {
@@ -49,8 +56,11 @@ public class Thesis extends LibItem {
         return abstractSummary;
     }
 
-    public void setAbstractSummary(String abstractSummary) {
-        this.abstractSummary = abstractSummary;
+    public void setAbstractSummary(String abstractSummary) throws LibItemException {
+        if (abstractSummary.length() < 100 || abstractSummary.length() > 500)
+            throw new LibItemException("\n\tAbstract Summary should be between 100 and 500 characters");
+        else
+            this.abstractSummary = abstractSummary;
     }
 
     public String getDatePublished() {

@@ -148,7 +148,7 @@ public class LibItemCsvHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    };
+    }
 
     // Read a CSV file and print it
     public void parseCsvFile(String docPath, String csvType) {
