@@ -373,6 +373,7 @@ public class Main {
                     addBookToAuthor(newAuthor);
                     break;
                 case "2":
+                    addThesisToAuthor(newAuthor);
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again");
@@ -530,6 +531,65 @@ public class Main {
         library.add(newMedia);
         System.out.println("New media item has been added to the library");
         newMedia.printItemDetails();
+    }
+
+    private static void addThesisToAuthor(Author author) throws LibItemException, AuthorException {
+        String title;
+        String topic;
+        String abstractSummary;
+        LocalDate datePublished = null;
+        String id = generateRandomID();
+
+        // Entering title
+        do {
+            System.out.println("Enter title:");
+            title = scanner.nextLine();
+            if (title.length() < 2 || title.length() > 50) {
+                System.out.println("Sorry, title should be between 2 and 50 characters");
+            }
+        } while (title.length() < 2 || title.length() > 50);
+        // Entering topic
+        do {
+            System.out.println("Enter topic (between 2 and 50 characters):");
+            topic = scanner.nextLine();
+            if (topic.length() < 2 || topic.length() > 50) {
+                System.out.println("Sorry, title should be between 2 and 50 characters");
+            }
+        } while (topic.length() < 2 || topic.length() > 50);
+        // Entering abstract
+        do {
+            System.out.println("Enter abstract (100-500 characters):");
+            abstractSummary = scanner.nextLine();
+            if (abstractSummary.length() < 100 || abstractSummary.length() > 500) {
+                System.out.println("Sorry, abstract should be between 100 and 500 characters");
+            }
+        } while (abstractSummary.length() < 100 || abstractSummary.length() > 500);
+        // Entering date published
+        do {
+            System.out.println("Enter published date in dd/mm/yyyy format:");
+            String dateString = scanner.nextLine();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            try {
+                datePublished = LocalDate.parse(dateString, formatter);
+            } catch (Exception e) {
+                System.out.println("Invalid date format. Please enter the date in dd/mm/yyyy format.");
+            }
+        } while (datePublished == null);
+
+        // Adding theses to the library
+        Thesis newThesis = new Thesis(title,
+                true,
+                author.getAuthorName(),
+                topic,
+                abstractSummary,
+                datePublished,
+                id);
+        library.add(newThesis);
+        author.addItem(newThesis);
+        authorsList.add(author);
+        System.out.println("Author " + author.getAuthorName() + "has been added to the system");
+        System.out.println("New thesis has been added to the library");
+        newThesis.printItemDetails();
     }
 
     private static void addThesis() throws NoSuchFieldException, IllegalAccessException, LibItemException {
