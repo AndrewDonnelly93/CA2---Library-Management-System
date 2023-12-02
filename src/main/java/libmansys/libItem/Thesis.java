@@ -1,6 +1,8 @@
 package libmansys.libItem;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 // Represents theses and dissertations
@@ -8,7 +10,7 @@ public class Thesis extends LibItem {
     private String author;
     private String topic;
     private String abstractSummary;
-    private Date datePublished;
+    private LocalDate datePublished;
 
     public Thesis(
             String title,
@@ -16,9 +18,9 @@ public class Thesis extends LibItem {
             String author,
             String topic,
             String abstractSummary,
-            Date datePublished,
+            LocalDate datePublished,
             String id
-    ) {
+    ) throws LibItemException {
         super(title, availabilityStatus, id);
         this.author = author;
         this.topic = topic;
@@ -51,22 +53,16 @@ public class Thesis extends LibItem {
         this.abstractSummary = abstractSummary;
     }
 
-    public Date getDatePublished() {
-        return datePublished;
+    public String getDatePublished() {
+        return formatDate(this.datePublished);
     }
 
-    public void setDatePublished(Date datePublished) {
+    private String formatDate(LocalDate date) {
+        return date != null ? date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "";
+    }
+
+    public void setDatePublished(LocalDate datePublished) {
         this.datePublished = datePublished;
-    }
-
-    @Override
-    public void borrowItem() {
-
-    }
-
-    @Override
-    public void returnItem() {
-
     }
 
     @Override
@@ -74,8 +70,14 @@ public class Thesis extends LibItem {
         System.out.println("-".repeat(50));
         System.out.println("Item type: Thesis Title: " + this.getTitle()
                 + " Author: " + this.getAuthor() + " Topic: " + this.getTopic() +
-                " Date published: " + new SimpleDateFormat("dd-MM-yyyy").format(this.getDatePublished()));
+                " Date published: " + this.getDatePublished());
         System.out.println("\nAbstract:");
         System.out.println(this.getAbstractSummary());
+        if (this.getAvailabilityStatus())
+            System.out.println("AVAILABLE");
+        else
+            System.out.println("NOT AVAILABLE");
+        System.out.println();
+
     }
 }

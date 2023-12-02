@@ -15,7 +15,7 @@ public class Media extends LibItem {
             String director,
             Duration playtime,
             String id
-    ) {
+    ) throws LibItemException {
         super(title, availabilityStatus, id);
         this.producer = producer;
         this.director = director;
@@ -63,20 +63,15 @@ public class Media extends LibItem {
     }
 
     @Override
-    public void borrowItem() {
-
-    }
-
-    @Override
-    public void returnItem() {
-
-    }
-
-    @Override
     public void printItemDetails() {
         System.out.println("-".repeat(50));
         System.out.println("Item type: Media Title: " + this.getTitle()
                 + " Producer: " + this.getProducer() + " Director: " + this.getDirector() +
                 " Duration: " + this.getPlaytime());
+        if (this.getAvailabilityStatus())
+            System.out.println("AVAILABLE");
+        else
+            System.out.println("NOT AVAILABLE");
+        System.out.println();
     }
 }

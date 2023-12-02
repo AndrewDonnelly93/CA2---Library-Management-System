@@ -10,6 +10,7 @@ import libmansys.libItem.Thesis;
 import libmansys.sort.MergeSort;
 import libmansys.user.LibUser;
 import libmansys.user.LibUserException;
+import libmansys.libItem.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -18,19 +19,17 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.UUID;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-
-    private static AuthorsCsvHandler authorsCsvHandler;
     private static ArrayList<Author> authorsList;
-
+    private static List<LibUser> libUserList;
     private static ArrayList<LibItem> library;
-    private static ArrayList<LibItem> booksCsvRecords;
-    private static ArrayList<LibItem> mediaCsvRecords;
-    private static ArrayList<LibItem> thesesCsvRecords;
     private static final String booksCsvFile = getFullPathFromRelative("src/test/csv/books.csv");
     private static final String mediaCsvFile = getFullPathFromRelative("src/test/csv/media.csv");
     private static final String thesesCsvFile = getFullPathFromRelative("src/test/csv/theses.csv");
@@ -38,50 +37,48 @@ public class Main {
     private static final StringWriter mediaCsvHeader = new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n");
     private static final StringWriter thesesCsvHeader = new StringWriter().append("Title,Availability,Topic,DatePublished,ID");
 
-    public static void main(String[] args) throws ParseException, IOException, AuthorException, NoSuchFieldException, IllegalAccessException {
-
-        //Inits for testing
-        Book book1 = new Book(
-                "The Little Prince", true,
-                "Antoine de Saint-Exupéry", "978-0156012195", "6c60ac1f-a82d-4c99-8590-8e19099d3b04"
-        );
-        Book book2 = new Book(
-                "Harry Potter and the Chamber of Secrets", false,
-                "J. K. Rowling", "9788183221344",
-                "f5bc4b45-b297-44c9-a4e2-74c3d04d8cd4"
-        );
-        Media cd1 = new Media("Pale Green Ghosts", true, "Bella Union",
-                "Kate Le Bon", Duration.ofHours(1).plusMinutes(30),
-                "e37db276-a850-477f-9737-91e47ef83a84");
-        Media dvd1 = new Media("Home Alone", false,
-                "John Hughes", "Chris Columbus",
-                Duration.ofHours(1).plusMinutes(43),
-                "83eb02f9-e1c4-4498-adce-cbe8911d4011");
-        Thesis thesis1 = new Thesis("Zirconia ceramics", true, "Jack Russell",
-                "Heating process which can sinter yttria zirconia ceramics",
-                "This research developed a hybrid heating process which can sinter yttria" +
-                        "zirconia ceramics to nearly 100% of their theoretical density in a short time." +
-                        "Following optimisation of the process, a detailed comparison of the" +
-                        "properties and microstructures of conventionally sintered and microwave" +
-                        "sintered samples of 3 mol% and 8 mol% yttria zirconia was performed." +
-                        "Identical thermal profiles were used for both types of heating. For both" +
-                        "materials, microwave heating was found to enhance the densification" +
-                        "processes which occur during constant rate heating.",
-                new SimpleDateFormat("dd/MM/yyyy").parse("14/05/2023"),
-                "17013fa6-1d7a-45f8-ae4c-292fbeb2b6db");
-
-
-        List<LibItem> listOfBorrowedAssets = new ArrayList<>();
-        listOfBorrowedAssets.add(book1);
-        listOfBorrowedAssets.add(book2);
-        listOfBorrowedAssets.add(cd1);
-        listOfBorrowedAssets.add(dvd1);
-        listOfBorrowedAssets.add(thesis1);
-
-        //Init a list of users for testing
-        List<LibUser> libUserList = new ArrayList<>();
+    public static void main(String[] args) throws ParseException, IOException, AuthorException, NoSuchFieldException, IllegalAccessException, LibItemException {
 
         // Initialising the library system
+        Book book1;
+        Book book2;
+        Media cd1;
+        Media dvd1;
+        Thesis thesis1;
+
+        try {
+            //Inits for testing
+            book1 = new Book(
+                    "The Little Prince", true,
+                    "Antoine de Saint-Exupéry", "9780156012195", "6c60ac1f-a82d-4c99-8590-8e19099d3b04"
+            );
+            book2 = new Book(
+                    "Harry Potter and the Chamber of Secrets", true,
+                    "J. K. Rowling", "9788183221344",
+                    "f5bc4b45-b297-44c9-a4e2-74c3d04d8cd4"
+            );
+            cd1 = new Media("Pale Green Ghosts", true, "Bella Union",
+                    "Kate Le Bon", Duration.ofHours(1).plusMinutes(30),
+                    "e37db276-a850-477f-9737-91e47ef83a84");
+            dvd1 = new Media("Home Alone", true,
+                    "John Hughes", "Chris Columbus",
+                    Duration.ofHours(1).plusMinutes(43),
+                    "83eb02f9-e1c4-4498-adce-cbe8911d4011");
+            thesis1 = new Thesis("Zirconia ceramics", true, "Jack Russell",
+                    "Heating process which can sinter yttria zirconia ceramics",
+                    "This research developed a hybrid heating process which can sinter yttria" +
+                            "zirconia ceramics to nearly 100% of their theoretical density in a short time." +
+                            "Following optimisation of the process, a detailed comparison of the" +
+                            "properties and microstructures of conventionally sintered and microwave" +
+                            "sintered samples of 3 mol% and 8 mol% yttria zirconia was performed." +
+                            "Identical thermal profiles were used for both types of heating. For both" +
+                            "materials, microwave heating was found to enhance the densification" +
+                            "processes which occur during constant rate heating.",
+                    LocalDate.parse("14/05/2023", DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    "17013fa6-1d7a-45f8-ae4c-292fbeb2b6db");
+        } catch (LibItemException e) {
+            throw new RuntimeException(e);
+        }
         library = new ArrayList<>();
         library.add(book1);
         library.add(book2);
@@ -89,33 +86,15 @@ public class Main {
         library.add(dvd1);
         library.add(thesis1);
 
-        //wrapped this in a try/catch because it was throwing an error
-        LibUser libUser;
-        LibUser libUser2;
+        //Init list of users
+        libUserList = new ArrayList<>();
         try {
-            libUser = new LibUser("Alice John", "12345", listOfBorrowedAssets);
-            libUser2 = new LibUser("James Barry", "32525", listOfBorrowedAssets);
+            libUserList.add(new LibUser("Leonila Ortin", "00002", new ArrayList<>()));
+            libUserList.add(new LibUser("Andrew Donnelly", "00003", new ArrayList<>()));
+            libUserList.add(new LibUser("Grace Williams", "00001", new ArrayList<>()));
         } catch (LibUserException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
-
-        libUserList.add(libUser2);
-        libUserList.add(libUser);
-
-        // Initiating Books, Media and Theses lists
-        booksCsvRecords = new ArrayList<>();
-        mediaCsvRecords = new ArrayList<>();
-        thesesCsvRecords = new ArrayList<>();
-        for (var item : library) {
-            if (item instanceof Book) {
-                booksCsvRecords.add(item);
-            } else if (item instanceof Media) {
-                mediaCsvRecords.add(item);
-            } else if (item instanceof Thesis) {
-                thesesCsvRecords.add(item);
-            }
-        }
-
 
         // Adding a list of authors
         ArrayList<LibItem> booksByAuthor1 = new ArrayList<>();
@@ -124,15 +103,14 @@ public class Main {
         booksByAuthor2.add(book1);
         ArrayList<LibItem> thesesByAuthor3 = new ArrayList<>();
         thesesByAuthor3.add(thesis1);
-        Author author1 = new Author("J.K.Rowling", booksByAuthor1);
-        Author author2 = new Author("Antoine de Saint-Exupéry", booksByAuthor2);
-        Author author3 = new Author("Jack Russell", thesesByAuthor3);
         authorsList = new ArrayList<>();
-        authorsList.add(author1);
-        authorsList.add(author2);
-        authorsList.add(author3);
-        String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
-        authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
+        try {
+            authorsList.add(new Author("J. K. Rowling", booksByAuthor1));
+            authorsList.add(new Author("Antoine de Saint-Exupéry", booksByAuthor2));
+            authorsList.add(new Author("Jack Russell", thesesByAuthor3));
+        } catch (AuthorException e) {
+            System.out.println(e.getMessage());
+        }
 
         //USER MENU
 
@@ -307,7 +285,7 @@ public class Main {
     }
 
 
-    private static void handleCatalogue() throws NoSuchFieldException, IllegalAccessException {
+    private static void handleCatalogue() throws NoSuchFieldException, IllegalAccessException, LibItemException {
         System.out.println("Manage Catalogue:");
         System.out.println("1. Update Catalogue");
         System.out.println("2. View Catalogue");
@@ -328,7 +306,7 @@ public class Main {
         }
     }
 
-    private static void updateCatalogue() {
+    private static void updateCatalogue() throws NoSuchFieldException, IllegalAccessException, LibItemException {
         System.out.println("Update Catalogue:");
         System.out.println("1. Add Author");
         System.out.println("2. Add LibItem");
@@ -368,13 +346,219 @@ public class Main {
         }
     }
 
-    private static void addAuthor() {
-        // TODO Code to add an author
+    private static void addAuthor() throws NoSuchFieldException, IllegalAccessException {
+        String authorName;
+        do {
+            System.out.println("Enter author's name: ");
+            authorName = scanner.nextLine();
+            if (authorName.length() < 5 || authorName.length() > 30) {
+                System.out.println("Author's name should be between 5 and 30 characters");
+            }
+        } while (authorName.length() < 5 || authorName.length() > 30);
+        List<Author> authorsListCasted = authorsList;
+        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        if (authorSearch == null) {
+            // Adding new author to the library
+            System.out.println("Would you like to add a book or a thesis for this author?");
+            System.out.println("1. Add a book");
+            System.out.println("2. Add a thesis");
+            System.out.println("3. No, finish editing this author");
+        } else {
+            System.out.println("Sorry, this author already exists");
+        }
     }
 
 
-    private static void addLibItem() {
-        // TODO Code to add a library item
+    private static void addLibItem() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+        System.out.println("Which item would you like to add?");
+        System.out.println("1. Add a book");
+        System.out.println("2. Add a media item");
+        System.out.println("3. Add a thesis");
+
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                addBook();
+                break;
+            case "2":
+                addMedia();
+                break;
+            case "3":
+                addThesis();
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again");
+                break;
+        }
+    }
+
+    private static void addBook() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+        String authorName;
+        String title;
+        String isbnNumber;
+        String id = generateRandomID();
+        do {
+            System.out.println("Enter author's name (it should exists in the author list or add an author first): ");
+            // Entering authorName
+            authorName = scanner.nextLine();
+            if (authorName.length() < 2) {
+                System.out.println("Author's name should have at least two characters");
+            }
+        } while (authorName.length() < 2);
+        List<Author> authorsListCasted = authorsList;
+        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        if (authorSearch == null) {
+            System.out.println("Please add this author to the authors list first");
+        } else {
+            // Entering title
+            do {
+                System.out.println("Enter title:");
+                title = scanner.nextLine();
+                if (title.length() < 2 || title.length() > 50) {
+                    System.out.println("Sorry, title should be between 2 and 50 characters");
+                }
+            } while (title.length() < 2 || title.length() > 50);
+            // Entering ISBN
+            do {
+                System.out.println("Enter ISBN (13 characters):");
+                isbnNumber = scanner.nextLine();
+                if (isbnNumber.length() != 13) {
+                    System.out.println("Sorry, ISBN should have 13 characters");
+                }
+            } while (isbnNumber.length() != 13);
+
+            // Adding book to the library
+            Book newBook = new Book(title, true, authorName, isbnNumber, id);
+            library.add(newBook);
+            System.out.println("New book has been added to the library");
+            newBook.printItemDetails();
+        }
+    }
+
+    private static void addMedia() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+        String title;
+        String producer;
+        String director;
+        Duration duration = null;
+        String id = generateRandomID();
+
+        // Entering title
+        do {
+            System.out.println("Enter title:");
+            title = scanner.nextLine();
+            if (title.length() < 2 || title.length() > 50) {
+                System.out.println("Sorry, title should be between 2 and 50 characters");
+            }
+        } while (title.length() < 2 || title.length() > 50);
+        // Entering producer
+        do {
+            System.out.println("Enter producer name:");
+            producer = scanner.nextLine();
+            if (producer.length() < 2 || producer.length() > 50) {
+                System.out.println("Sorry, producer name should be between 2 and 50 characters");
+            }
+        } while (producer.length() < 2 || producer.length() > 50);
+        // Entering director
+        do {
+            System.out.println("Enter director name:");
+            director = scanner.nextLine();
+            if (director.length() < 2 || director.length() > 50) {
+                System.out.println("Sorry, producer name should be between 2 and 50 characters");
+            }
+        } while (director.length() < 2 || director.length() > 50);
+        // Entering duration
+        do {
+            System.out.println("Enter playtime in the format 'PT1H30M' (1 hour 30 minutes)");
+            String durationString = scanner.nextLine();
+            try {
+                duration = Duration.parse(durationString);
+            } catch (Exception e) {
+                System.out.println("Invalid duration format. Please enter the duration in the format 'PT1H30M'.");
+            }
+        } while (duration == null);
+
+        // Adding media to the library
+        Media newMedia = new Media(title, true, producer, director, duration, id);
+        library.add(newMedia);
+        System.out.println("New media item has been added to the library");
+        newMedia.printItemDetails();
+    }
+
+    private static void addThesis() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+        String authorName;
+        String title;
+        String topic;
+        String abstractSummary;
+        LocalDate datePublished = null;
+        String id = generateRandomID();
+        do {
+            System.out.println("Enter author's name (it should exists in the author list or add an author first): ");
+            // Entering authorName
+            authorName = scanner.nextLine();
+            if (authorName.length() < 2) {
+                System.out.println("Author's name should have at least two characters");
+            }
+        } while (authorName.length() < 2);
+        List<Author> authorsListCasted = authorsList;
+        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        if (authorSearch == null) {
+            System.out.println("Please add this author to the authors list first");
+        } else {
+            // Entering title
+            do {
+                System.out.println("Enter title:");
+                title = scanner.nextLine();
+                if (title.length() < 2 || title.length() > 50) {
+                    System.out.println("Sorry, title should be between 2 and 50 characters");
+                }
+            } while (title.length() < 2 || title.length() > 50);
+            // Entering topic
+            do {
+                System.out.println("Enter topic (between 2 and 50 characters):");
+                topic = scanner.nextLine();
+                if (topic.length() < 2 || topic.length() > 50) {
+                    System.out.println("Sorry, title should be between 2 and 50 characters");
+                }
+            } while (topic.length() < 2 || topic.length() > 50);
+            // Entering abstract
+            do {
+                System.out.println("Enter abstract (100-500 characters):");
+                abstractSummary = scanner.nextLine();
+                if (abstractSummary.length() < 100 || abstractSummary.length() > 500) {
+                    System.out.println("Sorry, abstract should be between 100 and 500 characters");
+                }
+            } while (abstractSummary.length() < 100 || abstractSummary.length() > 500);
+            // Entering date published
+            do {
+                System.out.println("Enter published date in dd/mm/yyyy format:");
+                String dateString = scanner.nextLine();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                try {
+                    datePublished = LocalDate.parse(dateString, formatter);
+                } catch (Exception e) {
+                    System.out.println("Invalid date format. Please enter the date in dd/mm/yyyy format.");
+                }
+            } while (datePublished == null);
+
+            // Adding theses to the library
+            Thesis newThesis = new Thesis(title,
+                    true,
+                    authorName,
+                    topic,
+                    abstractSummary,
+                    datePublished,
+                    id);
+            library.add(newThesis);
+            System.out.println("New thesis has been added to the library");
+            newThesis.printItemDetails();
+
+        }
+    }
+
+    private static String generateRandomID() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
     }
 
     private static void viewAuthors() throws NoSuchFieldException, IllegalAccessException {
@@ -386,7 +570,7 @@ public class Main {
 
         switch (choice) {
             case "1":
-                authorsCsvHandler.writeAuthorsList();
+                exportAuthorList();
                 break;
             case "2":
                 searchAuthors();
@@ -396,6 +580,28 @@ public class Main {
                 break;
         }
 
+    }
+
+    private static void exportAuthorList() {
+        System.out.println("How would you like to export the list of authors?");
+        System.out.println("1. Unsorted");
+        System.out.println("2. Sorted by name");
+        String sortChoice = scanner.nextLine();
+        Comparator<Author> comparator;
+
+        switch (sortChoice) {
+            case "1":
+                String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
+                AuthorsCsvHandler authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
+                authorsCsvHandler.writeAuthorsList();
+                break;
+            case "2":
+                comparator = Comparator.comparing(Author::getAuthorName);
+                break;
+            default:
+                System.out.println("Invalid choice.");
+                break;
+        }
     }
 
     private static void viewLibItems() throws NoSuchFieldException, IllegalAccessException {
@@ -422,7 +628,7 @@ public class Main {
         }
     }
 
-    private static void handleLoans() {
+    private static void handleLoans() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("Loan System:");
         System.out.println("a. Borrow Book");
         System.out.println("b. Return Book");
@@ -432,10 +638,10 @@ public class Main {
 
         switch (choice) {
             case "a":
-                //TODO borrowBook();
+                borrowBook();
                 break;
             case "b":
-                //TODO returnBook();
+                returnBook();
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
@@ -444,14 +650,63 @@ public class Main {
     }
 
     private static void searchAuthors() {
+    private static void borrowBook() throws NoSuchFieldException, IllegalAccessException {
+        System.out.println("Enter User's ID");
+        String userID = scanner.nextLine();
+        LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
+        if (user == null) {
+            System.out.println("User ID " + userID + " is not registered");
+        } else {
+            System.out.println("Enter item's title: ");
+            String itemTitle = scanner.nextLine();
+            LibItem item = Search.linearSearchByStringAttribute(library, itemTitle, "title");
+            if (item == null) {
+                System.out.println("Item " + itemTitle + " does not exist");
+            } else {
+                if (!item.getAvailabilityStatus()) {
+                    System.out.println(itemTitle + " is not available");
+                } else {
+                    int userIndex = libUserList.indexOf(user);
+                    libUserList.get(userIndex).borrowItem(item);
+                    int itemIndex = library.indexOf(item);
+                    library.get(itemIndex).setAvailabilityStatus(false);
+                    System.out.println(item.getTitle() + " has been borrowed by user " + user.getName());
+                }
+            }
+        }
+    }
+
+    private static void returnBook() throws NoSuchFieldException, IllegalAccessException {
+        System.out.println("Enter User's ID");
+        String userID = scanner.nextLine();
+        LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
+        if (user == null) {
+            System.out.println("User ID " + userID + " is not registered");
+        } else {
+            System.out.println("Enter item's title: ");
+            String itemTitle = scanner.nextLine();
+            LibItem item = Search.linearSearchByStringAttribute(user.getListOfBorrowedAssets(), itemTitle, "title");
+            if (item == null) {
+                System.out.println("Item " + itemTitle + " was not borrowed by user " + userID);
+            } else {
+                int userIndex = libUserList.indexOf(user);
+                libUserList.get(userIndex).returnItem(item);
+                int itemIndex = library.indexOf(item);
+                library.get(itemIndex).setAvailabilityStatus(true);
+                System.out.println(item.getTitle() + " has been returned by user " + user.getName());
+            }
+        }
+    }
+
+    private static void searchAuthors() throws NoSuchFieldException, IllegalAccessException {
         String authorName;
         do {
             System.out.println("Enter author's name: ");
             authorName = scanner.nextLine();
-            if (authorName.length() < 5 || authorName.length() > 30) {
-                System.out.println("Author's name should be between 5 and 30 characters");
+            if (authorName.length() < 2) {
+                System.out.println("Author's name should have at least two characters");
             }
-        } while (authorName.length() < 5 || authorName.length() > 30);
+        } while (authorName.length() < 2);
 
         System.out.println("Searching by name: " + authorName);
 
@@ -495,6 +750,18 @@ public class Main {
 
 
     private static void allItemsExport() {
+        ArrayList<LibItem> booksCsvRecords = new ArrayList<>();
+        ArrayList<LibItem> mediaCsvRecords = new ArrayList<>();
+        ArrayList<LibItem> thesesCsvRecords = new ArrayList<>();
+        for (var item : library) {
+            if (item instanceof Book) {
+                booksCsvRecords.add(item);
+            } else if (item instanceof Media) {
+                mediaCsvRecords.add(item);
+            } else if (item instanceof Thesis) {
+                thesesCsvRecords.add(item);
+            }
+        }
         // Initiating CSV Handlers for books, media and theses
         LibItemCsvHandler csvHandlerBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords, "Books");
         LibItemCsvHandler csvHandlerMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords, "Media");
@@ -547,8 +814,9 @@ public class Main {
     }
 }
 
-/* TODO
--move exceptions to new class
--add new data structure
--add author to item object
+/*TODO
+add sort options - ID and number of loans
+Export the list
  */
+
+

@@ -53,9 +53,7 @@ public class Author
     public void printAuthorDetails (){
         System.out.println("\n\tAuthor Name: " + authorName);
         System.out.println("\n\tList of authored assets\n");
-        for (LibItem item : authoredItems) {
-            item.printItemDetails();
-        }
+        authoredItems.forEach(LibItem::printItemDetails);
     }
 }
 
