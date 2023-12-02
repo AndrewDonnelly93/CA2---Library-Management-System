@@ -230,7 +230,6 @@ public class Main {
         libUserList.forEach(user -> System.out.println(user.getName() + " - ID: " + user.getId()));
 
         // Applying the merge sort
-        // Applying the merge sort
         sorter.sort(libUserList, comparator);
 
         // Output the list after sorting
@@ -265,12 +264,11 @@ public class Main {
                 viewCatalogue();
                 break;
             default:
-                System.out.println("Invalid choice. Please try again.");
                 break;
         }
     }
 
-    private static void updateCatalogue() {
+    private static void updateCatalogue() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("Update Catalogue:");
         System.out.println("1. Add Author");
         System.out.println("2. Add LibItem");
@@ -310,13 +308,47 @@ public class Main {
         }
     }
 
-    private static void addAuthor() {
-        // TODO Code to add an author
+    private static void addAuthor() throws NoSuchFieldException, IllegalAccessException {
+        String authorName;
+        do {
+            System.out.println("Enter author's name: ");
+            authorName = scanner.nextLine();
+            if (authorName.length() < 5 || authorName.length() > 30) {
+                System.out.println("Author's name should be between 5 and 30 characters");
+            }
+        } while (authorName.length() < 5 || authorName.length() > 30);
+        List<Author> authorsListCasted = authorsList;
+        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        if (authorSearch == null) {
+            // Adding new author to the library
+            System.out.println("Would you like to add a book or a thesis for this author?");
+            System.out.println("1. Add a book");
+            System.out.println("2. Add a thesis");
+            System.out.println("3. No, finish editing this author");
+        } else {
+            System.out.println("Sorry, this author already exists");
+        }
     }
 
 
     private static void addLibItem() {
-        // TODO Code to add a library item
+        System.out.println("Which item would you like to add?");
+        System.out.println("1. Add a book");
+        System.out.println("2. Add a media item");
+        System.out.println("3. Add a thesis");
+
+    }
+
+    private static void addBook() {
+
+    }
+
+    private static void addMedia() {
+
+    }
+
+    private static void addThesis() {
+
     }
 
     private static void viewAuthors() throws NoSuchFieldException, IllegalAccessException {
@@ -390,10 +422,10 @@ public class Main {
         do {
             System.out.println("Enter author's name: ");
             authorName = scanner.nextLine();
-            if (authorName.length() < 5 || authorName.length() > 30) {
-                System.out.println("Author's name should be between 5 and 30 characters");
+            if (authorName.length() < 2) {
+                System.out.println("Author's name should have at least two characters");
             }
-        } while (authorName.length() < 5 || authorName.length() > 30);
+        } while (authorName.length() < 2);
 
         System.out.println("Searching by name: " + authorName);
         List<Author> authorsListCasted = authorsList;
