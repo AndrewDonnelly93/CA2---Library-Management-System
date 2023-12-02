@@ -27,7 +27,8 @@ class LibUserTest
         givenUserValidArguments();
         Book book = new Book("Title1", true, "Author", "1111111111111", "11111111-1111-1111-1111-111111111111");
         borrowedItems.add(book);
-        libUser.returnItem("Title1");
+        assertTrue(libUser.getListOfBorrowedAssets().contains(book));
+        libUser.returnItem(book);
         assertFalse(libUser.getListOfBorrowedAssets().contains(book));
     }
 
