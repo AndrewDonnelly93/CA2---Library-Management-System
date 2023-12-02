@@ -77,5 +77,11 @@ public class Thesis extends LibItem {
                 " Date published: " + new SimpleDateFormat("dd-MM-yyyy").format(this.getDatePublished()));
         System.out.println("\nAbstract:");
         System.out.println(this.getAbstractSummary());
+        if (this.getAvailabilityStatus())
+            System.out.println("AVAILABLE");
+        else
+            System.out.println("NOT AVAILABLE");
+        System.out.println();
+
     }
 }

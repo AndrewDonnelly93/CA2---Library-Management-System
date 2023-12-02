@@ -78,5 +78,10 @@ public class Media extends LibItem {
         System.out.println("Item type: Media Title: " + this.getTitle()
                 + " Producer: " + this.getProducer() + " Director: " + this.getDirector() +
                 " Duration: " + this.getPlaytime());
+        if (this.getAvailabilityStatus())
+            System.out.println("AVAILABLE");
+        else
+            System.out.println("NOT AVAILABLE");
+        System.out.println();
     }
 }

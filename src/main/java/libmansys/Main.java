@@ -20,7 +20,7 @@ public class Main {
 
     private static AuthorsCsvHandler authorsCsvHandler;
     private static ArrayList<Author> authorsList;
-
+    private static List<LibUser> libUserList;
     private static ArrayList<LibItem> library;
     private static ArrayList<LibItem> booksCsvRecords;
     private static ArrayList<LibItem> mediaCsvRecords;
@@ -82,7 +82,7 @@ public class Main {
         listOfBorrowedAssets.add(thesis1);
 
         //Init a list of users for testing
-        List<LibUser> libUserList = new ArrayList<>();
+        libUserList = new ArrayList<>();
 
         // Initialising the library system
         library = new ArrayList<>();
@@ -370,7 +370,7 @@ public class Main {
         }
     }
 
-    private static void handleLoans() {
+    private static void handleLoans() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("Loan System:");
         System.out.println("a. Borrow Book");
         System.out.println("b. Return Book");
@@ -380,14 +380,67 @@ public class Main {
 
         switch (choice) {
             case "a":
-                //TODO borrowBook();
+                borrowBook();
                 break;
             case "b":
-                //TODO returnBook();
+                returnBook();
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
                 break;
+        }
+    }
+
+    private static void borrowBook() throws NoSuchFieldException, IllegalAccessException {
+        System.out.println("Enter User's ID");
+        String userID = scanner.nextLine();
+        LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
+        if (user == null){
+            System.out.println("User ID " + userID + " is not registered");
+        }
+        else {
+            System.out.println("Enter item's title: ");
+            String itemTitle = scanner.nextLine();
+            LibItem item = Search.linearSearchByStringAttribute(library, itemTitle, "title");
+            if (item == null){
+                System.out.println("Item " + itemTitle + " does not exist");
+            }
+            else {
+                if (!item.getAvailabilityStatus()){
+                    System.out.println(itemTitle + " is not available");
+                }
+                else {
+                    int userIndex = libUserList.indexOf(user);
+                    libUserList.get(userIndex).borrowItem(item);
+                    int itemIndex = library.indexOf(item);
+                    library.get(itemIndex).setAvailabilityStatus(false);
+                    System.out.println(item.getTitle() + " has been borrowed by user " + user.getName());
+                }
+            }
+        }
+    }
+
+    private static void returnBook() throws NoSuchFieldException, IllegalAccessException {
+        System.out.println("Enter User's ID");
+        String userID = scanner.nextLine();
+        LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
+        if (user == null){
+            System.out.println("User ID " + userID + " is not registered");
+        }
+        else {
+            System.out.println("Enter item's title: ");
+            String itemTitle = scanner.nextLine();
+            LibItem item = Search.linearSearchByStringAttribute(user.getListOfBorrowedAssets(), itemTitle, "title");
+            if (item == null){
+                System.out.println("Item " + itemTitle + " was not borrowed by user " + userID);
+            }
+            else {
+                int userIndex = libUserList.indexOf(user);
+                libUserList.get(userIndex).returnItem(item);
+                int itemIndex = library.indexOf(item);
+                library.get(itemIndex).setAvailabilityStatus(true);
+                System.out.println(item.getTitle() + " has been returned by user " + user.getName());
+            }
         }
     }
 

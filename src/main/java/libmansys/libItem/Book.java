@@ -49,5 +49,10 @@ public class Book extends LibItem {
         System.out.println("-".repeat(50));
         System.out.println("Item type: Book Title: " + this.getTitle()
                 + " Author: " + this.getAuthor() + " ISBN: " + this.getISBN());
+        if (this.getAvailabilityStatus())
+            System.out.println("AVAILABLE");
+        else
+            System.out.println("NOT AVAILABLE");
+        System.out.println();
     }
 }
