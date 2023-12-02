@@ -1,6 +1,6 @@
 package libmansys.csv;
 
-import libmansys.LibUser;
+import libmansys.user.LibUser;
 import libmansys.libItem.Book;
 import libmansys.libItem.LibItem;
 import libmansys.libItem.Media;
