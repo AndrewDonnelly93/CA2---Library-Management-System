@@ -1,4 +1,4 @@
-package libmansys;
+package libmansys.user;
 
 import libmansys.libItem.LibItem;
 
@@ -70,12 +70,12 @@ public class LibUser {
     }
 
     //Borrowing functionality
-    public void borrowItem(LibItem item) throws NoSuchFieldException, IllegalAccessException {
+    public void borrowItem(LibItem item) {
         listOfBorrowedAssets.add(item);
     }
 
     //Return an item
-    public void returnItem(LibItem item) throws NoSuchFieldException, IllegalAccessException {
+    public void returnItem(LibItem item) {
         if (hasBorrowed(item))
             listOfBorrowedAssets.remove(item);
         else
@@ -93,7 +93,7 @@ public class LibUser {
     }
 
     public void printUserDetails() {
-        System.out.println("libmansys.LibUser{" +
+        System.out.println("libmansys.user.LibUser{" +
                 "name='" + this.getName() + '\'' +
                 ", id='" + this.getId()+"}");
         System.out.println("\nList of borrowed assets\n");

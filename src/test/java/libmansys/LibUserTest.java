@@ -3,6 +3,8 @@ package libmansys;
 import libmansys.libItem.Book;
 import libmansys.libItem.LibItem;
 import libmansys.libItem.LibItemException;
+import libmansys.user.LibUser;
+import libmansys.user.LibUserException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

@@ -3,6 +3,13 @@ package libmansys;
 import libmansys.csv.AuthorsCsvHandler;
 import libmansys.csv.LibItemCsvHandler;
 import libmansys.csv.UsersCsvHandler;
+import libmansys.libItem.Book;
+import libmansys.libItem.LibItem;
+import libmansys.libItem.Media;
+import libmansys.libItem.Thesis;
+import libmansys.sort.MergeSort;
+import libmansys.user.LibUser;
+import libmansys.user.LibUserException;
 import libmansys.libItem.*;
 
 import java.io.IOException;
@@ -11,7 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -40,7 +46,7 @@ public class Main {
         Thesis thesis1;
 
         try {
-            //Inits for testing
+            // Initialising the library system
             book1 = new Book(
                     "The Little Prince", true,
                     "Antoine de Saint-Exupéry", "9780156012195", "6c60ac1f-a82d-4c99-8590-8e19099d3b04"
@@ -162,10 +168,10 @@ public class Main {
                 userSort(libUserList);
                 break;
             case "2":
-                //TODO searchLibUser();
+                searchUsers(libUserList);
                 break;
             case "3":
-                //TODO addUser();
+                addUser(libUserList);
                 break;
             case "4":
                 break;
@@ -204,6 +210,7 @@ public class Main {
         libUserList.forEach(user -> System.out.println(user.getName() + " - ID: " + user.getId()));
 
         // Applying the merge sort
+        // Applying the merge sort
         sorter.sort(libUserList, comparator);
 
         // Output the list after sorting
@@ -219,6 +226,61 @@ public class Main {
         UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, (ArrayList<LibUser>) libUserList);
         usersCsvHandler.writeUsersList();
         System.out.println("Sorted user list exported to CSV.");
+    }
+
+    private static void searchUsers(List<LibUser> libUserList) {
+        String userName;
+        do {
+            System.out.println("Enter users's name: ");
+            userName = scanner.nextLine();
+            if (userName.length() < 5 || userName.length() > 30) {
+                System.out.println("Author's name should be between 5 and 30 characters");
+            }
+        } while (userName.length() < 5 || userName.length() > 30);
+
+        LibUser userSearch = Search.linearSearchByAttribute(libUserList,
+                LibUser::getName,
+                userName);
+
+        if (userSearch == null) {
+            System.out.println("Sorry, this user has not been found.");
+        } else {
+            System.out.println("User " + userSearch.getName() + " has been found.");
+            userSearch.printUserDetails();
+        }
+    }
+
+    private static void addUser(List<LibUser> libUserList) {
+        System.out.println("Add New User:");
+
+        // Prompt for username
+        String name;
+        do {
+            System.out.println("Enter user's name (2-30 characters): ");
+            name = scanner.nextLine();
+            if (name.length() < 2 || name.length() > 30) {
+                System.out.println("User's name should be between 2 and 30 characters");
+            }
+        } while (name.length() < 2 || name.length() > 30);
+
+        // Prompt for user ID
+        String id;
+        do {
+            System.out.println("Enter user's ID (1-10 characters): ");
+            id = scanner.nextLine();
+            if (id.isEmpty() || id.length() > 10) {
+                System.out.println("User ID should be between 1 and 10 characters");
+            }
+        } while (id.isEmpty() || id.length() > 10);
+
+        // Create new user and add to the list
+        try {
+            LibUser newUser = new LibUser(name, id, new ArrayList<>()); // Assuming an empty list of borrowed assets initially
+            libUserList.add(newUser);
+            System.out.println("New user added successfully.");
+        } catch (LibUserException e) {
+            System.out.println("Error adding user: " + e.getMessage());
+        }
     }
 
 
@@ -238,6 +300,7 @@ public class Main {
                 viewCatalogue();
                 break;
             default:
+                System.out.println("Invalid choice. Please try again.");
                 break;
         }
     }
@@ -292,7 +355,7 @@ public class Main {
             }
         } while (authorName.length() < 5 || authorName.length() > 30);
         List<Author> authorsListCasted = authorsList;
-        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        Author authorSearch = Search.linearSearchByAttribute(authorsListCasted, Author::getAuthorName, authorName );
         if (authorSearch == null) {
             // Adding new author to the library
             System.out.println("Would you like to add a book or a thesis for this author?");
@@ -343,7 +406,7 @@ public class Main {
             }
         } while (authorName.length() < 2);
         List<Author> authorsListCasted = authorsList;
-        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        Author authorSearch = Search.linearSearchByAttribute(authorsListCasted, Author::getAuthorName, authorName);
         if (authorSearch == null) {
             System.out.println("Please add this author to the authors list first");
         } else {
@@ -437,7 +500,7 @@ public class Main {
             }
         } while (authorName.length() < 2);
         List<Author> authorsListCasted = authorsList;
-        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        Author authorSearch = Search.linearSearchByAttribute(authorsListCasted,Author::getAuthorName, authorName);
         if (authorSearch == null) {
             System.out.println("Please add this author to the authors list first");
         } else {
@@ -515,7 +578,6 @@ public class Main {
                 System.out.println("Invalid choice. Please try again.");
                 break;
         }
-
     }
 
     private static void exportAuthorList() {
@@ -584,17 +646,16 @@ public class Main {
                 break;
         }
     }
-
-    private static void borrowBook() throws NoSuchFieldException, IllegalAccessException {
+    private static void borrowBook() {
         System.out.println("Enter User's ID");
         String userID = scanner.nextLine();
-        LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
+        LibUser user = Search.linearSearchByAttribute(libUserList, LibUser::getId, userID);
         if (user == null) {
             System.out.println("User ID " + userID + " is not registered");
         } else {
             System.out.println("Enter item's title: ");
             String itemTitle = scanner.nextLine();
-            LibItem item = Search.linearSearchByStringAttribute(library, itemTitle, "title");
+            LibItem item = Search.linearSearchByAttribute(library, LibItem::getTitle, itemTitle);
             if (item == null) {
                 System.out.println("Item " + itemTitle + " does not exist");
             } else {
@@ -611,16 +672,16 @@ public class Main {
         }
     }
 
-    private static void returnBook() throws NoSuchFieldException, IllegalAccessException {
+    private static void returnBook(){
         System.out.println("Enter User's ID");
         String userID = scanner.nextLine();
-        LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
+        LibUser user = Search.linearSearchByAttribute(libUserList, LibUser::getId, userID);
         if (user == null) {
             System.out.println("User ID " + userID + " is not registered");
         } else {
             System.out.println("Enter item's title: ");
             String itemTitle = scanner.nextLine();
-            LibItem item = Search.linearSearchByStringAttribute(user.getListOfBorrowedAssets(), itemTitle, "title");
+            LibItem item = Search.linearSearchByAttribute(user.getListOfBorrowedAssets(), LibItem::getTitle, itemTitle);
             if (item == null) {
                 System.out.println("Item " + itemTitle + " was not borrowed by user " + userID);
             } else {
@@ -633,7 +694,7 @@ public class Main {
         }
     }
 
-    private static void searchAuthors() throws NoSuchFieldException, IllegalAccessException {
+    private static void searchAuthors() {
         String authorName;
         do {
             System.out.println("Enter author's name: ");
@@ -644,8 +705,11 @@ public class Main {
         } while (authorName.length() < 2);
 
         System.out.println("Searching by name: " + authorName);
-        List<Author> authorsListCasted = authorsList;
-        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+
+        Author authorSearch = Search.linearSearchByAttribute(authorsList,
+                Author::getAuthorName,  // Method reference as AttributeGetter
+                authorName);
+
         if (authorSearch == null) {
             System.out.println("Sorry, this author has not been found");
         } else {
@@ -658,7 +722,7 @@ public class Main {
         }
     }
 
-    private static void searchItems() throws NoSuchFieldException, IllegalAccessException {
+    private static void searchItems() {
         String itemTitle;
         do {
             System.out.println("Enter item's name (between 5 and 50 characters): ");
@@ -667,8 +731,11 @@ public class Main {
                 System.out.println("Item's name should be between 5 and 50 characters");
             }
         } while (itemTitle.length() < 5 || itemTitle.length() > 50);
-        List<LibItem> libraryItems = library;
-        LibItem itemSearch = Search.linearSearchByStringAttribute(libraryItems, itemTitle, "title");
+
+        LibItem itemSearch = Search.linearSearchByAttribute(library,
+                LibItem::getTitle,  // Method reference as AttributeGetter
+                itemTitle);
+
         if (itemSearch == null) {
             System.out.println("Sorry, this item has not been found");
         } else {

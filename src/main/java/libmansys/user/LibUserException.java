@@ -1,4 +1,4 @@
-package libmansys;
+package libmansys.user;
 
 public class LibUserException extends Exception
 {

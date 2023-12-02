@@ -1,6 +1,4 @@
-package libmansys;
-
-import libmansys.libItem.Sortable;
+package libmansys.sort;
 
 import java.util.ArrayList;
 import java.util.Comparator;
