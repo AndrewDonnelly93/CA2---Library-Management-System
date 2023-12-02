@@ -44,5 +44,8 @@ public abstract class LibItem {
             this.id = id;
     }
 
+    public abstract void borrowItem();
+    public abstract void returnItem();
+
     public abstract void printItemDetails();
 }

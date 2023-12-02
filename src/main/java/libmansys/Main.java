@@ -14,16 +14,15 @@ import java.time.Duration;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.UUID;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
+
     private static AuthorsCsvHandler authorsCsvHandler;
     private static ArrayList<Author> authorsList;
     private static List<LibUser> libUserList;
     private static ArrayList<LibItem> library;
-    private static ArrayList<LibItem> booksCsvRecords;
-    private static ArrayList<LibItem> mediaCsvRecords;
-    private static ArrayList<LibItem> thesesCsvRecords;
     private static final String booksCsvFile = getFullPathFromRelative("src/test/csv/books.csv");
     private static final String mediaCsvFile = getFullPathFromRelative("src/test/csv/media.csv");
     private static final String thesesCsvFile = getFullPathFromRelative("src/test/csv/theses.csv");
@@ -31,7 +30,7 @@ public class Main {
     private static final StringWriter mediaCsvHeader = new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n");
     private static final StringWriter thesesCsvHeader = new StringWriter().append("Title,Availability,Topic,DatePublished,ID");
 
-    public static void main(String[] args) throws ParseException, IOException, NoSuchFieldException, IllegalAccessException {
+    public static void main(String[] args) throws ParseException, IOException, AuthorException, NoSuchFieldException, IllegalAccessException, LibItemException {
 
         // Initialising the library system
         Book book1;
@@ -39,6 +38,7 @@ public class Main {
         Media cd1;
         Media dvd1;
         Thesis thesis1;
+
         try {
             //Inits for testing
             book1 = new Book(
@@ -46,14 +46,14 @@ public class Main {
                     "Antoine de Saint-Exupéry", "9780156012195", "6c60ac1f-a82d-4c99-8590-8e19099d3b04"
             );
             book2 = new Book(
-                    "Harry Potter and the Chamber of Secrets", false,
+                    "Harry Potter and the Chamber of Secrets", true,
                     "J. K. Rowling", "9788183221344",
                     "f5bc4b45-b297-44c9-a4e2-74c3d04d8cd4"
             );
             cd1 = new Media("Pale Green Ghosts", true, "Bella Union",
                     "Kate Le Bon", Duration.ofHours(1).plusMinutes(30),
                     "e37db276-a850-477f-9737-91e47ef83a84");
-            dvd1 = new Media("Home Alone", false,
+            dvd1 = new Media("Home Alone", true,
                     "John Hughes", "Chris Columbus",
                     Duration.ofHours(1).plusMinutes(43),
                     "83eb02f9-e1c4-4498-adce-cbe8911d4011");
@@ -89,21 +89,7 @@ public class Main {
             System.out.println(e);
         }
 
-        // Initiating Books, Media and Theses lists
-        booksCsvRecords = new ArrayList<>();
-        mediaCsvRecords = new ArrayList<>();
-        thesesCsvRecords = new ArrayList<>();
-        for (var item : library) {
-            if (item instanceof Book) {
-                booksCsvRecords.add(item);
-            } else if (item instanceof Media) {
-                mediaCsvRecords.add(item);
-            } else if (item instanceof Thesis) {
-                thesesCsvRecords.add(item);
-            }
-        }
-
-        // Init list of authors
+        // Adding a list of authors
         ArrayList<LibItem> booksByAuthor1 = new ArrayList<>();
         booksByAuthor1.add(book2);
         ArrayList<LibItem> booksByAuthor2 = new ArrayList<>();
@@ -239,7 +225,7 @@ public class Main {
     }
 
 
-    private static void handleCatalogue() throws NoSuchFieldException, IllegalAccessException {
+    private static void handleCatalogue() throws NoSuchFieldException, IllegalAccessException, LibItemException {
         System.out.println("Manage Catalogue:");
         System.out.println("1. Update Catalogue");
         System.out.println("2. View Catalogue");
@@ -259,7 +245,7 @@ public class Main {
         }
     }
 
-    private static void updateCatalogue() throws NoSuchFieldException, IllegalAccessException {
+    private static void updateCatalogue() throws NoSuchFieldException, IllegalAccessException, LibItemException {
         System.out.println("Update Catalogue:");
         System.out.println("1. Add Author");
         System.out.println("2. Add LibItem");
@@ -322,16 +308,71 @@ public class Main {
     }
 
 
-    private static void addLibItem() {
+    private static void addLibItem() throws NoSuchFieldException, IllegalAccessException, LibItemException {
         System.out.println("Which item would you like to add?");
         System.out.println("1. Add a book");
         System.out.println("2. Add a media item");
         System.out.println("3. Add a thesis");
 
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                addBook();
+                break;
+            case "2":
+                addMedia();
+                break;
+            case "3":
+                addThesis();
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again");
+                break;
+        }
     }
 
-    private static void addBook() {
+    private static void addBook() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+        String authorName;
+        String title;
+        String isbnNumber;
+        String id = generateRandomID();
+        do {
+            System.out.println("Enter author's name (it should exists in the author list or add an author first): ");
+            // Entering authorName
+            authorName = scanner.nextLine();
+            if (authorName.length() < 2) {
+                System.out.println("Author's name should have at least two characters");
+            }
+        } while (authorName.length() < 2);
+        List<Author> authorsListCasted = authorsList;
+        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        if (authorSearch == null) {
+            System.out.println("Please add this author to the authors list first");
+        } else {
+            // Entering title
+            do {
+                System.out.println("Enter title:");
+                title = scanner.nextLine();
+                if (title.length() < 2 || title.length() > 50) {
+                    System.out.println("Sorry, title should be between 2 and 50 characters");
+                }
+            } while (title.length() < 2 || title.length() > 50);
+            // Entering ISBN
+            do {
+                System.out.println("Enter ISBN (13 characters):");
+                isbnNumber = scanner.nextLine();
+                if (isbnNumber.length() != 13) {
+                    System.out.println("Sorry, ISBN should have 13 characters");
+                }
+            } while (isbnNumber.length() != 13);
 
+            // Adding book to the library
+            Book newBook = new Book(title, true, authorName, isbnNumber, id);
+            library.add(newBook);
+            System.out.println("New book has been added to the library");
+            newBook.printItemDetails();
+        }
     }
 
     private static void addMedia() {
@@ -340,6 +381,11 @@ public class Main {
 
     private static void addThesis() {
 
+    }
+
+    private static String generateRandomID() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
     }
 
     private static void viewAuthors() throws NoSuchFieldException, IllegalAccessException {
@@ -478,11 +524,11 @@ public class Main {
             System.out.println("Sorry, this author has not been found");
         } else {
             System.out.println("This author(" + authorSearch.getAuthorName() + ") has been found");
-                if (authorSearch.getAuthoredItems().isEmpty()) {
-                    System.out.println("No available books or items");
-                } else {
-                    authorSearch.printAuthorDetails();
-                }
+            if (authorSearch.getAuthoredItems().isEmpty()) {
+                System.out.println("No available books or items");
+            } else {
+                authorSearch.printAuthorDetails();
+            }
         }
     }
 
@@ -507,6 +553,18 @@ public class Main {
 
 
     private static void allItemsExport() {
+        ArrayList<LibItem> booksCsvRecords = new ArrayList<>();
+        ArrayList<LibItem> mediaCsvRecords = new ArrayList<>();
+        ArrayList<LibItem> thesesCsvRecords = new ArrayList<>();
+        for (var item : library) {
+            if (item instanceof Book) {
+                booksCsvRecords.add(item);
+            } else if (item instanceof Media) {
+                mediaCsvRecords.add(item);
+            } else if (item instanceof Thesis) {
+                thesesCsvRecords.add(item);
+            }
+        }
         // Initiating CSV Handlers for books, media and theses
         LibItemCsvHandler csvHandlerBooks = new LibItemCsvHandler(booksCsvFile, booksCsvHeader, booksCsvRecords, "Books");
         LibItemCsvHandler csvHandlerMedia = new LibItemCsvHandler(mediaCsvFile, mediaCsvHeader, mediaCsvRecords, "Media");
