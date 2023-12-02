@@ -11,8 +11,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-class AuthorTest
-{
+class AuthorTest {
     private Author author;
     private List<LibItem> authoredItems;
 

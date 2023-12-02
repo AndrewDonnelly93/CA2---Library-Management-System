@@ -21,7 +21,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -30,8 +29,6 @@ import java.util.UUID;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-
-    private static AuthorsCsvHandler authorsCsvHandler;
     private static ArrayList<Author> authorsList;
     private static List<LibUser> libUserList;
     private static ArrayList<LibItem> library;

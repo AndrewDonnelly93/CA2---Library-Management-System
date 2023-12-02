@@ -5,20 +5,6 @@ import libmansys.libItem.LibItem;
 import java.util.List;
 
 public class LibUser {
-
-    /*LibraryUser Class
-    Attributes:
-    name (string)
-    ID (string)
-    listOfBorrowedAssets (List<Book/AudioBook/Theses/Dissertation/CD/DVD>)
-    Methods:
-    getName()
-    getID()
-    getListOfBorrowedAssets()*/
-
-    //Item Placeholder
-
-
     //Attributes
     private String name;
     private String id;

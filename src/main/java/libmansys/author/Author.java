@@ -2,10 +2,10 @@ package libmansys.author;
 
 import libmansys.libItem.LibItem;
 import libmansys.libItem.Media;
+
 import java.util.List;
 
-public class Author
-{
+public class Author {
     private String authorName;
     private List<LibItem> authoredItems;
 
@@ -50,7 +50,7 @@ public class Author
         authoredItems.remove(item);
     }
 
-    public void printAuthorDetails (){
+    public void printAuthorDetails() {
         System.out.println("\n\tAuthor Name: " + authorName);
         System.out.println("\n\tList of authored assets\n");
         authoredItems.forEach(LibItem::printItemDetails);
