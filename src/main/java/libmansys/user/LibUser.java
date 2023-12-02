@@ -1,4 +1,4 @@
-package libmansys;
+package libmansys.user;
 
 import libmansys.libItem.LibItem;
 
@@ -93,7 +93,7 @@ public class LibUser {
     }
 
     public void printUserDetails() {
-        System.out.println("libmansys.LibUser{" +
+        System.out.println("libmansys.user.LibUser{" +
                 "name='" + this.getName() + '\'' +
                 ", id='" + this.getId()+"}");
         System.out.println("\nList of borrowed assets\n");

@@ -21,9 +21,10 @@ class SearchTest {
     private Thesis thesis;
 
     @Test
-    void testLinearSearchByStringAttribute() throws ParseException, NoSuchFieldException, IllegalAccessException {
+    void testLinearSearchByAttribute() throws ParseException {
         addingItems();
-        assertEquals(media, Search.linearSearchByStringAttribute(itemsList, "Media Title", "title"));
+        // Replace linearSearchByStringAttribute with linearSearchByAttribute and return title with lamda method reference instead
+        assertEquals(media, Search.linearSearchByAttribute(itemsList, LibItem::getTitle, "Media Title"));
     }
 
     private void addingItems() throws ParseException {
