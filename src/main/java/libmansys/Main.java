@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -29,6 +30,8 @@ import java.util.UUID;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
+
+    private static AuthorsCsvHandler authorsCsvHandler;
     private static ArrayList<Author> authorsList;
     private static List<LibUser> libUserList;
     private static ArrayList<LibItem> library;
@@ -213,7 +216,6 @@ public class Main {
         libUserList.forEach(user -> System.out.println(user.getName() + " - ID: " + user.getId()));
 
         // Applying the merge sort
-        // Applying the merge sort
         sorter.sort(libUserList, comparator);
 
         // Output the list after sorting
@@ -287,7 +289,7 @@ public class Main {
     }
 
 
-    private static void handleCatalogue() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+    private static void handleCatalogue() throws NoSuchFieldException, IllegalAccessException, LibItemException, AuthorException {
         System.out.println("Manage Catalogue:");
         System.out.println("1. Update Catalogue");
         System.out.println("2. View Catalogue");
@@ -308,7 +310,7 @@ public class Main {
         }
     }
 
-    private static void updateCatalogue() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+    private static void updateCatalogue() throws NoSuchFieldException, IllegalAccessException, LibItemException, AuthorException {
         System.out.println("Update Catalogue:");
         System.out.println("1. Add Author");
         System.out.println("2. Add LibItem");
@@ -348,7 +350,7 @@ public class Main {
         }
     }
 
-    private static void addAuthor() throws NoSuchFieldException, IllegalAccessException {
+    private static void addAuthor() throws NoSuchFieldException, IllegalAccessException, AuthorException, LibItemException {
         String authorName;
         do {
             System.out.println("Enter author's name: ");
@@ -357,14 +359,29 @@ public class Main {
                 System.out.println("Author's name should be between 5 and 30 characters");
             }
         } while (authorName.length() < 5 || authorName.length() > 30);
+
+        // Checking if this author already exists
         List<Author> authorsListCasted = authorsList;
         Author authorSearch = Search.linearSearchByAttribute(authorsListCasted, Author::getAuthorName, authorName );
         if (authorSearch == null) {
             // Adding new author to the library
-            System.out.println("Would you like to add a book or a thesis for this author?");
+            ArrayList<LibItem> authoredItems = new ArrayList<>();
+            Author newAuthor = new Author(authorName, authoredItems);
+            System.out.println("Please add one book or a thesis for this author:");
             System.out.println("1. Add a book");
             System.out.println("2. Add a thesis");
-            System.out.println("3. No, finish editing this author");
+            String choice = scanner.nextLine();
+            switch (choice) {
+                case "1":
+                    addBookToAuthor(newAuthor);
+                    break;
+                case "2":
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again");
+                    break;
+            }
+
         } else {
             System.out.println("Sorry, this author already exists");
         }
@@ -436,6 +453,37 @@ public class Main {
             System.out.println("New book has been added to the library");
             newBook.printItemDetails();
         }
+    }
+
+    private static void addBookToAuthor(Author author) throws LibItemException, AuthorException {
+        String title;
+        String isbnNumber;
+        String id = generateRandomID();
+        // Entering title
+        do {
+            System.out.println("Enter title:");
+            title = scanner.nextLine();
+            if (title.length() < 2 || title.length() > 50) {
+                System.out.println("Sorry, title should be between 2 and 50 characters");
+            }
+        } while (title.length() < 2 || title.length() > 50);
+        // Entering ISBN
+        do {
+            System.out.println("Enter ISBN (13 characters):");
+            isbnNumber = scanner.nextLine();
+            if (isbnNumber.length() != 13) {
+                System.out.println("Sorry, ISBN should have 13 characters");
+            }
+        } while (isbnNumber.length() != 13);
+
+        // Adding book to the library
+        Book newBook = new Book(title, true, author.getAuthorName(), isbnNumber, id);
+        library.add(newBook);
+        author.addItem(newBook);
+        authorsList.add(author);
+        System.out.println("Author " + author.getAuthorName() + "has been added to the system");
+        System.out.println("New book has been added to the library");
+        newBook.printItemDetails();
     }
 
     private static void addMedia() throws NoSuchFieldException, IllegalAccessException, LibItemException {
