@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-
     private static AuthorsCsvHandler authorsCsvHandler;
     private static ArrayList<Author> authorsList;
     private static List<LibUser> libUserList;
@@ -32,14 +31,14 @@ public class Main {
     private static final StringWriter mediaCsvHeader = new StringWriter().append("Title,Availability,Producer,Director,Duration,ID,\n");
     private static final StringWriter thesesCsvHeader = new StringWriter().append("Title,Availability,Topic,DatePublished,ID");
 
-    public static void main(String[] args) throws ParseException, IOException, AuthorException, NoSuchFieldException, IllegalAccessException {
+    public static void main(String[] args) throws ParseException, IOException, NoSuchFieldException, IllegalAccessException {
 
+        // Initialising the library system
         Book book1;
         Book book2;
         Media cd1;
         Media dvd1;
         Thesis thesis1;
-        
         try {
             //Inits for testing
             book1 = new Book(
@@ -73,18 +72,6 @@ public class Main {
         } catch (LibItemException e) {
             throw new RuntimeException(e);
         }
-
-        List<LibItem> listOfBorrowedAssets = new ArrayList<>();
-        listOfBorrowedAssets.add(book1);
-        listOfBorrowedAssets.add(book2);
-        listOfBorrowedAssets.add(cd1);
-        listOfBorrowedAssets.add(dvd1);
-        listOfBorrowedAssets.add(thesis1);
-
-        //Init a list of users for testing
-        libUserList = new ArrayList<>();
-
-        // Initialising the library system
         library = new ArrayList<>();
         library.add(book1);
         library.add(book2);
@@ -92,18 +79,15 @@ public class Main {
         library.add(dvd1);
         library.add(thesis1);
 
-        //wrapped this in a try/catch because it was throwing an error
-        LibUser libUser;
-        LibUser libUser2;
+        //Init list of users
+        libUserList = new ArrayList<>();
         try {
-            libUser = new LibUser("Alice John", "12345", listOfBorrowedAssets);
-            libUser2 = new LibUser("James Barry", "32525", listOfBorrowedAssets);
+            libUserList.add(new LibUser("Andrew Donnelly", "00001", new ArrayList<LibItem>()));
+            libUserList.add(new LibUser("Grace Williams", "00002", new ArrayList<LibItem>()));
+            libUserList.add(new LibUser("Leonila Ortin", "00003", new ArrayList<LibItem>()));
         } catch (LibUserException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
-
-        libUserList.add(libUser2);
-        libUserList.add(libUser);
 
         // Initiating Books, Media and Theses lists
         booksCsvRecords = new ArrayList<>();
@@ -119,21 +103,22 @@ public class Main {
             }
         }
 
-
-        // Adding a list of authors
+        // Init list of authors
         ArrayList<LibItem> booksByAuthor1 = new ArrayList<>();
         booksByAuthor1.add(book2);
         ArrayList<LibItem> booksByAuthor2 = new ArrayList<>();
         booksByAuthor2.add(book1);
         ArrayList<LibItem> thesesByAuthor3 = new ArrayList<>();
         thesesByAuthor3.add(thesis1);
-        Author author1 = new Author("J.K.Rowling", booksByAuthor1);
-        Author author2 = new Author("Antoine de Saint-Exupéry", booksByAuthor2);
-        Author author3 = new Author("Jack Russell", thesesByAuthor3);
         authorsList = new ArrayList<>();
-        authorsList.add(author1);
-        authorsList.add(author2);
-        authorsList.add(author3);
+        try {
+            authorsList.add(new Author("J.K.Rowling", booksByAuthor1));
+            authorsList.add(new Author("Antoine de Saint-Exupéry", booksByAuthor2));
+            authorsList.add(new Author("Jack Russell", thesesByAuthor3));
+        } catch (AuthorException e) {
+            System.out.println(e);
+        }
+
         String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
         authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
 
