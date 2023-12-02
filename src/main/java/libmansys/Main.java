@@ -12,6 +12,8 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Duration;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.UUID;
@@ -86,7 +88,7 @@ public class Main {
             libUserList.add(new LibUser("Grace Williams", "00002", new ArrayList<LibItem>()));
             libUserList.add(new LibUser("Leonila Ortin", "00003", new ArrayList<LibItem>()));
         } catch (LibUserException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
 
         // Adding a list of authors
@@ -102,7 +104,7 @@ public class Main {
             authorsList.add(new Author("Antoine de Saint-Exupéry", booksByAuthor2));
             authorsList.add(new Author("Jack Russell", thesesByAuthor3));
         } catch (AuthorException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
 
         String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
@@ -379,8 +381,76 @@ public class Main {
 
     }
 
-    private static void addThesis() {
+    private static void addThesis() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+        String authorName;
+        String title;
+        String topic;
+        String abstractSummary;
+        Date datePublished = null;
+        String id = generateRandomID();
+        do {
+            System.out.println("Enter author's name (it should exists in the author list or add an author first): ");
+            // Entering authorName
+            authorName = scanner.nextLine();
+            if (authorName.length() < 2) {
+                System.out.println("Author's name should have at least two characters");
+            }
+        } while (authorName.length() < 2);
+        List<Author> authorsListCasted = authorsList;
+        Author authorSearch = Search.linearSearchByStringAttribute(authorsListCasted, authorName, "authorName");
+        if (authorSearch == null) {
+            System.out.println("Please add this author to the authors list first");
+        } else {
+            // Entering title
+            do {
+                System.out.println("Enter title:");
+                title = scanner.nextLine();
+                if (title.length() < 2 || title.length() > 50) {
+                    System.out.println("Sorry, title should be between 2 and 50 characters");
+                }
+            } while (title.length() < 2 || title.length() > 50);
+            // Entering topic
+            do {
+                System.out.println("Enter topic (between 2 and 50 characters):");
+                topic = scanner.nextLine();
+                if (topic.length() < 2 || topic.length() > 50) {
+                    System.out.println("Sorry, title should be between 2 and 50 characters");
+                }
+            } while (topic.length() < 2 || topic.length() > 50);
+            // Entering abstract
+            do {
+                System.out.println("Enter abstract (100-500 characters):");
+                abstractSummary = scanner.nextLine();
+                if (abstractSummary.length() < 100 || abstractSummary.length() > 500) {
+                    System.out.println("Sorry, abstract should be between 100 and 500 characters");
+                }
+            } while (abstractSummary.length() < 100 || abstractSummary.length() > 500);
+            // Entering date published
+            do {
+                System.out.println("Enter published date in dd/mm/yyyy format:");
+                String dateString = scanner.nextLine();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                try {
+                    LocalDate date = LocalDate.parse(dateString, formatter);
+                    datePublished = java.sql.Date.valueOf(date);
+                } catch (Exception e) {
+                    System.out.println("Invalid date format. Please enter the date in dd/mm/yyyy format.");
+                }
+            } while (datePublished != null);
+            // Adding theses to the library
 
+            Thesis newThesis = new Thesis(title,
+                    true,
+                    authorName,
+                    topic,
+                    abstractSummary,
+                    datePublished,
+                    id);
+            library.add(newThesis);
+            System.out.println("New thesis has been added to the library");
+            newThesis.printItemDetails();
+
+        }
     }
 
     private static String generateRandomID() {
@@ -458,21 +528,18 @@ public class Main {
         System.out.println("Enter User's ID");
         String userID = scanner.nextLine();
         LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
-        if (user == null){
+        if (user == null) {
             System.out.println("User ID " + userID + " is not registered");
-        }
-        else {
+        } else {
             System.out.println("Enter item's title: ");
             String itemTitle = scanner.nextLine();
             LibItem item = Search.linearSearchByStringAttribute(library, itemTitle, "title");
-            if (item == null){
+            if (item == null) {
                 System.out.println("Item " + itemTitle + " does not exist");
-            }
-            else {
-                if (!item.getAvailabilityStatus()){
+            } else {
+                if (!item.getAvailabilityStatus()) {
                     System.out.println(itemTitle + " is not available");
-                }
-                else {
+                } else {
                     int userIndex = libUserList.indexOf(user);
                     libUserList.get(userIndex).borrowItem(item);
                     int itemIndex = library.indexOf(item);
@@ -487,17 +554,15 @@ public class Main {
         System.out.println("Enter User's ID");
         String userID = scanner.nextLine();
         LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
-        if (user == null){
+        if (user == null) {
             System.out.println("User ID " + userID + " is not registered");
-        }
-        else {
+        } else {
             System.out.println("Enter item's title: ");
             String itemTitle = scanner.nextLine();
             LibItem item = Search.linearSearchByStringAttribute(user.getListOfBorrowedAssets(), itemTitle, "title");
-            if (item == null){
+            if (item == null) {
                 System.out.println("Item " + itemTitle + " was not borrowed by user " + userID);
-            }
-            else {
+            } else {
                 int userIndex = libUserList.indexOf(user);
                 libUserList.get(userIndex).returnItem(item);
                 int itemIndex = library.indexOf(item);
