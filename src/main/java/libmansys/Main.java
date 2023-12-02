@@ -20,8 +20,6 @@ import java.util.UUID;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-
-    private static AuthorsCsvHandler authorsCsvHandler;
     private static ArrayList<Author> authorsList;
     private static List<LibUser> libUserList;
     private static ArrayList<LibItem> library;
@@ -106,9 +104,6 @@ public class Main {
         } catch (AuthorException e) {
             System.out.println(e.getMessage());
         }
-
-        String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
-        authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
 
         //USER MENU
 
@@ -511,7 +506,7 @@ public class Main {
 
         switch (choice) {
             case "1":
-                authorsCsvHandler.writeAuthorsList();
+                exportAuthorList();
                 break;
             case "2":
                 searchAuthors();
@@ -521,6 +516,28 @@ public class Main {
                 break;
         }
 
+    }
+
+    private static void exportAuthorList() {
+        System.out.println("How would you like to export the list of authors?");
+        System.out.println("1. Unsorted");
+        System.out.println("2. Sorted by name");
+        String sortChoice = scanner.nextLine();
+        Comparator<Author> comparator;
+
+        switch (sortChoice) {
+            case "1":
+                String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
+                AuthorsCsvHandler authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
+                authorsCsvHandler.writeAuthorsList();
+                break;
+            case "2":
+                comparator = Comparator.comparing(Author::getAuthorName);
+                break;
+            default:
+                System.out.println("Invalid choice.");
+                break;
+        }
     }
 
     private static void viewLibItems() throws NoSuchFieldException, IllegalAccessException {
