@@ -21,7 +21,7 @@ public class Main {
 
     private static AuthorsCsvHandler authorsCsvHandler;
     private static ArrayList<Author> authorsList;
-
+    private static List<LibUser> libUserList;
     private static ArrayList<LibItem> library;
     private static final String booksCsvFile = getFullPathFromRelative("src/test/csv/books.csv");
     private static final String mediaCsvFile = getFullPathFromRelative("src/test/csv/media.csv");
@@ -32,6 +32,7 @@ public class Main {
 
     public static void main(String[] args) throws ParseException, IOException, AuthorException, NoSuchFieldException, IllegalAccessException, LibItemException {
 
+        // Initialising the library system
         Book book1;
         Book book2;
         Media cd1;
@@ -71,18 +72,6 @@ public class Main {
         } catch (LibItemException e) {
             throw new RuntimeException(e);
         }
-
-        List<LibItem> listOfBorrowedAssets = new ArrayList<>();
-        listOfBorrowedAssets.add(book1);
-        listOfBorrowedAssets.add(book2);
-        listOfBorrowedAssets.add(cd1);
-        listOfBorrowedAssets.add(dvd1);
-        listOfBorrowedAssets.add(thesis1);
-
-        //Init a list of users for testing
-        List<LibUser> libUserList = new ArrayList<>();
-
-        // Initialising the library system
         library = new ArrayList<>();
         library.add(book1);
         library.add(book2);
@@ -90,18 +79,15 @@ public class Main {
         library.add(dvd1);
         library.add(thesis1);
 
-        //wrapped this in a try/catch because it was throwing an error
-        LibUser libUser;
-        LibUser libUser2;
+        //Init list of users
+        libUserList = new ArrayList<>();
         try {
-            libUser = new LibUser("Alice John", "12345", listOfBorrowedAssets);
-            libUser2 = new LibUser("James Barry", "32525", listOfBorrowedAssets);
+            libUserList.add(new LibUser("Andrew Donnelly", "00001", new ArrayList<LibItem>()));
+            libUserList.add(new LibUser("Grace Williams", "00002", new ArrayList<LibItem>()));
+            libUserList.add(new LibUser("Leonila Ortin", "00003", new ArrayList<LibItem>()));
         } catch (LibUserException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
-
-        libUserList.add(libUser2);
-        libUserList.add(libUser);
 
         // Adding a list of authors
         ArrayList<LibItem> booksByAuthor1 = new ArrayList<>();
@@ -110,13 +96,15 @@ public class Main {
         booksByAuthor2.add(book1);
         ArrayList<LibItem> thesesByAuthor3 = new ArrayList<>();
         thesesByAuthor3.add(thesis1);
-        Author author1 = new Author("J.K.Rowling", booksByAuthor1);
-        Author author2 = new Author("Antoine de Saint-Exupéry", booksByAuthor2);
-        Author author3 = new Author("Jack Russell", thesesByAuthor3);
         authorsList = new ArrayList<>();
-        authorsList.add(author1);
-        authorsList.add(author2);
-        authorsList.add(author3);
+        try {
+            authorsList.add(new Author("J.K.Rowling", booksByAuthor1));
+            authorsList.add(new Author("Antoine de Saint-Exupéry", booksByAuthor2));
+            authorsList.add(new Author("Jack Russell", thesesByAuthor3));
+        } catch (AuthorException e) {
+            System.out.println(e);
+        }
+
         String authorsCsvFile = getFullPathFromRelative("src/test/csv/authors.csv");
         authorsCsvHandler = new AuthorsCsvHandler(authorsCsvFile, authorsList);
 
@@ -445,7 +433,7 @@ public class Main {
         }
     }
 
-    private static void handleLoans() {
+    private static void handleLoans() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("Loan System:");
         System.out.println("a. Borrow Book");
         System.out.println("b. Return Book");
@@ -455,14 +443,67 @@ public class Main {
 
         switch (choice) {
             case "a":
-                //TODO borrowBook();
+                borrowBook();
                 break;
             case "b":
-                //TODO returnBook();
+                returnBook();
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
                 break;
+        }
+    }
+
+    private static void borrowBook() throws NoSuchFieldException, IllegalAccessException {
+        System.out.println("Enter User's ID");
+        String userID = scanner.nextLine();
+        LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
+        if (user == null){
+            System.out.println("User ID " + userID + " is not registered");
+        }
+        else {
+            System.out.println("Enter item's title: ");
+            String itemTitle = scanner.nextLine();
+            LibItem item = Search.linearSearchByStringAttribute(library, itemTitle, "title");
+            if (item == null){
+                System.out.println("Item " + itemTitle + " does not exist");
+            }
+            else {
+                if (!item.getAvailabilityStatus()){
+                    System.out.println(itemTitle + " is not available");
+                }
+                else {
+                    int userIndex = libUserList.indexOf(user);
+                    libUserList.get(userIndex).borrowItem(item);
+                    int itemIndex = library.indexOf(item);
+                    library.get(itemIndex).setAvailabilityStatus(false);
+                    System.out.println(item.getTitle() + " has been borrowed by user " + user.getName());
+                }
+            }
+        }
+    }
+
+    private static void returnBook() throws NoSuchFieldException, IllegalAccessException {
+        System.out.println("Enter User's ID");
+        String userID = scanner.nextLine();
+        LibUser user = Search.linearSearchByStringAttribute(libUserList, userID, "id");
+        if (user == null){
+            System.out.println("User ID " + userID + " is not registered");
+        }
+        else {
+            System.out.println("Enter item's title: ");
+            String itemTitle = scanner.nextLine();
+            LibItem item = Search.linearSearchByStringAttribute(user.getListOfBorrowedAssets(), itemTitle, "title");
+            if (item == null){
+                System.out.println("Item " + itemTitle + " was not borrowed by user " + userID);
+            }
+            else {
+                int userIndex = libUserList.indexOf(user);
+                libUserList.get(userIndex).returnItem(item);
+                int itemIndex = library.indexOf(item);
+                library.get(itemIndex).setAvailabilityStatus(true);
+                System.out.println(item.getTitle() + " has been returned by user " + user.getName());
+            }
         }
     }
 
