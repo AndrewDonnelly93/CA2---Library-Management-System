@@ -590,7 +590,7 @@ public class Main {
         newThesis.printItemDetails();
     }
 
-    private static void addThesis() throws NoSuchFieldException, IllegalAccessException, LibItemException {
+    private static void addThesis() throws LibItemException {
         String authorName;
         String title;
         String topic;
