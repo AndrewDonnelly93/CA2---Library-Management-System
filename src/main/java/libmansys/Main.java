@@ -455,7 +455,6 @@ public class Main {
 
         System.out.println("Searching by name: " + authorName);
 
-        // Assuming authorsList is a List<Author> available in your context
         Author authorSearch = Search.linearSearchByAttribute(authorsList,
                 Author::getAuthorName,  // Method reference as AttributeGetter
                 authorName);
@@ -482,7 +481,6 @@ public class Main {
             }
         } while (itemTitle.length() < 5 || itemTitle.length() > 50);
 
-        // Assuming library is a List<LibItem> available in your context
         LibItem itemSearch = Search.linearSearchByAttribute(library,
                 LibItem::getTitle,  // Method reference as AttributeGetter
                 itemTitle);
