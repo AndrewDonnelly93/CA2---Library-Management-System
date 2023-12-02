@@ -97,8 +97,6 @@ public class LibUser {
                 "name='" + this.getName() + '\'' +
                 ", id='" + this.getId()+"}");
         System.out.println("\nList of borrowed assets\n");
-        for (var item: this.getListOfBorrowedAssets()) {
-            item.printItemDetails();
-        }
+        listOfBorrowedAssets.forEach(LibItem::printItemDetails);
     }
 }

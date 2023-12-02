@@ -82,9 +82,9 @@ public class Main {
         //Init list of users
         libUserList = new ArrayList<>();
         try {
-            libUserList.add(new LibUser("Andrew Donnelly", "00001", new ArrayList<LibItem>()));
-            libUserList.add(new LibUser("Grace Williams", "00002", new ArrayList<LibItem>()));
-            libUserList.add(new LibUser("Leonila Ortin", "00003", new ArrayList<LibItem>()));
+            libUserList.add(new LibUser("Leonila Ortin", "00002", new ArrayList<>()));
+            libUserList.add(new LibUser("Andrew Donnelly", "00003", new ArrayList<>()));
+            libUserList.add(new LibUser("Grace Williams", "00001", new ArrayList<>()));
         } catch (LibUserException e) {
             System.out.println(e);
         }
@@ -98,7 +98,7 @@ public class Main {
         thesesByAuthor3.add(thesis1);
         authorsList = new ArrayList<>();
         try {
-            authorsList.add(new Author("J.K.Rowling", booksByAuthor1));
+            authorsList.add(new Author("J. K. Rowling", booksByAuthor1));
             authorsList.add(new Author("Antoine de Saint-Exupéry", booksByAuthor2));
             authorsList.add(new Author("Jack Russell", thesesByAuthor3));
         } catch (AuthorException e) {
