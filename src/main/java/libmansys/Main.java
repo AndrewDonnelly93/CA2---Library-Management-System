@@ -69,10 +69,7 @@ public class Main {
                             "zirconia ceramics to nearly 100% of their theoretical density in a short time." +
                             "Following optimisation of the process, a detailed comparison of the" +
                             "properties and microstructures of conventionally sintered and microwave" +
-                            "sintered samples of 3 mol% and 8 mol% yttria zirconia was performed." +
-                            "Identical thermal profiles were used for both types of heating. For both" +
-                            "materials, microwave heating was found to enhance the densification" +
-                            "processes which occur during constant rate heating.",
+                            "sintered samples of 3 mol% and 8 mol% yttria zirconia was performed.",
                     LocalDate.parse("14/05/2023", DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     "17013fa6-1d7a-45f8-ae4c-292fbeb2b6db");
         } catch (LibItemException e) {
