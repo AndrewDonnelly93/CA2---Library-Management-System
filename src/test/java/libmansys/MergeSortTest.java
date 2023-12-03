@@ -5,7 +5,6 @@ import libmansys.sort.MergeSort;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,7 +37,7 @@ class MergeSortTest {
         assertEquals(expectedList, itemsList);
     }
 
-    private void addingItemsToList() throws ParseException, LibItemException {
+    private void addingItemsToList() throws LibItemException {
         itemsList = new ArrayList<>();
         book = new Book("Book Title", true, "Author", "0000000000000",
                 "00000000-0000-0000-0000-000000000000");

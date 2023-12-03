@@ -3,8 +3,6 @@ package libmansys;
 import libmansys.libItem.*;
 import libmansys.search.Search;
 import org.junit.jupiter.api.Test;
-
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,7 +18,7 @@ class SearchTest {
     private Thesis thesis;
 
     @Test
-    void testLinearSearchByAttribute() throws ParseException, LibItemException {
+    void testLinearSearchByAttribute() throws LibItemException {
         addingItems();
         assertEquals(media, Search.linearSearchByAttribute(itemsList, LibItem::getTitle, "Media Title"));
     }

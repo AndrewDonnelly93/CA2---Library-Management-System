@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LibUserTest {
     LibUser libUser;
-    List<LibItem> borrowedItems;
+    LinkedList<LibItem> borrowedItems;
 
     @Test
     void testBorrowItem() throws LibUserException, NoSuchFieldException, IllegalAccessException, LibItemException {
@@ -36,8 +36,8 @@ class LibUserTest {
     }
 
     private void givenUserValidArguments() throws LibUserException, LibItemException {
-        borrowedItems = new ArrayList<>();
+        borrowedItems = new LinkedList<>();
         borrowedItems.add(new Book("Title", true, "Author", "0000000000000", "00000000-0000-0000-0000-000000000000"));
-        libUser = new LibUser("User", "00000", (LinkedList<LibItem>) borrowedItems);
+        libUser = new LibUser("User", "00000", borrowedItems);
     }
 }

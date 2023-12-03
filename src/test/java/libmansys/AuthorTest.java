@@ -33,8 +33,8 @@ class AuthorTest {
     }
 
     private void givenAuthorValidArguments() throws AuthorException, LibItemException {
-        List<LibItem> authoredItems = new ArrayList<>();
+        LinkedList<LibItem> authoredItems = new LinkedList<>();
         authoredItems.add(new Book("Title", true, "Author", "0000000000000", "00000000-0000-0000-0000-000000000000"));
-        author = new Author("Author", (LinkedList<LibItem>) authoredItems);
+        author = new Author("Author", authoredItems);
     }
 }
