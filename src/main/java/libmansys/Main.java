@@ -23,13 +23,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.UUID;
+import java.util.LinkedList;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-
-    private static ArrayList<Author> authorsList;
+    private static List<Author> authorsList;
     private static List<LibUser> libUserList;
-    private static ArrayList<LibItem> library;
+    private static List<LibItem> library;
     private static final String booksCsvFile = getFullPathFromRelative("src/test/csv/books.csv");
     private static final String mediaCsvFile = getFullPathFromRelative("src/test/csv/media.csv");
     private static final String thesesCsvFile = getFullPathFromRelative("src/test/csv/theses.csv");
@@ -70,16 +70,13 @@ public class Main {
                             "zirconia ceramics to nearly 100% of their theoretical density in a short time." +
                             "Following optimisation of the process, a detailed comparison of the" +
                             "properties and microstructures of conventionally sintered and microwave" +
-                            "sintered samples of 3 mol% and 8 mol% yttria zirconia was performed." +
-                            "Identical thermal profiles were used for both types of heating. For both" +
-                            "materials, microwave heating was found to enhance the densification" +
-                            "processes which occur during constant rate heating.",
+                            "sintered samples of 3 mol% and 8 mol% yttria zirconia was performed.",
                     LocalDate.parse("14/05/2023", DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     "17013fa6-1d7a-45f8-ae4c-292fbeb2b6db");
         } catch (LibItemException e) {
             throw new RuntimeException(e);
         }
-        library = new ArrayList<>();
+        library = new LinkedList<>();
         library.add(book1);
         library.add(book2);
         library.add(cd1);
@@ -87,23 +84,23 @@ public class Main {
         library.add(thesis1);
 
         //Init list of users
-        libUserList = new ArrayList<>();
+        libUserList = new LinkedList<>();
         try {
-            libUserList.add(new LibUser("Leonila Ortin", "00002", new ArrayList<>()));
-            libUserList.add(new LibUser("Andrew Donnelly", "00003", new ArrayList<>()));
-            libUserList.add(new LibUser("Grace Williams", "00001", new ArrayList<>()));
+            libUserList.add(new LibUser("Leonila Ortin", "00002", new LinkedList<>()));
+            libUserList.add(new LibUser("Andrew Donnelly", "00003", new LinkedList<>()));
+            libUserList.add(new LibUser("Grace Williams", "00001", new LinkedList<>()));
         } catch (LibUserException e) {
             System.out.println(e.getMessage());
         }
 
         // Adding a list of authors
-        ArrayList<LibItem> booksByAuthor1 = new ArrayList<>();
+        LinkedList<LibItem> booksByAuthor1 = new LinkedList<>();
         booksByAuthor1.add(book2);
-        ArrayList<LibItem> booksByAuthor2 = new ArrayList<>();
+        LinkedList<LibItem> booksByAuthor2 = new LinkedList<>();
         booksByAuthor2.add(book1);
-        ArrayList<LibItem> thesesByAuthor3 = new ArrayList<>();
+        LinkedList<LibItem> thesesByAuthor3 = new LinkedList<>();
         thesesByAuthor3.add(thesis1);
-        authorsList = new ArrayList<>();
+        authorsList = new LinkedList<>();
         try {
             authorsList.add(new Author("J. K. Rowling", booksByAuthor1));
             authorsList.add(new Author("Antoine de Saint-Exupéry", booksByAuthor2));
@@ -129,7 +126,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    handleUsers(libUserList);
+                    handleUsers((LinkedList<LibUser>) libUserList);
                     break;
                 case 2:
                     handleCatalogue();
@@ -155,7 +152,7 @@ public class Main {
 
     //Methods for handling different services (Users, Catalogue, Loans
     //Each method contains a submenu for specific actions related to that service
-    private static void handleUsers(List<LibUser> libUserList) {
+    private static void handleUsers(LinkedList<LibUser> libUserList) {
         System.out.println("Manage Users:");
         System.out.println("1. Export list of all users");
         System.out.println("2. Search for user");
@@ -183,7 +180,7 @@ public class Main {
     }
 
     //Sort method using Lambda function
-    private static void userSort(List<LibUser> libUserList) {
+    private static void userSort(LinkedList<LibUser> libUserList) {
         System.out.println("How would you like to sort the list of users?");
         System.out.println("1. By Name");
         System.out.println("2. By ID");
@@ -221,14 +218,14 @@ public class Main {
     }
 
 
-    private static void exportUsersToCsv(List<LibUser> libUserList) {
+    private static void exportUsersToCsv(LinkedList<LibUser> libUserList) {
         String usersCsvFile = getFullPathFromRelative("src/test/csv/sorted_users.csv");
-        UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, (ArrayList<LibUser>) libUserList);
+        UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, (LinkedList<LibUser>) libUserList);
         usersCsvHandler.writeUsersList();
         System.out.println("Sorted user list exported to CSV.");
     }
 
-    private static void searchUsers(List<LibUser> libUserList) {
+    private static void searchUsers(LinkedList<LibUser> libUserList) {
         String userName;
         do {
             System.out.println("Enter users's name: ");
@@ -250,7 +247,7 @@ public class Main {
         }
     }
 
-    private static void addUser(List<LibUser> libUserList) {
+    private static void addUser(LinkedList<LibUser> libUserList) {
         System.out.println("Add New User:");
 
         // Prompt for username
@@ -275,7 +272,7 @@ public class Main {
 
         // Create new user and add to the list
         try {
-            LibUser newUser = new LibUser(name, id, new ArrayList<>()); // Assuming an empty list of borrowed assets initially
+            LibUser newUser = new LibUser(name, id, new LinkedList<>()); // Assuming an empty list of borrowed assets initially
             libUserList.add(newUser);
             System.out.println("New user added successfully.");
         } catch (LibUserException e) {
@@ -356,11 +353,11 @@ public class Main {
         } while (authorName.length() < 5 || authorName.length() > 30);
 
         // Checking if this author already exists
-        List<Author> authorsListCasted = authorsList;
+        LinkedList<Author> authorsListCasted = (LinkedList<Author>) authorsList;
         Author authorSearch = Search.linearSearchByAttribute(authorsListCasted, Author::getAuthorName, authorName );
         if (authorSearch == null) {
             // Adding new author to the library
-            ArrayList<LibItem> authoredItems = new ArrayList<>();
+            LinkedList<LibItem> authoredItems = new LinkedList<>();
             Author newAuthor = new Author(authorName, authoredItems);
             System.out.println("Please add one book or a thesis for this author:");
             System.out.println("1. Add a book");
@@ -421,7 +418,7 @@ public class Main {
                 System.out.println("Author's name should have at least two characters");
             }
         } while (authorName.length() < 2);
-        List<Author> authorsListCasted = authorsList;
+        LinkedList<Author> authorsListCasted = (LinkedList<Author>) authorsList;
         Author authorSearch = Search.linearSearchByAttribute(authorsListCasted, Author::getAuthorName, authorName);
         if (authorSearch == null) {
             System.out.println("Please add this author to the authors list first");
@@ -605,7 +602,7 @@ public class Main {
                 System.out.println("Author's name should have at least two characters");
             }
         } while (authorName.length() < 2);
-        List<Author> authorsListCasted = authorsList;
+        LinkedList<Author> authorsListCasted = (LinkedList<Author>) authorsList;
         Author authorSearch = Search.linearSearchByAttribute(authorsListCasted,Author::getAuthorName, authorName);
         if (authorSearch == null) {
             System.out.println("Please add this author to the authors list first");
@@ -859,9 +856,9 @@ public class Main {
 
 
     private static void allItemsExport() {
-        ArrayList<LibItem> booksCsvRecords = new ArrayList<>();
-        ArrayList<LibItem> mediaCsvRecords = new ArrayList<>();
-        ArrayList<LibItem> thesesCsvRecords = new ArrayList<>();
+        LinkedList<LibItem> booksCsvRecords = new LinkedList<>();
+        LinkedList<LibItem> mediaCsvRecords = new LinkedList<>();
+        LinkedList<LibItem> thesesCsvRecords = new LinkedList<>();
         for (var item : library) {
             if (item instanceof Book) {
                 booksCsvRecords.add(item);
@@ -897,9 +894,9 @@ public class Main {
     }
 
     private static void availItemsExport() {
-        ArrayList<LibItem> availBooksCsvRecords = new ArrayList<>();
-        ArrayList<LibItem> availMediaCsvRecords = new ArrayList<>();
-        ArrayList<LibItem> availThesesCsvRecords = new ArrayList<>();
+        LinkedList<LibItem> availBooksCsvRecords = new LinkedList<>();
+        LinkedList<LibItem> availMediaCsvRecords = new LinkedList<>();
+        LinkedList<LibItem> availThesesCsvRecords = new LinkedList<>();
         List<LibItem> availableLibItems = library.stream()
                 .filter(LibItem::getAvailabilityStatus)
                 .collect(Collectors.toList());

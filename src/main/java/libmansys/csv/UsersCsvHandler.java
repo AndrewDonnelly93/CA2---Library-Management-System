@@ -10,13 +10,13 @@ import org.apache.commons.csv.CSVPrinter;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class UsersCsvHandler {
     private String usersCsvFile;
-    private ArrayList<LibUser> usersList;
+    private LinkedList<LibUser> usersList;
 
-    public UsersCsvHandler(String usersCsvFile, ArrayList<LibUser> usersList) {
+    public UsersCsvHandler(String usersCsvFile, LinkedList<LibUser> usersList) {
         this.usersCsvFile = usersCsvFile;
         this.usersList = usersList;
     }
@@ -29,11 +29,11 @@ public class UsersCsvHandler {
         this.usersCsvFile = usersCsvFile;
     }
 
-    public ArrayList<LibUser> getUsersList() {
+    public LinkedList<LibUser> getUsersList() {
         return usersList;
     }
 
-    public void setUsersList(ArrayList<LibUser> usersList) {
+    public void setUsersList(LinkedList<LibUser> usersList) {
         this.usersList = usersList;
     }
 
@@ -50,9 +50,9 @@ public class UsersCsvHandler {
                     if (user.getListOfBorrowedAssets().isEmpty()) {
                         csvPrinter.printRecord("No items borrowed");
                     } else {
-                        ArrayList<LibItem> booksCsvRecords = new ArrayList<>();
-                        ArrayList<LibItem> mediaCsvRecords = new ArrayList<>();
-                        ArrayList<LibItem> thesesCsvRecords = new ArrayList<>();
+                        LinkedList<LibItem> booksCsvRecords = new LinkedList<>();
+                        LinkedList<LibItem> mediaCsvRecords = new LinkedList<>();
+                        LinkedList<LibItem> thesesCsvRecords = new LinkedList<>();
 
                         for (var item : user.getListOfBorrowedAssets()) {
                             if (item instanceof Book) {
@@ -99,7 +99,7 @@ public class UsersCsvHandler {
         }
     }
 
-    public void printLibItemToCsv(CSVPrinter csvPrinter, String libItemsName, String emptyMessage, ArrayList<LibItem> csvRecords) throws IOException {
+    public void printLibItemToCsv(CSVPrinter csvPrinter, String libItemsName, String emptyMessage, LinkedList<LibItem> csvRecords) throws IOException {
         try {
             csvPrinter.printRecord(libItemsName);
             if (csvRecords.isEmpty()) {

@@ -15,19 +15,20 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class LibItemCsvHandler {
     private String csvFilePath;
     private StringWriter csvHeader;
-    private ArrayList<LibItem> csvRecords;
+    private LinkedList<LibItem> csvRecords;
     private String csvFileType;
 
     public LibItemCsvHandler(
             String csvFilePath,
             StringWriter csvHeader,
-            ArrayList<LibItem> csvRecords,
+            LinkedList<LibItem> csvRecords,
             String csvFileType
     ) {
         this.csvFilePath = csvFilePath;
@@ -44,11 +45,11 @@ public class LibItemCsvHandler {
         this.csvHeader = csvHeader;
     }
 
-    public ArrayList<LibItem> getCsvRecords() {
+    public LinkedList<LibItem> getCsvRecords() {
         return csvRecords;
     }
 
-    public void setCsvRecords(ArrayList<LibItem> csvRecords) {
+    public void setCsvRecords(LinkedList<LibItem> csvRecords) {
         this.csvRecords = csvRecords;
     }
 

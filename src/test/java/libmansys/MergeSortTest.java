@@ -14,8 +14,7 @@ import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MergeSortTest
-{
+class MergeSortTest {
     private ArrayList<LibItem> itemsList;
     private Book book;
     private Book book1;

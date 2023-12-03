@@ -1,7 +1,6 @@
 package libmansys.user;
 
-public class LibUserException extends Exception
-{
+public class LibUserException extends Exception {
     private final String message;
     public LibUserException() {
         message = "\n\tThere is an error in LibUser Class";

@@ -1,7 +1,6 @@
 package libmansys.author;
 
-public class AuthorException extends Exception
-{
+public class AuthorException extends Exception {
     private final String message;
     public AuthorException() {
         message = "\n\tThere is an error in Author Class";

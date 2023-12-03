@@ -2,22 +2,23 @@ package libmansys.author;
 
 import libmansys.libItem.LibItem;
 import libmansys.libItem.Media;
+import java.util.LinkedList;
 import java.util.List;
 
-public class Author
-{
+public class Author {
     private String authorName;
     private List<LibItem> authoredItems;
 
     public Author() {
+        this.authoredItems = new LinkedList<>();  // Initialize as LinkedList
     }
 
-    public Author(String authorName, List<LibItem> authoredItems) throws AuthorException {
+    public Author(String authorName, LinkedList<LibItem> authoredItems) throws AuthorException {
         if (authorName.length() < 2 || authorName.length() > 30)
             throw new AuthorException("\n\tAuthor name should be between 2 and 30 characters");
         else
             this.authorName = authorName;
-        this.authoredItems = authoredItems;
+        this.authoredItems = new LinkedList<>(authoredItems);
     }
 
     public String getAuthorName() {
@@ -50,7 +51,7 @@ public class Author
         authoredItems.remove(item);
     }
 
-    public void printAuthorDetails (){
+    public void printAuthorDetails() {
         System.out.println("\n\tAuthor Name: " + authorName);
         System.out.println("\n\tList of authored assets\n");
         authoredItems.forEach(LibItem::printItemDetails);
