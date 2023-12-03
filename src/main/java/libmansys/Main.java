@@ -159,19 +159,20 @@ public class Main {
         System.out.println("3. Add user");
         System.out.println("4. Back to Main Menu");
 
-        String choice = scanner.nextLine();
+        String input = scanner.nextLine();
+        int choice = Integer.parseInt(input);
 
         switch (choice) {
-            case "1":
+            case 1:
                 userSort(libUserList);
                 break;
-            case "2":
+            case 2:
                 searchUsers(libUserList);
                 break;
-            case "3":
+            case 3:
                 addUser(libUserList);
                 break;
-            case "4":
+            case 4:
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
@@ -179,19 +180,20 @@ public class Main {
         }
     }
 
-    //Sort method using Lambda function
+    //Sort method using Method Reference and Functional Interface
     private static void userSort(LinkedList<LibUser> libUserList) {
         System.out.println("How would you like to sort the list of users?");
         System.out.println("1. By Name");
         System.out.println("2. By ID");
-        String sortChoice = scanner.nextLine();
+        String input = scanner.nextLine();
+        int sortChoice = Integer.parseInt(input);
         Comparator<LibUser> comparator;
 
         switch (sortChoice) {
-            case "1":
+            case 1:
                 comparator = Comparator.comparing(LibUser::getName);
                 break;
-            case "2":
+            case 2:
                 comparator = Comparator.comparing(LibUser::getId);
                 break;
             default:
@@ -220,7 +222,7 @@ public class Main {
 
     private static void exportUsersToCsv(LinkedList<LibUser> libUserList) {
         String usersCsvFile = getFullPathFromRelative("src/test/csv/sorted_users.csv");
-        UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, (LinkedList<LibUser>) libUserList);
+        UsersCsvHandler usersCsvHandler = new UsersCsvHandler(usersCsvFile, libUserList);
         usersCsvHandler.writeUsersList();
         System.out.println("Sorted user list exported to CSV.");
     }
@@ -228,7 +230,7 @@ public class Main {
     private static void searchUsers(LinkedList<LibUser> libUserList) {
         String userName;
         do {
-            System.out.println("Enter users's name: ");
+            System.out.println("Enter users' name: ");
             userName = scanner.nextLine();
             if (userName.length() < 5 || userName.length() > 30) {
                 System.out.println("Author's name should be between 5 and 30 characters");
@@ -287,13 +289,14 @@ public class Main {
         System.out.println("2. View Catalogue");
         System.out.println("3. Back to Main Menu");
 
-        String choice = scanner.nextLine();
+        String input = scanner.nextLine();
+        int choice = Integer.parseInt(input);
 
         switch (choice) {
-            case "1":
+            case 1:
                 updateCatalogue();
                 break;
-            case "2":
+            case 2:
                 viewCatalogue();
                 break;
             default:
@@ -307,13 +310,14 @@ public class Main {
         System.out.println("1. Add Author");
         System.out.println("2. Add LibItem");
 
-        String choice = scanner.nextLine();
+        String input = scanner.nextLine();
+        int choice = Integer.parseInt(input);
 
         switch (choice) {
-            case "1":
+            case 1:
                 addAuthor();
                 break;
-            case "2":
+            case 2:
                 addLibItem();
                 break;
             default:
@@ -327,13 +331,14 @@ public class Main {
         System.out.println("1. View Authors");
         System.out.println("2. View Library Items");
 
-        String choice = scanner.nextLine();
+        String input = scanner.nextLine();
+        int choice = Integer.parseInt(input);
 
         switch (choice) {
-            case "1":
+            case 1:
                 viewAuthors();
                 break;
-            case "2":
+            case 2:
                 viewLibItems();
                 break;
             default:
@@ -362,12 +367,14 @@ public class Main {
             System.out.println("Please add one book or a thesis for this author:");
             System.out.println("1. Add a book");
             System.out.println("2. Add a thesis");
-            String choice = scanner.nextLine();
+            String input = scanner.nextLine();
+            int choice = Integer.parseInt(input);
+
             switch (choice) {
-                case "1":
+                case 1:
                     addBookToAuthor(newAuthor);
                     break;
-                case "2":
+                case 2:
                     addThesisToAuthor(newAuthor);
                     break;
                 default:
@@ -387,16 +394,17 @@ public class Main {
         System.out.println("2. Add a media item");
         System.out.println("3. Add a thesis");
 
-        String choice = scanner.nextLine();
+        String input = scanner.nextLine();
+        int choice = Integer.parseInt(input);
 
         switch (choice) {
-            case "1":
+            case 1:
                 addBook();
                 break;
-            case "2":
+            case 2:
                 addMedia();
                 break;
-            case "3":
+            case 3:
                 addThesis();
                 break;
             default:
@@ -668,13 +676,14 @@ public class Main {
         System.out.println("1. Export list of all Authors (Note: Valid for Books and Theses only)");
         System.out.println("2. Search for an Author");
 
-        String choice = scanner.nextLine();
+        String input = scanner.nextLine();
+        int choice = Integer.parseInt(input);
 
         switch (choice) {
-            case "1":
+            case 1:
                 exportAuthorList();
                 break;
-            case "2":
+            case 2:
                 searchAuthors();
                 break;
             default:
@@ -687,14 +696,15 @@ public class Main {
         System.out.println("How would you like to export the list of authors?");
         System.out.println("1. Unsorted");
         System.out.println("2. Sorted by name");
-        String sortChoice = scanner.nextLine();
+        String input = scanner.nextLine();
+        int sortChoice = Integer.parseInt(input);
         Comparator<Author> comparator;
 
         switch (sortChoice) {
-            case "1":
+            case 1:
                 exportAuthorsToCsv();
                 break;
-            case "2":
+            case 2:
                 comparator = Comparator.comparing(Author::getAuthorName);
                 MergeSort<Author> sorter = new MergeSort<>();
                 sorter.sort(authorsList, comparator);
@@ -718,16 +728,17 @@ public class Main {
         System.out.println("2. Export list of available items only");
         System.out.println("3. Search for an item");
 
-        String choice = scanner.nextLine();
+        String input = scanner.nextLine();
+        int choice = Integer.parseInt(input);
 
         switch (choice) {
-            case "1":
+            case 1:
                 allItemsExport();
                 break;
-            case "2":
+            case 2:
                 availItemsExport();
                 break;
-            case "3":
+            case 3:
                 searchItems();
                 break;
             default:
@@ -742,13 +753,14 @@ public class Main {
         System.out.println("b. Return Book");
         System.out.println("c. Back to Main Menu");
 
-        String choice = scanner.nextLine();
+        String input = scanner.nextLine();
+        int choice = Integer.parseInt(input);
 
         switch (choice) {
-            case "a":
+            case 1:
                 borrowBook();
                 break;
-            case "b":
+            case 2:
                 returnBook();
                 break;
             default:
@@ -919,10 +931,5 @@ public class Main {
         showGeneratedLibItemsFiles(csvHandlerAvailBooks, csvHandlerAvailMedia, csvHandlerAvailTheses);
     }
 }
-
-/*TODO
-add sort options - ID and number of loans
-Export the list
- */
 
 
