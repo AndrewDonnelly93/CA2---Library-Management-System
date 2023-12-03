@@ -14,7 +14,6 @@ import java.util.List;
 class AuthorTest
 {
     private Author author;
-    private List<LibItem> authoredItems;
 
     @Test
     void testAddBook() throws AuthorException, LibItemException {
@@ -29,10 +28,12 @@ class AuthorTest
         Book book = new Book("Title1", true, "Author", "1111111111111", "11111111-1111-1111-1111-111111111111");
         author.addItem(book);
         assertTrue(author.getAuthoredItems().contains(book));
+        author.removeItem(book);
+        assertFalse(author.getAuthoredItems().contains(book));
     }
 
     private void givenAuthorValidArguments() throws AuthorException, LibItemException {
-        authoredItems = new ArrayList<>();
+        List<LibItem> authoredItems = new ArrayList<>();
         authoredItems.add(new Book("Title", true, "Author", "0000000000000", "00000000-0000-0000-0000-000000000000"));
         author = new Author("Author", authoredItems);
     }
