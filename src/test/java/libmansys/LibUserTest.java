@@ -8,6 +8,7 @@ import libmansys.user.LibUserException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,6 +38,6 @@ class LibUserTest {
     private void givenUserValidArguments() throws LibUserException, LibItemException {
         borrowedItems = new ArrayList<>();
         borrowedItems.add(new Book("Title", true, "Author", "0000000000000", "00000000-0000-0000-0000-000000000000"));
-        libUser = new LibUser("User", "00000", borrowedItems);
+        libUser = new LibUser("User", "00000", (LinkedList<LibItem>) borrowedItems);
     }
 }

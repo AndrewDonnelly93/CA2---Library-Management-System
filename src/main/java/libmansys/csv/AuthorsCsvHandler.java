@@ -7,11 +7,13 @@ import org.apache.commons.csv.CSVPrinter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 public class AuthorsCsvHandler {
     private String authorsCsvFile;
-    private ArrayList<Author> authorsList;
+    private List<Author> authorsList;
 
-    public AuthorsCsvHandler(String authorsCsvFile, ArrayList<Author> authorsList) {
+    public AuthorsCsvHandler(String authorsCsvFile, List<Author> authorsList) {
         this.authorsCsvFile = authorsCsvFile;
         this.authorsList = authorsList;
     }
@@ -24,11 +26,11 @@ public class AuthorsCsvHandler {
         this.authorsCsvFile = authorsCsvFile;
     }
 
-    public ArrayList<Author> getAuthorsList() {
+    public List<Author> getAuthorsList() {
         return authorsList;
     }
 
-    public void setAuthorsList(ArrayList<Author> authorsList) {
+    public void setAuthorsList(List<Author> authorsList) {
         this.authorsList = authorsList;
     }
 

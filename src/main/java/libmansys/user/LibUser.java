@@ -1,18 +1,18 @@
 package libmansys.user;
 
 import libmansys.libItem.LibItem;
-
+import java.util.LinkedList;
 import java.util.List;
 
 public class LibUser {
     //Attributes
     private String name;
     private String id;
-    private List<LibItem> listOfBorrowedAssets;
+    private LinkedList<LibItem> listOfBorrowedAssets;
 
 
     //Constructor
-    public LibUser(String name, String id, List<LibItem> listOfBorrowedAssets) throws LibUserException{
+    public LibUser(String name, String id, LinkedList<LibItem> listOfBorrowedAssets) throws LibUserException{
         if (name.length() < 2 || name.length() > 30)
             throw new LibUserException("\n\tUser name should be between 2 and 30 characters");
         else
@@ -33,7 +33,7 @@ public class LibUser {
         return id;
     }
 
-    public List<LibItem> getListOfBorrowedAssets() {
+    public LinkedList<LibItem> getListOfBorrowedAssets() {
         return listOfBorrowedAssets;
     }
 
@@ -51,7 +51,7 @@ public class LibUser {
             this.id = id;
     }
 
-    public void setListOfBorrowedAssets(List<LibItem> listOfBorrowedAssets) {
+    public void setListOfBorrowedAssets(LinkedList<LibItem> listOfBorrowedAssets) {
         this.listOfBorrowedAssets = listOfBorrowedAssets;
     }
 
