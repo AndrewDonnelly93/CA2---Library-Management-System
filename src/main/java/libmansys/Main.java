@@ -115,33 +115,36 @@ public class Main {
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("Welcome to the Library Management System! Please choose an option:");
-            System.out.println("1. Manage Users");
-            System.out.println("2. Manage Catalogue");
-            System.out.println("3. Loan System");
-            System.out.println("4. Exit");
+            try {
+                System.out.println("Welcome to the Library Management System! Please choose an option:");
+                System.out.println("1. Manage Users");
+                System.out.println("2. Manage Catalogue");
+                System.out.println("3. Loan System");
+                System.out.println("4. Exit");
 
-            String input = scanner.nextLine();
-            int choice = Integer.parseInt(input);
+                String input = scanner.nextLine();
+                int choice = Integer.parseInt(input);
 
-            switch (choice) {
-                case 1:
-                    handleUsers((LinkedList<LibUser>) libUserList);
-                    break;
-                case 2:
-                    handleCatalogue();
-                    break;
-                case 3:
-                    handleLoans();
-                    break;
-                case 4:
-                    exit = true;
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Invalid option. Please try again.");
+                switch (choice) {
+                    case 1:
+                        handleUsers((LinkedList<LibUser>) libUserList);
+                        break;
+                    case 2:
+                        handleCatalogue();
+                        break;
+                    case 3:
+                        handleLoans();
+                        break;
+                    case 4:
+                        exit = true;
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(e.getMessage());
             }
-
         }
     }
 
